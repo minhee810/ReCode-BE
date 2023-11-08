@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
