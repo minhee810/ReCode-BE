@@ -2,6 +2,7 @@ package com.abo2.recode.dto.user;
 
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.util.CustomDateUtil;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,5 +36,12 @@ public class UserRespDto {
             this.username = user.getUsername();
             this.nickname = user.getNickname();
         }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class FindUsernameRespDto{
+        private String username;
     }
 }

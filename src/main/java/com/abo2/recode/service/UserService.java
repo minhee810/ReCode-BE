@@ -36,4 +36,13 @@ public class UserService {
         // 3. dto 응답
         return new UserRespDto.JoinRespDto(userPS);
     }
+    @Transactional
+    public UserRespDto.FindUsernameRespDto findUsername(UserReqDto.FindUsernameReqDto findUsernameReqDto) {
+       User userPS = userRepository.findByEmail(findUsernameReqDto.getEmail()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+       return new UserRespDto.FindUsernameRespDto(userPS.getUsername());
+
+    }
+
+
 }
