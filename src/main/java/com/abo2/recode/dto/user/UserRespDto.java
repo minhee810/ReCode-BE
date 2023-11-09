@@ -44,4 +44,18 @@ public class UserRespDto {
     public static class FindUsernameRespDto{
         private String username;
     }
+
+    @Getter
+    @Setter
+    public static class UpdateUserRespDto{
+        private Long id;
+        private String email;
+        private String nickname;
+
+        public UpdateUserRespDto(User user){
+            this.id = user.getId();
+            this.email = user.getEmail();
+            this.nickname = user.getNickname();
+        }
+    }
 }
