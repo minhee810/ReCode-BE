@@ -2,9 +2,12 @@ package com.abo2.recode.dto.study;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -14,6 +17,7 @@ public class StudyReqDto {
     @Setter
     public static class StudyCreateReqDto{
 
+        // Study_Room
         @NotEmpty
         @Size(min = 1, max = 50)
         private String study_name;
@@ -27,10 +31,16 @@ public class StudyReqDto {
         private String description;
 
         @NotEmpty
-        private LocalDateTime start_date;
+        private String start_time; //스터디 출석 인정 시작 시간 "monday 12:00"
 
         @NotEmpty
-        private LocalDateTime end_date;
+        private String end_time; //스터디 출석 인정 끝 시간 "monday 12:10"
+
+        @NotEmpty
+        private LocalDate start_date;
+
+        @NotEmpty
+        private LocalDate end_date;
 
         @NotEmpty
         private Integer max_num;
@@ -43,7 +53,13 @@ public class StudyReqDto {
 
         @NotEmpty
         private LocalDateTime updatedAt;
+        //======================================
+        // skill 테이블의 스킬들
+        private String[] skills;
+
+        // 모집분야
+        @NotEmpty
+        private String expertise;
 
     }
-
 }

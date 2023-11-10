@@ -1,8 +1,8 @@
-package com.abo2.recode.domain.StudyRoom;
+package com.abo2.recode.domain.studyroom;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 public interface StudyRepository extends JpaRepository<StudyRoom,Long> {
+
 
 }
