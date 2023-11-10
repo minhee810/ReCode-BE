@@ -1,4 +1,4 @@
-package com.abo2.recode.dto;
+package com.abo2.recode.dto.qna;
 
 import java.time.LocalDateTime;
 
