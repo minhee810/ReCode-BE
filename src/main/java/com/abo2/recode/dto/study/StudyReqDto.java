@@ -2,11 +2,11 @@ package com.abo2.recode.dto.study;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.bytebuddy.asm.Advice;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+
 
 public class StudyReqDto {
 
@@ -27,10 +27,10 @@ public class StudyReqDto {
         private String description;
 
         @NotEmpty
-        private String start_date;
+        private LocalDateTime start_date;
 
         @NotEmpty
-        private String end_date;
+        private LocalDateTime end_date;
 
         @NotEmpty
         private Integer max_num;

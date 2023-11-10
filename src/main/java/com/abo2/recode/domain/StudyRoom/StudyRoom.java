@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -53,7 +54,7 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalDateTime createdAt; //스터디 그룹 만든 시각
 
-    @CreatedDate
+    @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
