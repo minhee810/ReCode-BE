@@ -46,7 +46,7 @@ public class StudyReqDto {
         private Integer max_num;
 
         @NotEmpty
-        private String user_id; //별도로 가져오는 코드 필요(입력 받지 않음)
+        private Long user_id; //별도로 가져오는 코드 필요(입력 받지 않음)
 
         @NotEmpty
         private LocalDateTime createdAt;
@@ -54,12 +54,8 @@ public class StudyReqDto {
         @NotEmpty
         private LocalDateTime updatedAt;
         //======================================
-        // skill 테이블의 스킬들
+        // skill 테이블의 스킬들,모집분야
         private String[] skills;
-
-        // 모집분야
-        @NotEmpty
-        private String expertise;
 
     }
 }
