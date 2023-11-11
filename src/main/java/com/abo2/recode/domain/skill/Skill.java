@@ -16,9 +16,8 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //skill 일련번호
 
-    @Column(unique = true,nullable = false,length = 50)
-    private String skill_name; //skill 네임
-
+    @Column(unique = true, nullable = false, length = 50)
+    private String skillName; // skill 네임
 
 }
 

@@ -45,7 +45,7 @@ public class StudyService {
         LocalDate end_date = studyCreateReqDto.getEnd_date();
         Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
         Integer max_num = studyCreateReqDto.getMax_num();
-        String user_id = studyCreateReqDto.getUser_id();
+        Long user_id = studyCreateReqDto.getUser_id();
 
         //1-1. start_time,end_time String -> LocalDateTime
         LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStart_time());
@@ -69,8 +69,9 @@ public class StudyService {
 
         //3.study_skill 테이블에 skill 삽입
         //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
+        // expertise
         for (String skillName : studyCreateReqDto.getSkills()) {
-            Skill skill = skillRepository.findByName(skillName); // 스킬 이름으로 Skill 엔티티 검색
+            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
 
             Study_skill studySkill = Study_skill.builder()
                     .studyRoom(studyRoom)
@@ -88,11 +89,9 @@ public class StudyService {
         DayOfWeek dayOfWeek = DayOfWeek.valueOf(parts[0].toUpperCase());
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime sameWeekDay = now.with(TemporalAdjusters.nextOrSame(dayOfWeek));
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm");
         LocalDateTime time = LocalDateTime
                 .parse(sameWeekDay.format(DateTimeFormatter.ISO_LOCAL_DATE)
                 + "T" + parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
 
         return time;
     }//convertToDateTime()

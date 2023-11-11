@@ -49,7 +49,7 @@ public class StudyRoom {
     private Integer max_num; //스터디 그룹 전체 티오
 
     @Column(nullable = false)
-    private String created_By; // 스터디 장
+    private Long created_By; // 스터디 장
 
     @CreatedDate
     @Column(nullable = false)
@@ -62,7 +62,7 @@ public class StudyRoom {
     @Builder
     public StudyRoom(String study_name, String title, String description, LocalDate start_date,
                      LocalDate end_date, LocalDateTime start_time, LocalDateTime end_time,
-                     Integer current_num, Integer max_num, String created_By) {
+                     Integer current_num, Integer max_num, Long created_By) {
 
         this.study_name = study_name;
         this.title = title;
