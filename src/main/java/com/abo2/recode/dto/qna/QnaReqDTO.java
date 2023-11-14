@@ -1,11 +1,9 @@
 package com.abo2.recode.dto.qna;
 
-import com.abo2.recode.entity.Qna;
+import com.abo2.recode.domain.Qna.Qna;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

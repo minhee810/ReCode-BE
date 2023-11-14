@@ -1,4 +1,4 @@
-package com.abo2.recode.entity;
+package com.abo2.recode.domain.Qna;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
