@@ -77,4 +77,5 @@ public class UserReqDto {
         @Size(min = 2,  max = 300)
         private String essay;
     }
+
 }

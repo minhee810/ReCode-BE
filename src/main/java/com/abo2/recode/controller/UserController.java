@@ -42,14 +42,14 @@ public class UserController {
 
     @PostMapping(value = "/v1/mypage/{id}/essay")
     public ResponseEntity<?> writeEssay(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.WriteEssayReqDto writeEssayReqDto, BindingResult bindingResult){
-        UserRespDto.WriteEssayRespDto writeEssayRespDto = userService.writeEssay(loginUser.getUser().getId(), writeEssayReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "소개글이 성공적으로 업데이트 되었습니다.", writeEssayRespDto), HttpStatus.OK);
+        UserRespDto.EssayRespDto essayRespDto = userService.writeEssay(loginUser.getUser().getId(), writeEssayReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "소개글이 성공적으로 업데이트 되었습니다.", essayRespDto), HttpStatus.OK);
     }
 
     @GetMapping(value = "/v1/mypage/{id}/getessay")
     public ResponseEntity<?> getEssay(@AuthenticationPrincipal LoginUser loginUser){
-        UserRespDto.GetEssayRespDto getEssayRespDto = userService.getEssay(loginUser.getUser().getId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "소개글 조회에 성공하였습니다.", getEssayRespDto), HttpStatus.OK);
+        UserRespDto.EssayRespDto essayRespDto = userService.getEssay(loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "소개글 조회에 성공하였습니다.", essayRespDto), HttpStatus.OK);
     }
 
     @PostMapping(value = "/v1/users/{id}/delete")
@@ -58,4 +58,9 @@ public class UserController {
         return new ResponseEntity<>(new ResponseDto<>(1, "탈퇴에 성공하였습니다.", null), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/v1/users/{id}/getuser")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal LoginUser loginUser){
+        UserRespDto.getUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "개인 정보 조회에 성공하였습니다", getUserInfoDto), HttpStatus.OK);
+    }
 }
