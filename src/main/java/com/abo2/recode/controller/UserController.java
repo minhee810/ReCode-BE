@@ -51,4 +51,11 @@ public class UserController {
         UserRespDto.GetEssayRespDto getEssayRespDto = userService.getEssay(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "소개글 조회에 성공하였습니다.", getEssayRespDto), HttpStatus.OK);
     }
+
+    @PostMapping(value = "/v1/users/{id}/delete")
+    public ResponseEntity<?> withdrawUser(@AuthenticationPrincipal LoginUser loginUser){
+        userService.withdrawUser(loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "탈퇴에 성공하였습니다.", null), HttpStatus.OK);
+    }
+
 }

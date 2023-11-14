@@ -79,4 +79,9 @@ public class UserService {
         // 2. dto 응답
         return new UserRespDto.GetEssayRespDto(userPS);
     }
+
+    @Transactional
+    public void withdrawUser(Long userId){
+        userRepository.deleteById(userId);
+    }
 }
