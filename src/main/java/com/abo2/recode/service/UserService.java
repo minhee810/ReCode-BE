@@ -60,12 +60,23 @@ public class UserService {
     }
 
     @Transactional
-    public UserRespDto.WriteEssayResDto writeEssay(Long userId, UserReqDto.WriteEssayReqDto writeEssayReqDto){
+    public UserRespDto.WriteEssayRespDto writeEssay(Long userId, UserReqDto.WriteEssayReqDto writeEssayReqDto){
         // 1. user 아이디 조회
         User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
+        // 2. 객체에 변경 사항 반영
         userPS.writeEssay(writeEssayReqDto.getEssay());
 
-        return new UserRespDto.WriteEssayResDto(userPS);
+        // 3. dto 응답
+        return new UserRespDto.WriteEssayRespDto(userPS);
+    }
+
+    @Transactional
+    public UserRespDto.GetEssayRespDto getEssay(Long userId){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        // 2. dto 응답
+        return new UserRespDto.GetEssayRespDto(userPS);
     }
 }
