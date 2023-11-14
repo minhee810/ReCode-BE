@@ -61,10 +61,20 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class WriteEssayResDto{
+    public static class WriteEssayRespDto{
         private String essay;
 
-        public WriteEssayResDto(User user){
+        public WriteEssayRespDto(User user){
+            this.essay = user.getEssay();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class GetEssayRespDto{
+        private String essay;
+
+        public GetEssayRespDto(User user) {
             this.essay = user.getEssay();
         }
     }
