@@ -39,4 +39,10 @@ public class UserController {
         UserRespDto.UpdateUserRespDto updateUserRespDto = userService.updateUser(loginUser.getUser().getId(), updateUserReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1,"회원정보 수정 성공", updateUserRespDto), HttpStatus.OK);
     }
+
+    @PostMapping(value = "/v1/mypage/{id}/essay")
+    public ResponseEntity<?> writeEssay(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.WriteEssayReqDto writeEssayReqDto, BindingResult bindingResult){
+        UserRespDto.WriteEssayResDto writeEssayResDto = userService.writeEssay(loginUser.getUser().getId(), writeEssayReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "소개글이 성공적으로 업데이트 되었습니다.", writeEssayResDto), HttpStatus.OK);
+    }
 }

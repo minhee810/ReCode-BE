@@ -66,4 +66,8 @@ public class User {
         this.nickname = nickname;
     }
 
+    public void writeEssay(String essay){
+        this.essay = essay;
+    }
+
 }

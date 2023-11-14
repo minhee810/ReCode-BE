@@ -69,4 +69,12 @@ public class UserReqDto {
         @Pattern(regexp = "^[a-zA-Z가-힣]{1,20}$", message = "한글/영문 1~20자 이내로 작성해주세요")
         private String nickname;
     }
+
+    @Setter
+    @Getter
+    public static class WriteEssayReqDto{
+        @NotEmpty
+        @Size(min = 2,  max = 300)
+        private String essay;
+    }
 }

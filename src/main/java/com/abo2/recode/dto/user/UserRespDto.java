@@ -58,4 +58,14 @@ public class UserRespDto {
             this.nickname = user.getNickname();
         }
     }
+
+    @Getter
+    @Setter
+    public static class WriteEssayResDto{
+        private String essay;
+
+        public WriteEssayResDto(User user){
+            this.essay = user.getEssay();
+        }
+    }
 }
