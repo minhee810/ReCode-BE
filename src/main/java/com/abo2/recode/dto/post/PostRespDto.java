@@ -16,15 +16,15 @@ public class PostRespDto {
         private String content;
         private String category;
         private LocalDateTime createdAt;
-        private String username;
+        private String nickname;
 
         public PostListRespDto(Post post) {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
-            this.category = post.getContent();
+            this.category = post.getCategory();
             this.createdAt = post.getCreatedAt();
-            this.username = post.getUser().getUsername();
+            this.nickname = post.getUser().getNickname();
         }
     }
 }

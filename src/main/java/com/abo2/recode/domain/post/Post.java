@@ -39,7 +39,7 @@ public class Post {
     private User user;
 
     @Column(nullable = false)
-    private Integer category;
+    private String category;
 
     @CreatedDate
     @Column(nullable = false)
@@ -51,7 +51,7 @@ public class Post {
 
     @Builder
     public Post(String title, String content, StudyRoom studyRoom,
-                User user, Integer category) {
+                User user, String category) {
         this.title = title;
         this.content = content;
         this.studyRoom = studyRoom;
