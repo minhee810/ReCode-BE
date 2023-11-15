@@ -1,4 +1,4 @@
-FROM gradle:8.3-jdk11
+FROM gradle:8.4-jdk11-alpine
 WORKDIR /recode-be
 COPY . .
 RUN gradle build --no-daemon
