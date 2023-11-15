@@ -61,21 +61,25 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class WriteEssayRespDto{
+    public static class EssayRespDto{
         private String essay;
 
-        public WriteEssayRespDto(User user){
+        public EssayRespDto(User user){
             this.essay = user.getEssay();
         }
     }
 
     @Getter
     @Setter
-    public static class GetEssayRespDto{
-        private String essay;
+    public static class getUserInfoDto{
+        private String username;
+        private String nickname;
+        private String email;
 
-        public GetEssayRespDto(User user) {
-            this.essay = user.getEssay();
+        public getUserInfoDto(User user){
+            this.username = user.getUsername();
+            this.nickname = user.getNickname();
+            this.email = user.getEmail();
         }
     }
 }
