@@ -51,10 +51,10 @@ public class StudyResDto {
         private LocalDate end_date; //스터디 마무리 기간
 
         @Column(nullable = false)
-        private LocalDateTime start_time; //스터디 출석 인정 시작 시간
+        private String start_time; //스터디 출석 인정 시작 시간
 
         @Column(nullable = false)
-        private LocalDateTime end_time; //스터디 출석 인정 끝 시간
+        private String end_time; //스터디 출석 인정 끝 시간
 
         @Column(nullable = false)
         private Integer current_num = 1; // 필드 선언 시 기본값 지정,스터디 그룹 현재 인원

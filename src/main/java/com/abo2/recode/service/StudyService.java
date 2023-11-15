@@ -111,7 +111,6 @@ public class StudyService {
         return time;
     }//convertToDateTime()
 
-
     //study 가입 신청
     public void studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
@@ -142,5 +141,15 @@ public class StudyService {
                 .build();
 
         studyMemberRepository.save(studyMember);
+    }
+
+    //스터디 모임 상세 조회
+    public StudyRoom studyRoomDetailBrowse(Long studyId) {
+
+        //0. 찾는 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
+        Optional<StudyRoom> optionalStudyRoom =  studyRoomRepository.findById(studyId);
+        StudyRoom studyRoom = optionalStudyRoom.orElse(null);
+
+        return studyRoom;
     }
 }//class StudyService
