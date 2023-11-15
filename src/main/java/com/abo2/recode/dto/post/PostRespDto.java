@@ -1,12 +1,24 @@
 package com.abo2.recode.dto.post;
 
 import com.abo2.recode.domain.post.Post;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Builder
 public class PostRespDto {
+
+    private Long id;
+    private String title;
+    private String content;
+    private Long studyRoomId;
+    private Long userId;
+    private String category;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Getter
     @Setter
@@ -27,4 +39,6 @@ public class PostRespDto {
             this.nickname = post.getUser().getNickname();
         }
     }
+
+
 }

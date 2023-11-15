@@ -2,8 +2,10 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostRepository;
+import com.abo2.recode.dto.post.PostReqDto;
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,5 +34,31 @@ public class PostService {
         return posts.stream()
                 .map(PostRespDto.PostListRespDto::new)
                 .collect(Collectors.toList());
+    }
+
+
+
+    public PostRespDto writePost(PostReqDto postReqDto) {
+        Post post = Post.builder()
+                .title(postReqDto.getTitle())
+                .content(postReqDto.getContent())
+                .category(postReqDto.getCategory())
+                .build();
+
+        Post savedPost = postRepository.save(post);
+        return convertToResponseDto(savedPost);
+    }
+
+    private PostRespDto convertToResponseDto(Post post) {
+        return PostRespDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .studyRoomId(post.getStudyRoom().getId())
+                .userId(post.getUser().getId())
+                .category(post.getCategory())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
     }
 }
