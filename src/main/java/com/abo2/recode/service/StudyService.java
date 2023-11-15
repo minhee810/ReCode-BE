@@ -131,11 +131,8 @@ public class StudyService {
         studyRoom = optionalStudyRoom.orElse(null);
 
         // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
-        User user = new User(); // Replace this with your actual value
-        Optional<User> optionalUser = Optional.of(user);
-
-        optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
-        user = optionalUser.orElse(null); // Provide a default value (null in this case)
+        Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
+        User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
         // 2. DB에 저장할 Study_Member Entity 선언,save
         Study_Member studyMember = Study_Member.builder()
