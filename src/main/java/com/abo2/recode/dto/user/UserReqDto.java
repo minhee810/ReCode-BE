@@ -2,7 +2,6 @@ package com.abo2.recode.dto.user;
 
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserEnum;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,6 +55,27 @@ public class UserReqDto {
         @NotEmpty
         @Pattern(regexp = "^[a-zA-Z0-9]{2,10}@[a-zA-Z0-9]{2,6}\\.[a-zA-Z]{2,3}$", message = "이메일 형식으로 작성해주세요")
         private String email;
+    }
+
+
+    @Setter
+    @Getter
+    public static class UpdateUserReqDto{
+        @NotEmpty
+        @Pattern(regexp = "^[a-zA-Z0-9]{2,10}@[a-zA-Z0-9]{2,6}\\.[a-zA-Z]{2,3}$", message = "이메일 형식으로 작성해주세요")
+        private String email;
+
+        @NotEmpty
+        @Pattern(regexp = "^[a-zA-Z가-힣]{1,20}$", message = "한글/영문 1~20자 이내로 작성해주세요")
+        private String nickname;
+    }
+
+    @Setter
+    @Getter
+    public static class WriteEssayReqDto{
+        @NotEmpty
+        @Size(min = 2,  max = 300)
+        private String essay;
     }
 
 }

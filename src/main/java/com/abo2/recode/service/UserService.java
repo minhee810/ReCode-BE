@@ -38,11 +38,59 @@ public class UserService {
     }
     @Transactional
     public UserRespDto.FindUsernameRespDto findUsername(UserReqDto.FindUsernameReqDto findUsernameReqDto) {
-       User userPS = userRepository.findByEmail(findUsernameReqDto.getEmail()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+        // 1. 이메일로 user 정보 조회
+        User userPS = userRepository.findByEmail(findUsernameReqDto.getEmail()).orElseThrow(()
+                -> new CustomApiException("존재하지 않는 사용자입니다."));
 
-       return new UserRespDto.FindUsernameRespDto(userPS.getUsername());
+        // 2. dto 응답
+        return new UserRespDto.FindUsernameRespDto(userPS.getUsername());
 
     }
 
+    @Transactional
+    public UserRespDto.UpdateUserRespDto updateUser(Long userId, UserReqDto.UpdateUserReqDto updateUserReqDto){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
+        // 2. update()로 객체에 변경사항 반영
+        userPS.updateUser(updateUserReqDto.getNickname(), updateUserReqDto.getEmail());
+
+        // 3. dto 응답
+        return new UserRespDto.UpdateUserRespDto(userPS);
+    }
+
+    @Transactional
+    public UserRespDto.EssayRespDto writeEssay(Long userId, UserReqDto.WriteEssayReqDto writeEssayReqDto){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        // 2. 객체에 변경 사항 반영
+        userPS.writeEssay(writeEssayReqDto.getEssay());
+
+        // 3. dto 응답
+        return new UserRespDto.EssayRespDto(userPS);
+    }
+
+    @Transactional
+    public UserRespDto.EssayRespDto getEssay(Long userId){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        // 2. dto 응답
+        return new UserRespDto.EssayRespDto(userPS);
+    }
+
+    @Transactional
+    public void withdrawUser(Long userId){
+        userRepository.deleteById(userId);
+    }
+
+    @Transactional
+    public UserRespDto.getUserInfoDto getUserInfo(Long userId){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        // 2. dto 응답
+        return new UserRespDto.getUserInfoDto(userPS);
+    }
 }
