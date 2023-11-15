@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -31,7 +28,8 @@ public class StudyroomController {
 
     @Transactional
     @PostMapping(value="/v1/study") // @AuthenticationPrincipal 에서 LoginUser객체를 꺼내와야 함. LoginUSer
-    public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal LoginUser loginUser, @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto){
+    public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal LoginUser loginUser,
+                                                  @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto){
 
         logger.info(loginUser.getUser().toString());
         // loginUser.getUser().getId() -> user id 담겨있음
@@ -45,6 +43,34 @@ public class StudyroomController {
                 = new ResponseDto<>(HttpStatus.OK.value(), "Success", studyCreateReqDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }
+    }//createRoom()
 
-}
+    //study 가입 신청
+    @PostMapping(value="/v1/study/{study_id}/apply")
+    public ResponseEntity<ResponseDto> studyApply(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @RequestBody StudyReqDto.StudyApplyReqDto studyApplyReqDto
+    ){
+        //1. study_member에 status = 0으로 insert한다
+        logger.info(loginUser.getUser().toString());
+        // loginUser.getUser().getId() -> user id 담겨있음
+
+        studyApplyReqDto.setUser_id(loginUser.getUser().getId());
+        studyService.studyApply(studyApplyReqDto);
+
+        //2. 성공 return
+        ResponseDto<StudyReqDto.StudyApplyReqDto> responseDto
+                = new ResponseDto<>(1, "스터디 신청에 성공하였습니다.", studyApplyReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }//studyApply()
+
+    //study 소개 글 조회
+//    @GetMapping(value = "/v1/study/{study_id}")
+//    public ResponseEntity<ResponseDto> studyRoomDetailBrowse(
+//            @AuthenticationPrincipal LoginUser loginUser,
+//            @PathVariable int study_id
+//    ){
+//
+//    }
+
+}//StudyRoomController class
