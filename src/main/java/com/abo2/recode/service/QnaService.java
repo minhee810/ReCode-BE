@@ -1,6 +1,6 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.Qna.QnaRepository;
+import com.abo2.recode.domain.qna.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
