@@ -1,23 +1,31 @@
 package com.abo2.recode.domain.Qna;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Getter;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "qna_reply")
+@Getter
 public class QnaReply {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "qna_reply")
     private Long id;
 
-    private Long qna_id;
-
+    @Column(nullable = false)
     private String comment;
 
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "qna_id", nullable = false)
+    private Qna qna_id;
+
+
+
+
 
 }
