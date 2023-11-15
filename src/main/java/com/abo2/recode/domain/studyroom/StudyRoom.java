@@ -1,5 +1,7 @@
 package com.abo2.recode.domain.studyroom;
 
+import antlr.collections.impl.LList;
+import com.abo2.recode.domain.quiz.Quiz;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -59,6 +63,14 @@ public class StudyRoom {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt; //스터디 그룹 수정 시각
+
+    @OneToMany
+    @JoinColumn(name = "quiz_id")
+    private List<Quiz> quizzes = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "attendence_id")
+    private List<Attendence> attendenceList = new ArrayList<>();
 
     @Builder
     public StudyRoom(String studyName, String title, String description, LocalDate startDate,
