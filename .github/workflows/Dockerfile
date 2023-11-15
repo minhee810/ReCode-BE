@@ -14,4 +14,4 @@ WORKDIR /recode-be
 COPY --from=builder /build/build/libs/*.jar .
 
 EXPOSE 8080
-CMD ["java", "-jar", "./build/libs/*.jar"] 
+CMD ["java", "-jar", "*.jar"] 
