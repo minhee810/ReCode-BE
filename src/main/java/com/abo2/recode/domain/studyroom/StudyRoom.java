@@ -68,6 +68,10 @@ public class StudyRoom {
     @JoinColumn(name = "quiz_id")
     private List<Quiz> quizzes = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn(name = "attendence_id")
+    private List<Attendence> attendenceList = new ArrayList<>();
+
     @Builder
     public StudyRoom(String studyName, String title, String description, LocalDate startDate,
                      LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime,

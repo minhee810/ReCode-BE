@@ -1,6 +1,7 @@
 package com.abo2.recode.domain.user;
 
 import com.abo2.recode.domain.quiz.Quiz;
+import com.abo2.recode.domain.studyroom.Attendence;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,10 @@ public class User {
     @OneToMany
     @JoinColumn(name = "quiz_id")
     private List<Quiz> quizzes = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "attendence_id")
+    private List<Attendence> attendenceList = new ArrayList<>();
 
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {
