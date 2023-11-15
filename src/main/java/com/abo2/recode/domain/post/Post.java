@@ -19,15 +19,6 @@ import java.time.LocalDateTime;
 @Entity
 public class Post {
 
-//    id integer [primary key]
-//    title varchar
-//    content varchar
-//    study_id integer
-//    user_id integer
-//    category integer // 글 종류(출석, 회고)
-//    createdAt timestamp
-//    updatedAt timestamp
-
     @Id
     @Column(name="post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
