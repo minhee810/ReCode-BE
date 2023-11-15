@@ -60,4 +60,17 @@ public class StudyReqDto {
 
 
     }
+
+    @Getter
+    @Setter
+    public static class StudyApplyReqDto{
+        //"study_id": 1, // 사용자가 신청하고자 하는 스터디의 ID
+        // "user_id": 42  // 신청하는 사용자의 ID
+
+        @NotEmpty
+        Long study_id;
+
+        @NotEmpty
+        Long user_id;
+    }
 }
