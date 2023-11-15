@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM gradle:8.3-jdk11
 WORKDIR /recode-be
-RUN ./gradlew build
+RUN gradle build
 CMD ["java", "-jar", "recode-be.jar"] 
