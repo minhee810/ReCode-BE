@@ -1,7 +1,15 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.post.PostRepository;
+import com.abo2.recode.domain.qna.QnaRepository;
+import com.abo2.recode.domain.quiz.QuizRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
+import com.abo2.recode.domain.skill.Study_skillRepository;
+import com.abo2.recode.domain.studymember.Study_memberRepository;
+import com.abo2.recode.domain.studyroom.AttendanceRepository;
+import com.abo2.recode.domain.studyroom.StudyRoomRepository;
+import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +21,33 @@ public class AdminService {
 
     private SkillRepository skillRepository;
 
+    private Study_skillRepository studySkillRepository;
+
+    private Study_memberRepository studyMemberRepository;
+
+    private PostRepository postRepository;
+
+    private AttendanceRepository attendanceRepository;
+
+    private QuizRepository quizRepository;
+
+    private StudyRoomRepository studyRoomRepository;
+
     @Autowired
-    public AdminService(SkillRepository skillRepository) {
+    public AdminService(SkillRepository skillRepository, Study_skillRepository studySkillRepository,
+                        Study_memberRepository studyMemberRepository, PostRepository postRepository,
+                        AttendanceRepository attendanceRepository, QuizRepository quizRepository,
+                        StudyRoomRepository studyRoomRepository) {
         this.skillRepository = skillRepository;
+        this.studySkillRepository = studySkillRepository;
+        this.studyMemberRepository = studyMemberRepository;
+        this.postRepository = postRepository;
+        this.attendanceRepository = attendanceRepository;
+        this.quizRepository = quizRepository;
+        this.studyRoomRepository = studyRoomRepository;
     }
 
+    // 관리자가 기술 스택 관리
     public SkillResDto.AdminSkillAddResDto adminSkillAdd(String[] addskills){
 
         SkillResDto.AdminSkillAddResDto adminSkillAddResDto = new SkillResDto.AdminSkillAddResDto();
@@ -37,4 +67,21 @@ public class AdminService {
 
     }//adminSkillAdd()
 
+    //관리자가 스터디룸 엔티티 삭제
+    public AdminResDto.StudyDeleteResponseDto adminStudyRoomDelete(Long studyId) {
+
+        // StudyRoom Entity 삭제 -> 연결 테이블 데이터도 전부 삭제 처리
+
+        // StudySkill 테이블: study_room_id 열을 참조하는 레코드 삭제
+            studySkillRepository.deleteById(studyId);
+        // StudyMember 테이블: study_id 열을 참조하는 레코드 삭제
+        // Post 테이블: study_id 열을 참조하는 레코드 삭제
+        // Attendance 테이블: study_room_id 열을 참조하는 레코드 삭제
+        // Quiz 테이블: study_id 열과 user_id 열을 참조하는 레코드 삭제
+
+
+
+
+
+    }
 }//AdminService class

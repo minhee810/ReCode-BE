@@ -10,6 +10,7 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
