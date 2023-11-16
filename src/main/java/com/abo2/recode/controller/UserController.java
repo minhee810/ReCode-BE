@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/user-name/{username}/exists")
-    public ResponseEntity<?> checkIdDuplicate(@PathVariable String username){
+    public ResponseEntity<?> checkIdDuplicate(@PathVariable @Valid String username){
 
         // 1. username 중복 값 확인
         if (userService.checkUsernameDuplicate(username) == true) {
