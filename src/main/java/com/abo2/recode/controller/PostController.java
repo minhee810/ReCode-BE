@@ -2,6 +2,7 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.dto.ResponseDto;
+import com.abo2.recode.dto.post.PostDetailRespDto;
 import com.abo2.recode.dto.post.PostReqDto;
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.service.PostService;
@@ -36,5 +37,13 @@ public class PostController {
     public ResponseEntity<?> writePost(@RequestBody PostReqDto postReqDto) {
         PostRespDto postRespDto = postService.writePost(postReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", postRespDto), HttpStatus.CREATED);
+    }
+
+
+    // 게시글 상세보기
+    @GetMapping("/v1/post/{postId}")
+    public ResponseEntity<?> getPostDetail(@PathVariable Long postId) {
+        PostDetailRespDto postDetailRespDto = postService.getPostDetail(postId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세정보 조회 성공", postDetailRespDto), HttpStatus.OK);
     }
 }

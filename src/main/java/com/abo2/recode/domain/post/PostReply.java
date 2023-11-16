@@ -2,6 +2,7 @@ package com.abo2.recode.domain.post;
 
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -50,4 +51,12 @@ public class PostReply {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @Builder
+    public PostReply(String content, Post post, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.content = content;
+        this.post = post;
+        this.user = user;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

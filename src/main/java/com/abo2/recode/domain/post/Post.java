@@ -11,6 +11,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -20,22 +23,24 @@ import java.time.LocalDateTime;
 public class Post {
 
     @Id
-    @Column(name="post_id")
+    @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id; // Post 일련번호 - PK
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private String title;
 
-    @Column(nullable = false,length = 300)
+    @Column(nullable = false, length = 300)
     private String content;
 
+
     @ManyToOne
-    @JoinColumn(name="studyRoom_id")
+    @NotNull
+    @JoinColumn(name = "studyRoom_id")
     private StudyRoom studyRoom;
 
     @ManyToOne
-    @JoinColumn(name ="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)

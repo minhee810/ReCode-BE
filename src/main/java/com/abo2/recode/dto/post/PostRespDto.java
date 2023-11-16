@@ -4,12 +4,20 @@ import com.abo2.recode.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
 public class PostRespDto {
+
 
     private Long id;
     private String title;
@@ -19,6 +27,8 @@ public class PostRespDto {
     private String category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
 
     @Getter
     @Setter
