@@ -20,7 +20,7 @@ public class Study_Member {
     @Id
     @Column(name="studyMember_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id; //스터디 룸 member 일련번호
+    private Long Id; //스터디 룸 member 일련번호
 
     @ManyToOne
     @JoinColumn(name = "studyRoom_id")
@@ -30,7 +30,7 @@ public class Study_Member {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(unique = true,nullable = false,length = 50)
+    @Column(nullable = false,length = 50)
     private Integer status;
 
     @Builder

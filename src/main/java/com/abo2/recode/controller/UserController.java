@@ -3,6 +3,7 @@ package com.abo2.recode.controller;
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.ResponseDto;
+import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.dto.user.UserReqDto;
 import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -62,5 +64,11 @@ public class UserController {
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal LoginUser loginUser){
         UserRespDto.getUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "개인 정보 조회에 성공하였습니다", getUserInfoDto), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/v1/users/{id}/mystudy")
+    public ResponseEntity<?> myStudy(@AuthenticationPrincipal LoginUser loginUser){
+        List<StudyResDto.MyStudyRespDto> myStudyRespDto = userService.myStudy(loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자의 스터디 가입 신청 목록을 성공적으로 조회했습니다.", myStudyRespDto), HttpStatus.OK);
     }
 }

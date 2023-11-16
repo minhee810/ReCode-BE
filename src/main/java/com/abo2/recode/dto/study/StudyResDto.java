@@ -1,5 +1,7 @@
 package com.abo2.recode.dto.study;
 
+import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -74,4 +76,35 @@ public class StudyResDto {
         private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
     }
-}
+
+    @Getter
+    @Setter
+    public static class MyStudyRespDto {
+        private Long id;
+        private String study_name;
+        private String title;
+        private Long created_By;
+        private String status;
+
+        public MyStudyRespDto(StudyRoom studyRoom, Integer status) {
+            this.id = studyRoom.getId();
+            this.study_name = studyRoom.getStudyName();
+            this.title = studyRoom.getTitle();
+            this.status = getStatusString(status);
+        }
+
+            private String getStatusString(Integer status) {
+                switch (status) {
+                    case 0:
+                        return "대기중";
+                    case 1:
+                        return "열공중";
+                    case 2:
+                        return "거절됨";
+                    default:
+                        return "unknown";
+                }
+            }
+        }
+    }
+

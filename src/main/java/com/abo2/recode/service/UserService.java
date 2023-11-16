@@ -1,7 +1,10 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.studymember.Study_memberRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.dto.user.UserReqDto;
 import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -12,7 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +26,7 @@ public class UserService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Study_memberRepository studyMemberRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -92,5 +98,16 @@ public class UserService {
 
         // 2. dto 응답
         return new UserRespDto.getUserInfoDto(userPS);
+    }
+
+    @Transactional
+    public List<StudyResDto.MyStudyRespDto> myStudy(Long userId){
+
+        List<Study_Member> studyMembers = studyMemberRepository.findStudyMembersByUserId(userId);
+        List<StudyResDto.MyStudyRespDto> response = studyMembers.stream()
+                .map(sm -> new StudyResDto.MyStudyRespDto(sm.getStudyRoom(), sm.getStatus()))
+                .collect(Collectors.toList());
+
+        return response;
     }
 }
