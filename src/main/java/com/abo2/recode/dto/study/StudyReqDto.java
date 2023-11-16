@@ -57,6 +57,8 @@ public class StudyReqDto {
         // skill 테이블의 스킬들,모집분야
         private String[] skills;
 
+
+
     }
 
     @Getter

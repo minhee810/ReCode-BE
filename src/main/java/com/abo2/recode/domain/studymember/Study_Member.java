@@ -41,10 +41,3 @@ public class Study_Member {
     }
 
 }
-
-/*    Table Study_member {
-        id integer [primary key]
-        study_id integer
-        user_id integer
-        status integer
-        }*/

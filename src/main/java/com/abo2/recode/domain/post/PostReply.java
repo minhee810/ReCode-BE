@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.postreply;
+package com.abo2.recode.domain.post;
 
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.user.User;
