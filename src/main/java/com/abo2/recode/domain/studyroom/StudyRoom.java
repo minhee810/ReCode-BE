@@ -1,6 +1,5 @@
 package com.abo2.recode.domain.studyroom;
 
-import antlr.collections.impl.LList;
 import com.abo2.recode.domain.quiz.Quiz;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +23,7 @@ public class StudyRoom {
     @Id
     @Column(name="studyroom_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id; //스터디 그룹 일련번호
+    private Long id; //스터디 그룹 일련번호
 
     @Column(unique = true,nullable = false,length = 50)
     private String studyName; //스터디 그룹 네임
@@ -73,10 +72,11 @@ public class StudyRoom {
     private List<Attendence> attendenceList = new ArrayList<>();
 
     @Builder
-    public StudyRoom(String studyName, String title, String description, LocalDate startDate,
+    public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
                      LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime,
                      Integer currentNum, Integer maxNum, Long createdBy) {
 
+        this.id = id;
         this.studyName = studyName;
         this.title = title;
         this.description = description;

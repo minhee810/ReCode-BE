@@ -1,5 +1,7 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.skill.Study_skill;
+import com.abo2.recode.domain.skill.Study_skillRepository;
 import com.abo2.recode.domain.studymember.Study_Member;
 import com.abo2.recode.domain.studymember.Study_memberRepository;
 import com.abo2.recode.domain.user.User;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final Study_memberRepository studyMemberRepository;
+    private final Study_skillRepository studySkillRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -100,14 +104,16 @@ public class UserService {
         return new UserRespDto.getUserInfoDto(userPS);
     }
 
-    @Transactional
-    public List<StudyResDto.MyStudyRespDto> myStudy(Long userId){
+    public List<StudyResDto.MyStudyRespDto> myStudy(Long userId) {
+        List<Study_Member> studyMembers = studyMemberRepository.findByUserId(userId);
+        List<StudyResDto.MyStudyRespDto> myStudyRespDtos = new ArrayList<>();
 
-        List<Study_Member> studyMembers = studyMemberRepository.findStudyMembersByUserId(userId);
-        List<StudyResDto.MyStudyRespDto> response = studyMembers.stream()
-                .map(sm -> new StudyResDto.MyStudyRespDto(sm.getStudyRoom(), sm.getStatus()))
-                .collect(Collectors.toList());
+        for (Study_Member studyMember : studyMembers) {
+            List<Study_skill> skills = studySkillRepository.findByStudyRoomId(studyMember.getStudyRoom().getId());
+            StudyResDto.MyStudyRespDto myStudyRespDto = new StudyResDto.MyStudyRespDto(studyMember, skills);
+            myStudyRespDtos.add(myStudyRespDto);
+        }
 
-        return response;
+        return myStudyRespDtos;
     }
 }

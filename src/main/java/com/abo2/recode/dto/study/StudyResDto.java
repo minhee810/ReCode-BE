@@ -1,5 +1,7 @@
 package com.abo2.recode.dto.study;
 
+import com.abo2.recode.domain.skill.Skill;
+import com.abo2.recode.domain.skill.Study_skill;
 import com.abo2.recode.domain.studymember.Study_Member;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Getter;
@@ -13,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StudyResDto {
 
@@ -83,28 +87,33 @@ public class StudyResDto {
         private Long id;
         private String study_name;
         private String title;
-        private Long created_By;
         private String status;
+        private List<String> skillNames;
 
-        public MyStudyRespDto(StudyRoom studyRoom, Integer status) {
+        public MyStudyRespDto(Study_Member studyMember, List<Study_skill> studySkills) {
+            StudyRoom studyRoom = studyMember.getStudyRoom();
+
             this.id = studyRoom.getId();
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
-            this.status = getStatusString(status);
+            this.status = getStatusString(studyMember.getStatus());
+            this.skillNames = studySkills.stream()
+                    .map(studySkill -> studySkill.getSkill().getSkillName())
+                    .collect(Collectors.toList());
         }
 
-            private String getStatusString(Integer status) {
-                switch (status) {
-                    case 0:
-                        return "대기중";
-                    case 1:
-                        return "열공중";
-                    case 2:
-                        return "거절됨";
-                    default:
-                        return "unknown";
-                }
+        private String getStatusString(Integer status) {
+            switch (status) {
+                case 0:
+                    return "대기중";
+                case 1:
+                    return "열공중";
+                case 2:
+                    return "거절됨";
+                default:
+                    return "unknown";
             }
         }
     }
+}
 

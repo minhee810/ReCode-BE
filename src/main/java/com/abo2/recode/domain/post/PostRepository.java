@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("SELECT p FROM Post p WHERE p.studyRoom.Id = :studyRoomId")
+    @Query("SELECT p FROM Post p WHERE p.studyRoom.id = :studyRoomId")
     List<Post> findPostsByStudyRoomId(@Param("studyRoomId") Long studyRoomId);
 }

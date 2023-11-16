@@ -16,6 +16,7 @@ public class Study_skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Study_Skill_id")
     private Long id; //스터디 그룹 스킬 일련번호
 
     @ManyToOne
