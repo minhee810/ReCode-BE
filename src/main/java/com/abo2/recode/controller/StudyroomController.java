@@ -56,18 +56,23 @@ public class StudyroomController {
     @PostMapping(value="/v1/study/{study_id}/apply")
     public ResponseEntity<ResponseDto> studyApply(
             @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable Long study_id,
             @RequestBody StudyReqDto.StudyApplyReqDto studyApplyReqDto
     ){
         //1. study_member에 status = 0으로 insert한다
         logger.info(loginUser.getUser().toString());
         // loginUser.getUser().getId() -> user id 담겨있음
 
+        studyApplyReqDto.setStudyId(study_id);
         studyApplyReqDto.setUserId(loginUser.getUser().getId());
+
+        StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto =
         studyService.studyApply(studyApplyReqDto);
 
+
         //2. 성공 return
-        ResponseDto<StudyReqDto.StudyApplyReqDto> responseDto
-                = new ResponseDto<>(1, "스터디 신청에 성공하였습니다.", studyApplyReqDto);
+        ResponseDto<StudyResDto.StudyRoomApplyResDto> responseDto
+                = new ResponseDto<>(1, "스터디 신청에 성공하였습니다.", studyRoomApplyResDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }//studyApply()
 

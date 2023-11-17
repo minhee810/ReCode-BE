@@ -76,7 +76,7 @@ public class AdminService {
         return new AdminResDto.StudyDeleteResponseDto(studyId);
     } //adminStudyRoomDelete()
 
-    // 관리자 스터디 그룹 일반 멤버 스터디
+    // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급
 
 //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
 //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
