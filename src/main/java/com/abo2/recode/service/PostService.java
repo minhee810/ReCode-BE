@@ -50,4 +50,18 @@ public class PostService {
                 .map((PostRespDto.PostListRespDto::new))
                 .collect(Collectors.toList());
     }
+
+    // 게시글 필터링
+    @Transactional
+    public List<PostRespDto.PostListRespDto> filterList(Long studyId, Integer category){
+        List<Post> posts = postRepository.findPostsByCategory(studyId, category);
+
+        if(posts.isEmpty()) {
+            throw new CustomApiException("해당 게시글이 존재하지 않습니다.");
+        }
+
+        return posts.stream()
+                .map(((PostRespDto.PostListRespDto::new)))
+                .collect(Collectors.toList());
+    }
 }
