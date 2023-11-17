@@ -15,10 +15,11 @@ import javax.persistence.*;
 public class Study_skill {
 
     @Id
+    @Column(name = "study_skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 스킬 일련번호
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 

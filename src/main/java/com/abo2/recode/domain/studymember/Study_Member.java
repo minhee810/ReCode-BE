@@ -18,11 +18,11 @@ import javax.persistence.*;
 public class Study_Member {
 
     @Id
-    @Column(name="studyMember_id")
+    @Column(name="study_member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id; //스터디 룸 member 일련번호
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 

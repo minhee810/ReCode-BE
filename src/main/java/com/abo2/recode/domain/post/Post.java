@@ -30,9 +30,9 @@ public class Post {
     @Column(nullable = false,length = 300)
     private String content;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="studyRoom_id")
-    private StudyRoom studyRoom;
+        @ManyToOne
+        @JoinColumn(name="study_room_id")
+        private StudyRoom studyRoom;
 
     @ManyToOne
     @JoinColumn(name ="user_id")

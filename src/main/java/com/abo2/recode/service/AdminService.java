@@ -70,21 +70,10 @@ public class AdminService {
     //관리자가 스터디룸 엔티티 삭제
     public AdminResDto.StudyDeleteResponseDto adminStudyRoomDelete(Long studyId) {
 
-        // StudyRoom Entity 삭제 -> 연결 테이블 데이터도 전부 삭제 처리
+        // StudyRoom Entity 삭제 -> 연결 테이블 데이터도 전부 삭제 처리(CASCADE 옵션)
+        studyRoomRepository.deleteById(studyId);
 
-        //CASCADE로 해결!
-/*        // StudySkill 테이블: study_room_id 열을 참조하는 레코드 삭제
-            studySkillRepository.deleteByStudyId(studyId);
-        // StudyMember 테이블: study_id 열을 참조하는 레코드 삭제
-            studyMemberRepository.deleteByStudyId(studyId);
-        // Post 테이블: study_id 열을 참조하는 레코드 삭제
-            postRepository.deleteByStudyId(studyId);
-        // Attendance 테이블: study_room_id 열을 참조하는 레코드 삭제
-            attendanceRepository.deleteByStudyId(studyId);
-        // Quiz 테이블: study_id 열과 user_id 열을 참조하는 레코드 삭제
-            quizRepository.deleteByStudyId(studyId);*/
-
-            return new AdminResDto.StudyDeleteResponseDto(studyId);
+        return new AdminResDto.StudyDeleteResponseDto(studyId);
     } //adminStudyRoomDelete()
 
     // 관리자 스터디 그룹 일반 멤버 스터디

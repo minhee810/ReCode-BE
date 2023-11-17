@@ -25,11 +25,11 @@ public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "attendence_id")
+    @Column(name = "attendance_id")
     private Long id;
 
     // @JoinColumn(name = "parent_id", referencedColumnName = "id", onDelete = OnDeleteAction.CASCADE)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
