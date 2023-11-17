@@ -5,6 +5,7 @@ import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.post.PostDetailRespDto;
 import com.abo2.recode.dto.post.PostReqDto;
 import com.abo2.recode.dto.post.PostRespDto;
+import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,17 +34,41 @@ public class PostController {
 
 
     // 게시글 작성
-    @PostMapping("/v1/post")
-    public ResponseEntity<?> writePost(@RequestBody PostReqDto postReqDto) {
+    @PostMapping("/v1/study/{study_id}/posts")
+    public ResponseEntity<?> writePost(@RequestBody PostReqDto postReqDto, @PathVariable String study_id) {
         PostRespDto postRespDto = postService.writePost(postReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", postRespDto), HttpStatus.CREATED);
     }
 
 
     // 게시글 상세보기
-    @GetMapping("/v1/post/{postId}")
+    @GetMapping("/v1/study/posts/{postId}")
     public ResponseEntity<?> getPostDetail(@PathVariable Long postId) {
         PostDetailRespDto postDetailRespDto = postService.getPostDetail(postId);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세정보 조회 성공", postDetailRespDto), HttpStatus.OK);
     }
+
+
+    // 게시글 수정
+    @PutMapping("/v1/study/posts/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostReqDto postReqDto) {
+        PostRespDto updatePost = postService.updatePost(postId, postReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정 성공", updatePost), HttpStatus.OK);
+
+    }
+
+
+    // 게시글 삭제
+    @DeleteMapping("/v1/study/posts/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+
+        try {
+            postService.deletePost(postId);
+            return new ResponseEntity<>("게시글이 삭제되었습니다.", HttpStatus.OK);
+
+        } catch (CustomApiException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

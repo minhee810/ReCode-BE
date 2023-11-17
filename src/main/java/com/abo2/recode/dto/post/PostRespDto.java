@@ -1,21 +1,13 @@
 package com.abo2.recode.dto.post;
 
 import com.abo2.recode.domain.post.Post;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@Setter
 public class PostRespDto {
 
 
@@ -28,7 +20,16 @@ public class PostRespDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-
+    public PostRespDto(Post post) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.studyRoomId = post.getStudyRoom().getId();
+        this.userId = post.getUser().getId();
+        this.category = post.getCategory();
+        this.createdAt = post.getCreatedAt();
+        this.updatedAt = post.getUpdatedAt();
+    }
 
     @Getter
     @Setter

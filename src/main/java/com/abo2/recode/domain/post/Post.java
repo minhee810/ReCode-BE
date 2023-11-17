@@ -6,18 +6,18 @@ import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Post {
@@ -35,12 +35,11 @@ public class Post {
 
 
     @ManyToOne
-    @NotNull
-    @JoinColumn(name = "studyRoom_id")
+    @JoinColumn(name = "studyRoom_id", nullable = false)
     private StudyRoom studyRoom;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
