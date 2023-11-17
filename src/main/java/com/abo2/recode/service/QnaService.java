@@ -59,8 +59,8 @@ public class QnaService {
     }
 
     @Transactional
-    public Qna qnaDelete(Long id) {
-        return qnaRepository.findById(id).orElseThrow();
+    public void qnaDelete(Long id) {
+        qnaRepository.deleteById(id);
     }
 
 

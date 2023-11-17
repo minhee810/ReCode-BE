@@ -72,12 +72,12 @@ public class QnaController {
     @DeleteMapping("/qna/{id}")
     public ResponseEntity<?> qnaDelete(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaReqDTO qnaReqDTO) {
         qnaReqDTO.setUser_id(loginUser.getUser().getId());
-        Qna qna = qnaService.qnaDelete(id);
+        qnaService.qnaDelete(id);
         if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-            return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", qna), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", id), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", qna), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", id), HttpStatus.OK);
     }
 
 
