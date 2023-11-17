@@ -33,6 +33,12 @@ public class UserController {
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", joinRespDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/admin_join")
+    public ResponseEntity<?> admin_join(@RequestBody @Valid UserReqDto.JoinAdminReqDto joinAdminReqDto, BindingResult bindingResult) {
+        UserRespDto.JoinRespDto joinRespDto = userService.admin_join(joinAdminReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자 회원가입 성공", joinRespDto), HttpStatus.CREATED);
+    }
+
     @PostMapping("/find-username")
     public ResponseEntity<?> findUsername(@RequestBody @Valid UserReqDto.FindUsernameReqDto findUsernameReqDto, BindingResult bindingResult){
         UserRespDto.FindUsernameRespDto findUsernameRespDto = userService.findUsername(findUsernameReqDto);
@@ -66,9 +72,6 @@ public class UserController {
         UserRespDto.UpdateUserRespDto updateUserRespDto = userService.updateUser(loginUser.getUser().getId(), updateUserReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1,"회원정보 수정 성공", updateUserRespDto), HttpStatus.OK);
     }
-
-
-
 
     @PostMapping(value = "/v1/mypage/{id}/essay")
     public ResponseEntity<?> writeEssay(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.WriteEssayReqDto writeEssayReqDto, BindingResult bindingResult){

@@ -122,5 +122,4 @@ public class StudyroomController {
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
     }
 
-
 }//StudyRoomController class

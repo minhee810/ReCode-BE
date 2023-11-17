@@ -54,6 +54,21 @@ public class UserService {
     }
 
     @Transactional
+    public UserRespDto.JoinRespDto admin_join(UserReqDto.JoinAdminReqDto joinAdminReqDto) {
+        // 1. 동일 유저네임 존재 검사
+        Optional<User> userOP = userRepository.findByUsername(joinAdminReqDto.getUsername());
+        if (userOP.isPresent()) {
+            throw new CustomApiException("동일한 username이 존재합니다.");
+        }
+
+        // 2. 패스워드 인코딩 + 회원가입
+        User userPS = userRepository.save(joinAdminReqDto.toEntity(passwordEncoder));
+
+        // 3. dto 응답
+        return new UserRespDto.JoinRespDto(userPS);
+    }
+
+    @Transactional
     public boolean checkUsernameDuplicate(String username){
         // 1. 회원가입 시 username 중복확인
         return userRepository.existsByUsername(username);

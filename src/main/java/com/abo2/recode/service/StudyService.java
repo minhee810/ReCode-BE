@@ -10,6 +10,7 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -132,6 +133,7 @@ public class StudyService {
 
         // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
         Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
+
         User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
         // 2. DB에 저장할 Study_Member Entity 선언,save
