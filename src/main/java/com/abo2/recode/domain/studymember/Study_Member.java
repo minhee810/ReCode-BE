@@ -22,8 +22,8 @@ public class Study_Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id; //스터디 룸 member 일련번호
 
-    @ManyToOne
-    @JoinColumn(name = "studyRoom_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
     @OneToOne

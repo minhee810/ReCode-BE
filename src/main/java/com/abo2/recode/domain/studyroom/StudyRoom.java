@@ -1,6 +1,5 @@
 package com.abo2.recode.domain.studyroom;
 
-import antlr.collections.impl.LList;
 import com.abo2.recode.domain.quiz.Quiz;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +21,7 @@ import java.util.List;
 public class StudyRoom {
 
     @Id
-    @Column(name="studyroom_id")
+    @Column(name="study_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id; //스터디 그룹 일련번호
 
@@ -70,7 +69,7 @@ public class StudyRoom {
 
     @OneToMany
     @JoinColumn(name = "attendence_id")
-    private List<Attendence> attendenceList = new ArrayList<>();
+    private List<Attendance> attendanceList = new ArrayList<>();
 
     @Builder
     public StudyRoom(String studyName, String title, String description, LocalDate startDate,

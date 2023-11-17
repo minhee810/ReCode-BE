@@ -18,7 +18,7 @@ public class Study_skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 스킬 일련번호
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
