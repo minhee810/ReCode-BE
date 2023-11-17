@@ -53,18 +53,18 @@ public class StudyService {
 
         //1. 넘겨 받은 studyReqDto에서 정보 가져오기
 
-        String study_name = studyCreateReqDto.getStudy_name();
+        String study_name = studyCreateReqDto.getStudyName();
         String title = studyCreateReqDto.getTitle();
         String description = studyCreateReqDto.getDescription();
-        LocalDate start_date = studyCreateReqDto.getStart_date();
-        LocalDate end_date = studyCreateReqDto.getEnd_date();
+        LocalDate start_date = studyCreateReqDto.getStartDate();
+        LocalDate end_date = studyCreateReqDto.getEndDate();
         Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
-        Integer max_num = studyCreateReqDto.getMax_num();
-        Long user_id = studyCreateReqDto.getUser_id();
+        Integer max_num = studyCreateReqDto.getMaxNum();
+        Long user_id = studyCreateReqDto.getUserId();
 
         //1-1. start_time,end_time String -> LocalDateTime
-        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStart_time());
-        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEnd_time());
+        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
+        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEndTime());
 
         //2. DB에 전송할 studyRoom Entity 선언, studyRoom Entity에 데이터 집어 넣기, DB에 Insert
         StudyRoom studyRoom = StudyRoom.builder()
@@ -126,7 +126,7 @@ public class StudyService {
         Optional<StudyRoom> optionalStudyRoom = Optional.of(studyRoom);
 
         optionalStudyRoom =
-                studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
+                studyRoomRepository.findById(studyApplyReqDto.getUser_id());
         studyRoom = optionalStudyRoom.orElse(null);
 
         // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.

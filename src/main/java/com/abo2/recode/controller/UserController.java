@@ -9,11 +9,13 @@ import com.abo2.recode.dto.user.UserReqDto;
 import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,11 +39,25 @@ public class UserController {
         return  new ResponseEntity<>(new ResponseDto<>(1, "아이디 찾기 성공", findUsernameRespDto), HttpStatus.OK);
     }
 
+    @GetMapping("/user-name/{username}/exists")
+    public ResponseEntity<?> checkIdDuplicate(@PathVariable @Valid String username){
+
+        // 1. username 중복 값 확인
+        if (userService.checkUsernameDuplicate(username) == true) {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 아이디 입니다.", null), HttpStatus.CONFLICT);
+        }else {
+            return new ResponseEntity<>(new ResponseDto<>(1,"사용 가능한 아이디 입니다.", null), HttpStatus.OK);
+        }
+    }
+
     @PutMapping("/v1/users/{id}")
     public ResponseEntity<?> modifyUserInfo(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.UpdateUserReqDto updateUserReqDto, BindingResult bindingResult){
         UserRespDto.UpdateUserRespDto updateUserRespDto = userService.updateUser(loginUser.getUser().getId(), updateUserReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1,"회원정보 수정 성공", updateUserRespDto), HttpStatus.OK);
     }
+
+
+
 
     @PostMapping(value = "/v1/mypage/{id}/essay")
     public ResponseEntity<?> writeEssay(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.WriteEssayReqDto writeEssayReqDto, BindingResult bindingResult){

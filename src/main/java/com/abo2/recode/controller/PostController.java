@@ -24,8 +24,14 @@ public class PostController {
 
     // 게시글 목록 조회
     @GetMapping(value = "/v1/study/{study_id}/list")
-    public ResponseEntity<?> postList(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_id){
-        List<PostRespDto.PostListRespDto> postListRespDto = postService.postList(study_id);
+    public ResponseEntity<?> postList(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_id, @RequestParam(value = "keyword", required = false) String keyword){
+        List<PostRespDto.PostListRespDto> postListRespDto;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            postListRespDto = postService.postList(study_id);
+        } else {
+            postListRespDto = postService.searchList(study_id, keyword);
+        }
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록 불러오기 성공", postListRespDto), HttpStatus.OK);
     }
 }

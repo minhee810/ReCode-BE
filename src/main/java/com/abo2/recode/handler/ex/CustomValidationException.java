@@ -13,4 +13,7 @@ public class CustomValidationException extends RuntimeException {
         super(message);
         this.errorMap = errorMap;
     }
+
+    // 아이디 중복 예외를 생성하는 정적 팩토리 메서드
+
 }

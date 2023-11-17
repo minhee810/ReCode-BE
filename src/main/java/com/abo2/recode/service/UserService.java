@@ -46,6 +46,13 @@ public class UserService {
         // 3. dto 응답
         return new UserRespDto.JoinRespDto(userPS);
     }
+
+    @Transactional
+    public boolean checkUsernameDuplicate(String username){
+        // 1. 회원가입 시 username 중복확인
+        return userRepository.existsByUsername(username);
+    }
+
     @Transactional
     public UserRespDto.FindUsernameRespDto findUsername(UserReqDto.FindUsernameReqDto findUsernameReqDto) {
         // 1. 이메일로 user 정보 조회

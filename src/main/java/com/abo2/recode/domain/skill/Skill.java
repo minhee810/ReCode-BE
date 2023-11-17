@@ -18,7 +18,7 @@ public class Skill {
     @Column(name = "skill_id")
     private Long id; //skill 일련번호
 
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(unique = true, nullable = true, length = 50)
     private String skillName; // skill 네임
 
     @Builder
@@ -27,7 +27,3 @@ public class Skill {
         this.skillName = skillName;
     }
 }
-
-//    Table Skill {
-//        id integer [primary key]
-//        skill_name varchar
