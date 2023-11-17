@@ -40,6 +40,12 @@ public class UserService {
             throw new CustomApiException("동일한 username이 존재합니다.");
         }
 
+        // 2. 동일한 이메일 존재 검사
+        Optional<User> userEM = userRepository.findByEmail(joinReqDto.getEmail());
+        if (userEM.isPresent()) {
+            throw new CustomApiException("동일한 email 로 가입된 계정이 존재합니다.");
+        }
+
         // 2. 패스워드 인코딩 + 회원가입
         User userPS = userRepository.save(joinReqDto.toEntity(passwordEncoder));
 
@@ -51,6 +57,12 @@ public class UserService {
     public boolean checkUsernameDuplicate(String username){
         // 1. 회원가입 시 username 중복확인
         return userRepository.existsByUsername(username);
+    }
+
+    @Transactional
+    public boolean checkEmailDuplicate(String email){
+        // 1. 회원가입 시 email 중복확인
+        return userRepository.existsByEmail(email);
     }
 
     @Transactional
