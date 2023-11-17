@@ -1,18 +1,19 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
+import com.abo2.recode.domain.Qna.Qna;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReqDTO;
+import com.abo2.recode.dto.qna.QnaResDTO;
 import com.abo2.recode.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class QnaController {
 
     private final QnaService qnaService;
 
+    //Qna 생성
     @PostMapping("/qna")
     public ResponseEntity<?> postQna(@AuthenticationPrincipal LoginUser loginUser, @RequestBody QnaReqDTO qnaReqDTO) {
 
@@ -34,4 +36,27 @@ public class QnaController {
             restTemplate.postForEntity(triggerUrl, null, String.class);
         }
     }
+
+    //Qna 목록 조회
+    @GetMapping("/qna")
+    public ResponseEntity<?> qnaList(@AuthenticationPrincipal LoginUser loginUser, QnaResDTO qnaResDTO) {
+        qnaResDTO.setUser_id(loginUser.getUser().getId());
+        List<Qna> qnas = qnaService.qnaList();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnas), HttpStatus.OK);
+    }
+
+    //Qna 단일 조회
+    @GetMapping("/qna/{id}")
+    public ResponseEntity<?> qna(@AuthenticationPrincipal LoginUser loginUser,@PathVariable Long id,QnaResDTO qnaResDTO) {
+        qnaResDTO.setUser_id(loginUser.getUser().getId());
+
+      Qna qna1 = qnaService.qna(id);
+
+
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공",qna1 ), HttpStatus.OK);
+    }
+
+
 }

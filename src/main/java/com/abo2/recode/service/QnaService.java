@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +31,15 @@ public class QnaService {
         qnaRepository.save(qna);
     }
 
+    @Transactional
+    public List<Qna> qnaList() {
+
+        return qnaRepository.findAll();
+    }
+
+    public Qna qna(Long qnaId) {
+        return qnaRepository.findById(qnaId).orElseThrow();
+
+    }
 
 }

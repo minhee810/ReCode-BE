@@ -39,7 +39,8 @@ public class Qna {
     private Long user_id;
 
     @Builder
-    public Qna(Long user_id, String title, String category, String content, LocalDateTime createdAt,LocalDateTime updatedAt) {
+    public Qna(Long id,Long user_id, String title, String category, String content, LocalDateTime createdAt,LocalDateTime updatedAt) {
+        this.id = id;
         this.user_id = user_id;
         this.title = title;
         this.category = category;
