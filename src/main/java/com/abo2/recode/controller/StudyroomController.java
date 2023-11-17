@@ -32,6 +32,7 @@ public class StudyroomController {
         this.studyService = studyService;
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping(value="/v1/study") // @AuthenticationPrincipal 에서 LoginUser객체를 꺼내와야 함. LoginUSer
     public ResponseEntity<ResponseDto> createRoom(@AuthenticationPrincipal LoginUser loginUser,
@@ -39,7 +40,7 @@ public class StudyroomController {
 
         logger.info(loginUser.getUser().toString());
         // loginUser.getUser().getId() -> user id 담겨있음
-        studyCreateReqDto.setUser_id(loginUser.getUser().getId());
+        studyCreateReqDto.setUserId(loginUser.getUser().getId());
         System.out.println("User : "+loginUser.getUser().getId());
 
         //1. studyReqDto를 DB에 넣기 Service에서 처리
@@ -61,7 +62,7 @@ public class StudyroomController {
         logger.info(loginUser.getUser().toString());
         // loginUser.getUser().getId() -> user id 담겨있음
 
-        studyApplyReqDto.setUser_id(loginUser.getUser().getId());
+        studyApplyReqDto.setUserId(loginUser.getUser().getId());
         studyService.studyApply(studyApplyReqDto);
 
         //2. 성공 return
@@ -113,6 +114,5 @@ public class StudyroomController {
 
         return dayOfWeek + " " + String.format("%02d:%02d", hour, minute);
     }//convertToString()
-
 
 }//StudyRoomController class

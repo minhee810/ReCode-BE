@@ -20,7 +20,7 @@ public class StudyReqDto {
         // Study_Room
         @NotEmpty
         @Size(min = 1, max = 50)
-        private String study_name;
+        private String studyName;
 
         @NotEmpty
         @Size(min = 1, max = 50)
@@ -31,22 +31,22 @@ public class StudyReqDto {
         private String description;
 
         @NotEmpty
-        private String start_time; //스터디 출석 인정 시작 시간 "monday 12:00"
+        private String startTime; //스터디 출석 인정 시작 시간 "monday 12:00"
 
         @NotEmpty
-        private String end_time; //스터디 출석 인정 끝 시간 "monday 12:10"
+        private String endTime; //스터디 출석 인정 끝 시간 "monday 12:10"
 
         @NotEmpty
-        private LocalDate start_date;
+        private LocalDate startDate;
 
         @NotEmpty
-        private LocalDate end_date;
+        private LocalDate endDate;
 
         @NotEmpty
-        private Integer max_num;
+        private Integer maxNum;
 
         @NotEmpty
-        private Long user_id; //별도로 가져오는 코드 필요(입력 받지 않음)
+        private Long userId; // 별도로 가져오는 코드 필요(입력 받지 않음)
 
         @NotEmpty
         private LocalDateTime createdAt;
@@ -68,9 +68,9 @@ public class StudyReqDto {
         // "user_id": 42  // 신청하는 사용자의 ID
 
         @NotEmpty
-        Long study_id;
+        Long studyId;
 
         @NotEmpty
-        Long user_id;
+        Long userId;
     }
 }

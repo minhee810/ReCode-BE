@@ -56,12 +56,16 @@ public class AdminController {
             @AuthenticationPrincipal LoginUser loginUser
             ){
 
+        // Debugging: Log the user information
+        logger.info("Logged-in user: {}", loginUser);
+
         //유저가 관리자가 맞는지 검증
         if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {
             logger.error("관리자가 아님!!!!");
-            throw new CustomForbiddenException("관리자가 아닙니다!");
+            return (ResponseEntity<ResponseDto>) new CustomExceptionHandler()
+                    .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
         }
-        else {
+
             // DB에서 StudyRoom Entity 삭제
             AdminResDto.StudyDeleteResponseDto studyDeleteResponseDto
                     = adminService.adminStudyRoomDelete(study_id);
@@ -70,7 +74,7 @@ public class AdminController {
                     = new ResponseDto<>(1,"스터디 모집 글이 성공적으로 삭제되었습니다",studyDeleteResponseDto);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-        }
     }//adminStudyRoomDelete()
+
 
 }//AdminController

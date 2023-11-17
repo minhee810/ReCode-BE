@@ -57,6 +57,17 @@ public class UserRespDto {
             this.email = user.getEmail();
             this.nickname = user.getNickname();
         }
+
+    }
+
+
+    @Getter
+    @Setter
+    public static class CheckUsernameDuplicateRespDto{
+        private String username;
+        public CheckUsernameDuplicateRespDto(User user) {
+            this.username = user.getUsername();
+        }
     }
 
     @Getter

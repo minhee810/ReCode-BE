@@ -21,5 +21,8 @@ public class AdminResDto {
         @NotEmpty
         private Long study_id;
 
+        public StudyDeleteResponseDto(Long study_id) {
+            this.study_id = study_id;
+        }
     }
 }

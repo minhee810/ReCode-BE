@@ -30,7 +30,7 @@ public class Post {
     @Column(nullable = false,length = 300)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="studyRoom_id")
     private StudyRoom studyRoom;
 

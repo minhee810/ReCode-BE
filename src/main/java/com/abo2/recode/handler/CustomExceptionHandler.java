@@ -33,10 +33,4 @@ public class CustomExceptionHandler {
         log.error(e.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.FORBIDDEN);
     }
-
-    @ExceptionHandler(CustomForbiddenException.class)
-    public ResponseEntity<?> adminForbiddenException(CustomForbiddenException e) {
-        log.error(e.getMessage());
-        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.FORBIDDEN);
-    }
 }
