@@ -13,6 +13,7 @@ import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.study.StudyReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.DayOfWeek;
@@ -151,5 +152,11 @@ public class StudyService {
         StudyRoom studyRoom = optionalStudyRoom.orElse(null);
 
         return studyRoom;
+    }
+
+    // 스터디 탈퇴
+    @Transactional
+    public void withdrawStudy(Long userId, Long studyId){
+        studyMemberRepository.deleteById(userId);
     }
 }//class StudyService

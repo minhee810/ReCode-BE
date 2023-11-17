@@ -115,5 +115,12 @@ public class StudyroomController {
         return dayOfWeek + " " + String.format("%02d:%02d", hour, minute);
     }//convertToString()
 
+    // 스터디 룸 탈퇴
+    @PostMapping(value = "/v1/study/{study_id}/withdraw/{user_id}")
+    public ResponseEntity<?> withdrawStudy(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_id){
+        studyService.withdrawStudy(loginUser.getUser().getId(), study_id);
+        return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
+    }
+
 
 }//StudyRoomController class
