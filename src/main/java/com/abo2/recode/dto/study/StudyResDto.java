@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -73,5 +74,24 @@ public class StudyResDto {
         @Column(nullable = false)
         private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
+    }
+
+    @Getter
+    @Setter
+    public static class StudyRoomApplyResDto{
+     /*   {
+            "code": 1,
+                "msg": "스터디 신청에 성공하였습니다.",
+                "data": {
+            "study_id": 1
+        }
+        }*/
+
+        @NotEmpty
+        private Long study_id;
+
+        public StudyRoomApplyResDto(Long study_id) {
+            this.study_id = study_id;
+        }
     }
 }

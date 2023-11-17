@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -34,8 +35,9 @@ public class Post {
 
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "studyRoom_id", nullable = false)
+    @JoinColumn(name = "study_room_id",nullable = false)
     private StudyRoom studyRoom;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

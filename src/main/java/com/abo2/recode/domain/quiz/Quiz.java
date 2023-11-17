@@ -31,7 +31,7 @@ public class Quiz {
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 

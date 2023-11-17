@@ -1,6 +1,9 @@
 package com.abo2.recode.domain.studyroom;
 
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
+import com.abo2.recode.domain.skill.Study_skill;
+import com.abo2.recode.domain.studymember.Study_Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,13 +66,27 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
-    @OneToMany
-    @JoinColumn(name = "quiz_id")
+    //==========================================
+
+    // StudyRoom을 참조하는 StudySkill 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Study_skill> studySkills;
+
+    // StudyRoom을 참조하는 Study_Member 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Study_Member> studyMembers;
+
+    // StudyRoom을 참조하는 attendance 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Attendance> attendanceList = new ArrayList<>();
+
+    // StudyRoom을 참조하는 quiz 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Quiz> quizzes = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "attendence_id")
-    private List<Attendance> attendanceList = new ArrayList<>();
+    // StudyRoom을 참조하는 Post 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Post> posts;
 
     @Builder
     public StudyRoom(String studyName, String title, String description, LocalDate startDate,
