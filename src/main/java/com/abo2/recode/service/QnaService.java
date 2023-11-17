@@ -33,13 +33,35 @@ public class QnaService {
 
     @Transactional
     public List<Qna> qnaList() {
-
         return qnaRepository.findAll();
     }
 
+    @Transactional
     public Qna qna(Long qnaId) {
         return qnaRepository.findById(qnaId).orElseThrow();
 
     }
+
+    @Transactional
+    public Qna qnaModify(Long id, QnaReqDTO qnaReqDTO) {
+        qnaRepository.findById(id).orElseThrow();
+
+        Qna qna = Qna.builder()
+                .id(id)
+                .title(qnaReqDTO.getTitle())
+                .category(qnaReqDTO.getCategory())
+                .content(qnaReqDTO.getContent())
+                .build();
+
+        qnaRepository.save(qna);
+
+        return qna;
+    }
+
+    @Transactional
+    public Qna qnaDelete(Long id) {
+        return qnaRepository.findById(id).orElseThrow();
+    }
+
 
 }

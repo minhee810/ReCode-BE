@@ -2,6 +2,7 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.Qna.Qna;
+import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReqDTO;
 import com.abo2.recode.dto.qna.QnaResDTO;
@@ -48,14 +49,35 @@ public class QnaController {
 
     //Qna 단일 조회
     @GetMapping("/qna/{id}")
-    public ResponseEntity<?> qna(@AuthenticationPrincipal LoginUser loginUser,@PathVariable Long id,QnaResDTO qnaResDTO) {
+    public ResponseEntity<?> qna(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaResDTO qnaResDTO) {
         qnaResDTO.setUser_id(loginUser.getUser().getId());
 
-      Qna qna1 = qnaService.qna(id);
+        Qna qna1 = qnaService.qna(id);
 
 
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qna1), HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공",qna1 ), HttpStatus.OK);
+    //Qna 수정
+    @PutMapping("/qna/{id}")
+    public ResponseEntity<?> qnaModify(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, @RequestBody QnaReqDTO qnaReqDTO) {
+        qnaReqDTO.setUser_id(loginUser.getUser().getId());
+        Qna qna = qnaService.qnaModify(id, qnaReqDTO);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 수정 성공", qna), HttpStatus.OK);
+
+    }
+
+    //Qna 식제(관리자 권한)
+    @DeleteMapping("/qna/{id}")
+    public ResponseEntity<?> qnaDelete(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaReqDTO qnaReqDTO) {
+        qnaReqDTO.setUser_id(loginUser.getUser().getId());
+        Qna qna = qnaService.qnaDelete(id);
+        if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", qna), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", qna), HttpStatus.OK);
     }
 
 
