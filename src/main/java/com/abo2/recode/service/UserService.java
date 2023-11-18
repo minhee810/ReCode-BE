@@ -126,7 +126,16 @@ public class UserService {
 
     @Transactional
     public void withdrawUser(Long userId){
-        userRepository.deleteById(userId);
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        userRepository.dissociateStudyRooms(userId);
+        userRepository.dissociatePosts(userId);
+        userRepository.dissociatePostReply(userId);
+        userRepository.dissociateQnas(userId);
+        userRepository.dissociateStudyMember(userId);
+        userRepository.dissociateQuiz(userId);
+        userRepository.deleteUsersAttendance(userId);
+        userRepository.deleteWithoutRelatedInfo(userId);
     }
 
     @Transactional
