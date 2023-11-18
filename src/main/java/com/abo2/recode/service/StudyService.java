@@ -58,6 +58,8 @@ public class StudyService {
         System.out.println("Service createRoom()");
 
         //1. 넘겨 받은 studyReqDto에서 정보 가져오기
+        User master = userRepository.findById(studyCreateReqDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         String study_name = studyCreateReqDto.getStudyName();
         String title = studyCreateReqDto.getTitle();
@@ -66,7 +68,6 @@ public class StudyService {
         LocalDate end_date = studyCreateReqDto.getEndDate();
         Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
         Integer max_num = studyCreateReqDto.getMaxNum();
-        Long user_id = studyCreateReqDto.getUserId();
 
         //1-1. start_time,end_time String -> LocalDateTime
         LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
@@ -83,7 +84,7 @@ public class StudyService {
                 .endDate(end_date)
                 .currentNum(current_num)
                 .maxNum(max_num)
-                .createdBy(user_id)
+                .master(master)
                 .build();
 
         studyRoomRepository.save(studyRoom);
@@ -169,7 +170,7 @@ public class StudyService {
         if(studyRoom.isPresent()) {
             StudyRoom room = studyRoom.get();
 
-            if(!room.getCreatedBy().equals(userId)){
+            if(!room.getMaster().equals(userId)){
                 studyMemberRepository.deleteByUserIdAndStudyRoomUd(userId, studyId);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
@@ -180,8 +181,9 @@ public class StudyService {
     }
 
     // 스터디 목록 불러오기
+    @Transactional
     public List<StudyResDto.StudyListRespDto> mainList(){
-        List<StudyRoom> studyRooms = studyRoomRepository.findAll();
+        List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
         return studyRooms.stream()
                 .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
                 .collect(Collectors.toList());

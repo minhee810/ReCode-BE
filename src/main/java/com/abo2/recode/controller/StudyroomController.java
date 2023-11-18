@@ -73,9 +73,8 @@ public class StudyroomController {
     }//studyApply()
 
     //study 소개 글 조회
-    @GetMapping(value = "/v1/study/{study_id}")
+    @GetMapping(value = "/study/{study_id}")
     public ResponseEntity<ResponseDto> studyRoomDetailBrowse(
-            @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable Long study_id
 
     ){
@@ -85,7 +84,7 @@ public class StudyroomController {
         //1. Studyroom entity -> StudyRoomDetailResDto 담기
         StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto = new StudyResDto.StudyRoomDetailResDto();
 
-        studyRoomDetailResDto.setCreated_By(loginUser.getUser().getId());
+        studyRoomDetailResDto.setMaster(studyRoom.getMaster().getId());
 
         studyRoomDetailResDto.setStudy_room_id(studyRoom.getId());
         studyRoomDetailResDto.setStudy_name(studyRoom.getStudyName());

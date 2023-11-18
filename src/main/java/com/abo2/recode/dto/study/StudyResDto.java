@@ -1,9 +1,9 @@
 package com.abo2.recode.dto.study;
 
-import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.Study_skill;
 import com.abo2.recode.domain.studymember.Study_Member;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -69,7 +69,7 @@ public class StudyResDto {
         private Integer max_num; //스터디 그룹 전체 티오
 
         @Column(nullable = false)
-        private Long created_By; // 스터디 장
+        private Long master; // 스터디 장
 
         @CreatedDate
         @Column(nullable = false)
@@ -125,7 +125,8 @@ public class StudyResDto {
         private List<String> skillNames;
         private Integer current_num;
         private Integer max_num;
-        private Long created_by;
+        private String masterEmail;
+        private String masterNickname;
 
         public StudyListRespDto(StudyRoom studyRoom, List<Study_skill> studySkills) {
             this.id = studyRoom.getId();
@@ -136,7 +137,10 @@ public class StudyResDto {
                     .collect(Collectors.toList());
             this.current_num = studyRoom.getCurrentNum();
             this.max_num = studyRoom.getMaxNum();
-            this.created_by = studyRoom.getCreatedBy();
+            if (studyRoom.getMaster() != null) {
+                this.masterNickname = studyRoom.getMaster().getNickname();
+                this.masterEmail = studyRoom.getMaster().getEmail();
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.Study_skill;
 import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,8 +56,9 @@ public class StudyRoom {
     @Column(nullable = false)
     private Integer maxNum; //스터디 그룹 전체 티오
 
-    @Column(nullable = false)
-    private Long createdBy; // 스터디 장
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User master;
 
     @CreatedDate
     @Column(nullable = false)
@@ -88,10 +90,12 @@ public class StudyRoom {
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Post> posts;
 
+    //===========================================
+
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
                      LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime,
-                     Integer currentNum, Integer maxNum, Long createdBy) {
+                     Integer currentNum, Integer maxNum, User master) {
 
         this.id = id;
         this.studyName = studyName;
@@ -103,6 +107,6 @@ public class StudyRoom {
         this.endTime = endTime;
         this.currentNum = currentNum;
         this.maxNum = maxNum;
-        this.createdBy = createdBy;
+        this.master = master;
     }
 }

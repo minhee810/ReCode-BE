@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE StudyRoom sr SET sr.createdBy = null WHERE sr.createdBy = 0")
+    @Query("UPDATE StudyRoom sr SET sr.master = null WHERE sr.master.id = :userId")
     void dissociateStudyRooms(@Param("userId") Long userId);
 
     @Transactional

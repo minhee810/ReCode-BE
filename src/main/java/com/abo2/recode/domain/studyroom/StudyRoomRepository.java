@@ -10,4 +10,6 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
 
     Optional<StudyRoom> findById(Long Id);
 
+    @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master")
+    List<StudyRoom> findAllWithMaster();
 }
