@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -120,6 +121,14 @@ public class StudyroomController {
     public ResponseEntity<?> withdrawStudy(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_id){
         studyService.withdrawStudy(loginUser.getUser().getId(), study_id);
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
+    }
+
+    // 스터디 목록 조회
+    @GetMapping(value = "/main/list")
+    public ResponseEntity<?> mainList(){
+        List<StudyResDto.StudyListRespDto> studyListRespDto;
+        studyListRespDto = studyService.mainList();
+        return new ResponseEntity<>(new ResponseDto<>(1, "목록 조회 성공", studyListRespDto), HttpStatus.OK);
     }
 
 }//StudyRoomController class

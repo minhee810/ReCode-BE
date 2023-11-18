@@ -12,6 +12,8 @@ import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
+import com.abo2.recode.dto.study.StudyResDto;
+import com.abo2.recode.handler.ex.CustomApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudyService {
@@ -159,6 +163,31 @@ public class StudyService {
     // 스터디 탈퇴
     @Transactional
     public void withdrawStudy(Long userId, Long studyId){
-        studyMemberRepository.deleteById(userId);
+        // 1. 해당 스터디룸 정보 가져오기
+        Optional<StudyRoom> studyRoom = studyRoomRepository.findById(studyId);
+
+        if(studyRoom.isPresent()) {
+            StudyRoom room = studyRoom.get();
+
+            if(room.getCreatedBy() == 0){
+                studyMemberRepository.deleteById(userId);
+            } else {
+                throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
+            }
+        } else {
+            throw new CustomApiException("스터디를 찾을 수 없습니다.");
+        }
+    }
+
+    // 스터디 목록 불러오기
+    public List<StudyResDto.StudyListRespDto> mainList(){
+        List<StudyRoom> studyRooms = studyRoomRepository.findAll();
+        return studyRooms.stream()
+                .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
+                .collect(Collectors.toList());
+    }
+
+    private List<Study_skill> getStudySkills(StudyRoom studyRoom) {
+        return studySkillRepository.findByStudyRoomId(studyRoom.getId());
     }
 }//class StudyService

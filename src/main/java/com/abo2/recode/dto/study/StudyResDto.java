@@ -115,5 +115,29 @@ public class StudyResDto {
             }
         }
     }
+
+    @Getter
+    @Setter
+    public static class StudyListRespDto {
+        private Long id;
+        private String study_name;
+        private String title;
+        private List<String> skillNames;
+        private Integer current_num;
+        private Integer max_num;
+        private Long created_by;
+
+        public StudyListRespDto(StudyRoom studyRoom, List<Study_skill> studySkills) {
+            this.id = studyRoom.getId();
+            this.study_name = studyRoom.getStudyName();
+            this.title = studyRoom.getTitle();
+            this.skillNames = studySkills.stream()
+                    .map(studySkill -> studySkill.getSkill().getSkillName())
+                    .collect(Collectors.toList());
+            this.current_num = studyRoom.getCurrentNum();
+            this.max_num = studyRoom.getMaxNum();
+            this.created_by = studyRoom.getCreatedBy();
+        }
+    }
 }
 
