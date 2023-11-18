@@ -169,8 +169,8 @@ public class StudyService {
         if(studyRoom.isPresent()) {
             StudyRoom room = studyRoom.get();
 
-            if(room.getCreatedBy() == 0){
-                studyMemberRepository.deleteById(userId);
+            if(!room.getCreatedBy().equals(userId)){
+                studyMemberRepository.deleteByUserIdAndStudyRoomUd(userId, studyId);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
             }
