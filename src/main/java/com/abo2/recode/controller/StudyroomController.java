@@ -73,11 +73,11 @@ public class StudyroomController {
     }//studyApply()
 
     //study 소개 글 조회
-    @GetMapping(value = "/study/{study_id}")
-    public ResponseEntity<?> studyRoomDetailBrowse(@PathVariable Long study_id){
+    @GetMapping(value = "/study/{study_room_id}")
+    public ResponseEntity<?> studyRoomDetailBrowse(@PathVariable Long study_room_id){
         // 1. 요청에 대한 Entity 리턴
         StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto =
-                studyService.studyRoomDetailBrowse(study_id);
+                studyService.studyRoomDetailBrowse(study_room_id);
 
         //2. 성공 return
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto), HttpStatus.OK);
@@ -94,8 +94,8 @@ public class StudyroomController {
 
     // 스터디 룸 탈퇴
     @PostMapping(value = "/v1/study/{study_id}/withdraw/{user_id}")
-    public ResponseEntity<?> withdrawStudy(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_id){
-        studyService.withdrawStudy(loginUser.getUser().getId(), study_id);
+    public ResponseEntity<?> withdrawStudy(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_room_id){
+        studyService.withdrawStudy(loginUser.getUser().getId(), study_room_id);
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
     }
 

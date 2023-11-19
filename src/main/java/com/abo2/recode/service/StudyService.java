@@ -153,25 +153,25 @@ public class StudyService {
 
     //스터디 모임 상세 조회
     @Transactional
-    public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long study_id) {
-        StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_id));
+    public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long study_room_id) {
+        StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_room_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_room_id));
 
-        List<Study_skill> studySkills = studySkillRepository.findByStudyRoomId(study_id);
+        List<Study_skill> studySkills = studySkillRepository.findByStudyRoomId(study_room_id);
         return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills);
     }
 
     // 스터디 탈퇴
     @Transactional
-    public void withdrawStudy(Long userId, Long studyId){
+    public void withdrawStudy(Long userId, Long study_room_id){
         // 1. 해당 스터디룸 정보 가져오기
-        Optional<StudyRoom> studyRoom = studyRoomRepository.findById(studyId);
+        Optional<StudyRoom> studyRoom = studyRoomRepository.findById(study_room_id);
 
         if(studyRoom.isPresent()) {
             StudyRoom room = studyRoom.get();
 
             if(!room.getMaster().equals(userId)){
-                studyMemberRepository.deleteByUserIdAndStudyRoomUd(userId, studyId);
+                studyMemberRepository.deleteByUserIdAndStudyRoomUd(userId, study_room_id);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
             }
