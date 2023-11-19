@@ -152,13 +152,13 @@ public class StudyService {
     }
 
     //스터디 모임 상세 조회
-    public StudyRoom studyRoomDetailBrowse(Long studyId) {
+    @Transactional
+    public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long study_id) {
+        StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_id));
 
-        //0. 찾는 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
-        Optional<StudyRoom> optionalStudyRoom =  studyRoomRepository.findById(studyId);
-        StudyRoom studyRoom = optionalStudyRoom.orElse(null);
-
-        return studyRoom;
+        List<Study_skill> studySkills = studySkillRepository.findByStudyRoomId(study_id);
+        return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills);
     }
 
     // 스터디 탈퇴

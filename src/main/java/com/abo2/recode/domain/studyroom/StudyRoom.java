@@ -56,7 +56,7 @@ public class StudyRoom {
     @Column(nullable = false)
     private Integer maxNum; //스터디 그룹 전체 티오
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by")
     private User master;
 

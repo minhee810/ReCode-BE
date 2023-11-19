@@ -74,36 +74,13 @@ public class StudyroomController {
 
     //study 소개 글 조회
     @GetMapping(value = "/study/{study_id}")
-    public ResponseEntity<ResponseDto> studyRoomDetailBrowse(
-            @PathVariable Long study_id
-
-    ){
+    public ResponseEntity<?> studyRoomDetailBrowse(@PathVariable Long study_id){
         // 1. 요청에 대한 Entity 리턴
-        StudyRoom studyRoom
-                = studyService.studyRoomDetailBrowse(study_id);
-        //1. Studyroom entity -> StudyRoomDetailResDto 담기
-        StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto = new StudyResDto.StudyRoomDetailResDto();
-
-        studyRoomDetailResDto.setMaster(studyRoom.getMaster().getId());
-
-        studyRoomDetailResDto.setStudy_room_id(studyRoom.getId());
-        studyRoomDetailResDto.setStudy_name(studyRoom.getStudyName());
-        studyRoomDetailResDto.setTitle(studyRoom.getTitle());
-        studyRoomDetailResDto.setDescription(studyRoom.getDescription());
-
-        studyRoomDetailResDto.setStart_time(convertToString(studyRoom.getStartTime()));
-        studyRoomDetailResDto.setEnd_time(convertToString(studyRoom.getEndTime()));
-
-        studyRoomDetailResDto.setStart_date(studyRoom.getStartDate());
-        studyRoomDetailResDto.setEnd_date(studyRoom.getEndDate());
-        studyRoomDetailResDto.setMax_num(studyRoom.getMaxNum());
-        studyRoomDetailResDto.setCreatedAt(studyRoom.getCreatedAt());
-        studyRoomDetailResDto.setUpdatedAt(studyRoom.getUpdatedAt());
+        StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto =
+                studyService.studyRoomDetailBrowse(study_id);
 
         //2. 성공 return
-        ResponseDto<StudyResDto.StudyRoomDetailResDto> responseDto
-                = new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto), HttpStatus.OK);
     } //studyRoomDetailBrowse()
 
     // LocalDateTime 객체를 "Day Hour:Minute" 형식의 문자열로 변환
