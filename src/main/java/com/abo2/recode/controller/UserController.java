@@ -7,6 +7,7 @@ import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.dto.user.UserReqDto;
 import com.abo2.recode.dto.user.UserRespDto;
+import com.abo2.recode.service.StudyService;
 import com.abo2.recode.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
@@ -26,6 +27,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final StudyService studyService;
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserReqDto.JoinReqDto joinReqDto, BindingResult bindingResult) {
@@ -102,4 +104,15 @@ public class UserController {
         List<StudyResDto.MyStudyRespDto> myStudyRespDto = userService.myStudy(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "사용자의 스터디 가입 신청 목록을 성공적으로 조회했습니다.", myStudyRespDto), HttpStatus.OK);
     }
+
+    // 스터디 룸 가입 여부 확인
+    @GetMapping("/v1/users/{userId}/studyrooms/{studyRoomId}/isInStudyRoom")
+    public ResponseEntity<Boolean> isInStudyRoom(@PathVariable Long userId, @PathVariable Long studyRoomId) {
+        User user = userService.findUserById(userId);
+        StudyRoom studyRoom = studyService.findStudyRoomById(studyRoomId);
+
+        boolean isInStudyRoom = studyService.isUserInStudyRoom(user, studyRoom);
+        return ResponseEntity.ok(isInStudyRoom);
+    }
+
 }

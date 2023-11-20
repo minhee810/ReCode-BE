@@ -192,4 +192,15 @@ public class StudyService {
     private List<Study_skill> getStudySkills(StudyRoom studyRoom) {
         return studySkillRepository.findByStudyRoomId(studyRoom.getId());
     }
+
+    public StudyRoom findStudyRoomById(Long studyRoomId) {
+        return studyRoomRepository.findById(studyRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 스터디룸을 찾을 수 없습니다."));
+    }
+
+    public boolean isUserInStudyRoom(User user, StudyRoom studyRoom) {
+        Optional<Study_Member> studyMember = studyMemberRepository.findByUserAndStudyRoom(user, studyRoom);
+        return studyMember.isPresent();
+    }
+
 }//class StudyService

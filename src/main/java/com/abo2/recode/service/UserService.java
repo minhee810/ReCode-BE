@@ -159,4 +159,10 @@ public class UserService {
 
         return myStudyRespDtos;
     }
+
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다."));
+    }
+
 }
