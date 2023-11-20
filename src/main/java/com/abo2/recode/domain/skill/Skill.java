@@ -15,6 +15,7 @@ public class Skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "skill_id")
     private Long id; //skill 일련번호
 
@@ -23,3 +24,4 @@ public class Skill {
     private String skillName; // skill 네임
 
 }
+

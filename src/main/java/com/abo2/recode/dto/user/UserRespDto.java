@@ -57,5 +57,40 @@ public class UserRespDto {
             this.email = user.getEmail();
             this.nickname = user.getNickname();
         }
+
+    }
+
+
+    @Getter
+    @Setter
+    public static class CheckUsernameDuplicateRespDto{
+        private String username;
+        public CheckUsernameDuplicateRespDto(User user) {
+            this.username = user.getUsername();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class EssayRespDto{
+        private String essay;
+
+        public EssayRespDto(User user){
+            this.essay = user.getEssay();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class getUserInfoDto{
+        private String username;
+        private String nickname;
+        private String email;
+
+        public getUserInfoDto(User user){
+            this.username = user.getUsername();
+            this.nickname = user.getNickname();
+            this.email = user.getEmail();
+        }
     }
 }

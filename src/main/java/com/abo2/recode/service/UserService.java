@@ -36,6 +36,13 @@ public class UserService {
         // 3. dto 응답
         return new UserRespDto.JoinRespDto(userPS);
     }
+
+    @Transactional
+    public boolean checkUsernameDuplicate(String username){
+        // 1. 회원가입 시 username 중복확인
+        return userRepository.existsByUsername(username);
+    }
+
     @Transactional
     public UserRespDto.FindUsernameRespDto findUsername(UserReqDto.FindUsernameReqDto findUsernameReqDto) {
         // 1. 이메일로 user 정보 조회
@@ -59,5 +66,38 @@ public class UserService {
         return new UserRespDto.UpdateUserRespDto(userPS);
     }
 
+    @Transactional
+    public UserRespDto.EssayRespDto writeEssay(Long userId, UserReqDto.WriteEssayReqDto writeEssayReqDto){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
+        // 2. 객체에 변경 사항 반영
+        userPS.writeEssay(writeEssayReqDto.getEssay());
+
+        // 3. dto 응답
+        return new UserRespDto.EssayRespDto(userPS);
+    }
+
+    @Transactional
+    public UserRespDto.EssayRespDto getEssay(Long userId){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        // 2. dto 응답
+        return new UserRespDto.EssayRespDto(userPS);
+    }
+
+    @Transactional
+    public void withdrawUser(Long userId){
+        userRepository.deleteById(userId);
+    }
+
+    @Transactional
+    public UserRespDto.getUserInfoDto getUserInfo(Long userId){
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        // 2. dto 응답
+        return new UserRespDto.getUserInfoDto(userPS);
+    }
 }
