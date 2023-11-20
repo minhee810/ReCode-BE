@@ -35,7 +35,7 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/v1/study/{study_id}/posts")
-    public ResponseEntity<?> writePost(@RequestBody PostReqDto postReqDto, @PathVariable String study_id) {
+    public ResponseEntity<?> writePost(@RequestBody PostReqDto postReqDto, @PathVariable Long study_id) {
         PostRespDto postRespDto = postService.writePost(postReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", postRespDto), HttpStatus.CREATED);
     }

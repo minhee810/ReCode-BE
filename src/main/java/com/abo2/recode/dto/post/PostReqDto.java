@@ -4,11 +4,7 @@ package com.abo2.recode.dto.post;
 import com.abo2.recode.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -26,6 +22,8 @@ public class PostReqDto {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .category(post.getCategory())
+                .studyRoomId(post.getStudyRoom().getId())
+                .userId(post.getUser().getId())
                 .build();
     }
 
