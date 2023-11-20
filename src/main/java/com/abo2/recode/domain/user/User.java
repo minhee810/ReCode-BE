@@ -22,7 +22,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(name ="user_id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -75,13 +75,12 @@ public class User {
     }
 
 
-
-    public void updateUser(String nickname, String email){
+    public void updateUser(String nickname, String email) {
         this.email = email;
         this.nickname = nickname;
     }
 
-    public void writeEssay(String essay){
+    public void writeEssay(String essay) {
         this.essay = essay;
     }
 

@@ -35,8 +35,11 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/v1/study/{study_id}/posts")
-    public ResponseEntity<?> writePost(@RequestBody PostReqDto postReqDto, @PathVariable Long study_id) {
-        PostRespDto postRespDto = postService.writePost(postReqDto);
+    public ResponseEntity<?> writePost(@AuthenticationPrincipal LoginUser loginUser,
+                                       @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto,
+                                       @PathVariable Long study_id) {
+
+        PostRespDto postRespDto = postService.writePost(loginUser.getUser().getId(), postWriteReqDto, study_id);
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", postRespDto), HttpStatus.CREATED);
     }
 
@@ -51,8 +54,9 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/v1/study/posts/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostReqDto postReqDto) {
-        PostRespDto updatePost = postService.updatePost(postId, postReqDto);
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostReqDto.PostWriteReqDto
+            postWriteReqDto) {
+        PostRespDto updatePost = postService.updatePost(postId, postWriteReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정 성공", updatePost), HttpStatus.OK);
 
     }

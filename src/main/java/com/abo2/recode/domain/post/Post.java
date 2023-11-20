@@ -34,13 +34,12 @@ public class Post {
     private String content;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "study_room_id",nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)

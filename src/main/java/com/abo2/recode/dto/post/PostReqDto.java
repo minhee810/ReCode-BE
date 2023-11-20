@@ -2,29 +2,26 @@ package com.abo2.recode.dto.post;
 
 
 import com.abo2.recode.domain.post.Post;
+import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@Builder
+
 public class PostReqDto {
 
-    private String title;
-    private String content;
-    private String category;
-    private Long studyRoomId;
-    private Long userId;
 
-    public static PostReqDto postReqDto(Post post) {
-        return PostReqDto.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .category(post.getCategory())
-                .studyRoomId(post.getStudyRoom().getId())
-                .userId(post.getUser().getId())
-                .build();
+    @Getter
+    @Setter
+    public static class PostWriteReqDto {
+
+        private String title;
+        private String content;
+        private String category;
+        private Long studyRoomId;  // StudyRoom 대신 실제 외래 키 값인 Long 으로 변경
+        private Long userId;
+
+
     }
-
 }
