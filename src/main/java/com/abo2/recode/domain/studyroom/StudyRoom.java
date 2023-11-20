@@ -1,6 +1,11 @@
 package com.abo2.recode.domain.studyroom;
 
+
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
+import com.abo2.recode.domain.skill.Study_skill;
+import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +27,9 @@ import java.util.List;
 public class StudyRoom {
 
     @Id
-    @Column(name="studyroom_id")
+    @Column(name="study_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id; //스터디 그룹 일련번호
+    private Long id; //스터디 그룹 일련번호
 
 
     @Column(unique = true,nullable = false,length = 50)
@@ -54,8 +59,9 @@ public class StudyRoom {
     @Column(nullable = false)
     private Integer maxNum; //스터디 그룹 전체 티오
 
-    @Column(nullable = false)
-    private Long createdBy; // 스터디 장
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by")
+    private User master;
 
     @CreatedDate
     @Column(nullable = false)
@@ -65,19 +71,36 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
-    @OneToMany
-    @JoinColumn(name = "quiz_id")
+    //==========================================
+
+    // StudyRoom을 참조하는 StudySkill 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Study_skill> studySkills;
+
+    // StudyRoom을 참조하는 Study_Member 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Study_Member> studyMembers;
+
+    // StudyRoom을 참조하는 attendance 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Attendance> attendanceList = new ArrayList<>();
+
+    // StudyRoom을 참조하는 quiz 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Quiz> quizzes = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "attendence_id")
-    private List<Attendence> attendenceList = new ArrayList<>();
+    // StudyRoom을 참조하는 Post 엔티티
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private List<Post> posts;
+
+    //===========================================
 
     @Builder
-    public StudyRoom(String studyName, String title, String description, LocalDate startDate,
+    public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
                      LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime,
-                     Integer currentNum, Integer maxNum, Long createdBy) {
+                     Integer currentNum, Integer maxNum, User master) {
 
+        this.id = id;
         this.studyName = studyName;
         this.title = title;
         this.description = description;
@@ -87,7 +110,7 @@ public class StudyRoom {
         this.endTime = endTime;
         this.currentNum = currentNum;
         this.maxNum = maxNum;
-        this.createdBy = createdBy;
+        this.master = master;
     }
 
 }

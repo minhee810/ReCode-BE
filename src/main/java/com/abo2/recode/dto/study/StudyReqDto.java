@@ -68,9 +68,9 @@ public class StudyReqDto {
         // "user_id": 42  // 신청하는 사용자의 ID
 
         @NotEmpty
-        Long studyId;
+        Long study_id;
 
         @NotEmpty
-        Long userId;
+        Long user_id;
     }
 }

@@ -1,8 +1,10 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
+import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.ResponseDto;
+import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.dto.user.UserReqDto;
 import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.service.UserService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -28,6 +31,12 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody @Valid UserReqDto.JoinReqDto joinReqDto, BindingResult bindingResult) {
         UserRespDto.JoinRespDto joinRespDto = userService.회원가입(joinReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", joinRespDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/admin_join")
+    public ResponseEntity<?> admin_join(@RequestBody @Valid UserReqDto.JoinAdminReqDto joinAdminReqDto, BindingResult bindingResult) {
+        UserRespDto.JoinRespDto joinRespDto = userService.admin_join(joinAdminReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "관리자 회원가입 성공", joinRespDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/find-username")
@@ -47,14 +56,22 @@ public class UserController {
         }
     }
 
+    @GetMapping("/user-email/{email}/exists")
+    public ResponseEntity<?> checkEmailDuplicate(@PathVariable @Valid String email){
+
+        // 1. email 중복 값 확인
+        if (userService.checkEmailDuplicate(email) == true) {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 이메일 입니다.", null), HttpStatus.CONFLICT);
+        }else {
+            return new ResponseEntity<>(new ResponseDto<>(1,"사용 가능한 이메일 입니다.", null), HttpStatus.OK);
+        }
+    }
+
     @PutMapping("/v1/users/{id}")
     public ResponseEntity<?> modifyUserInfo(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.UpdateUserReqDto updateUserReqDto, BindingResult bindingResult){
         UserRespDto.UpdateUserRespDto updateUserRespDto = userService.updateUser(loginUser.getUser().getId(), updateUserReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1,"회원정보 수정 성공", updateUserRespDto), HttpStatus.OK);
     }
-
-
-
 
     @PostMapping(value = "/v1/mypage/{id}/essay")
     public ResponseEntity<?> writeEssay(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.WriteEssayReqDto writeEssayReqDto, BindingResult bindingResult){
@@ -68,7 +85,7 @@ public class UserController {
         return new ResponseEntity<>(new ResponseDto<>(1, "소개글 조회에 성공하였습니다.", essayRespDto), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/v1/users/{id}/delete")
+    @PostMapping(value = "/v1/users/{id}/withdraw")
     public ResponseEntity<?> withdrawUser(@AuthenticationPrincipal LoginUser loginUser){
         userService.withdrawUser(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "탈퇴에 성공하였습니다.", null), HttpStatus.OK);
@@ -78,5 +95,11 @@ public class UserController {
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal LoginUser loginUser){
         UserRespDto.getUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "개인 정보 조회에 성공하였습니다", getUserInfoDto), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/v1/users/{id}/study-applications")
+    public ResponseEntity<?> myStudy(@AuthenticationPrincipal LoginUser loginUser){
+        List<StudyResDto.MyStudyRespDto> myStudyRespDto = userService.myStudy(loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자의 스터디 가입 신청 목록을 성공적으로 조회했습니다.", myStudyRespDto), HttpStatus.OK);
     }
 }
