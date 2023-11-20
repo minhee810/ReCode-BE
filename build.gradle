@@ -3,8 +3,8 @@ plugins {
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
-jar{
-    enabled=false
+jar {
+    enabled = false
 }
 
 group = 'com.abo2'
@@ -38,6 +38,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    // for sending gmail from changing password
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // SLF4J to Log4j2 Bridge (if you are using SLF4J APIs in your code)
     implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
