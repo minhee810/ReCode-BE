@@ -1,7 +1,12 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.skill.Study_skill;
+import com.abo2.recode.domain.skill.Study_skillRepository;
+import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.studymember.Study_memberRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.dto.user.UserReqDto;
 import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -12,7 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +29,8 @@ public class UserService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Study_memberRepository studyMemberRepository;
+    private final Study_skillRepository studySkillRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -28,6 +38,12 @@ public class UserService {
         Optional<User> userOP = userRepository.findByUsername(joinReqDto.getUsername());
         if (userOP.isPresent()) {
             throw new CustomApiException("동일한 username이 존재합니다.");
+        }
+
+        // 2. 동일한 이메일 존재 검사
+        Optional<User> userEM = userRepository.findByEmail(joinReqDto.getEmail());
+        if (userEM.isPresent()) {
+            throw new CustomApiException("동일한 email 로 가입된 계정이 존재합니다.");
         }
 
         // 2. 패스워드 인코딩 + 회원가입
@@ -56,6 +72,12 @@ public class UserService {
     public boolean checkUsernameDuplicate(String username){
         // 1. 회원가입 시 username 중복확인
         return userRepository.existsByUsername(username);
+    }
+
+    @Transactional
+    public boolean checkEmailDuplicate(String email){
+        // 1. 회원가입 시 email 중복확인
+        return userRepository.existsByEmail(email);
     }
 
     @Transactional
@@ -104,7 +126,16 @@ public class UserService {
 
     @Transactional
     public void withdrawUser(Long userId){
-        userRepository.deleteById(userId);
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        userRepository.dissociateStudyRooms(userId);
+        userRepository.dissociatePosts(userId);
+        userRepository.dissociatePostReply(userId);
+        userRepository.dissociateQnas(userId);
+        userRepository.dissociateStudyMember(userId);
+        userRepository.dissociateQuiz(userId);
+        userRepository.deleteUsersAttendance(userId);
+        userRepository.deleteWithoutRelatedInfo(userId);
     }
 
     @Transactional
@@ -114,5 +145,18 @@ public class UserService {
 
         // 2. dto 응답
         return new UserRespDto.getUserInfoDto(userPS);
+    }
+
+    public List<StudyResDto.MyStudyRespDto> myStudy(Long userId) {
+        List<Study_Member> studyMembers = studyMemberRepository.findByUserId(userId);
+        List<StudyResDto.MyStudyRespDto> myStudyRespDtos = new ArrayList<>();
+
+        for (Study_Member studyMember : studyMembers) {
+            List<Study_skill> skills = studySkillRepository.findByStudyRoomId(studyMember.getStudyRoom().getId());
+            StudyResDto.MyStudyRespDto myStudyRespDto = new StudyResDto.MyStudyRespDto(studyMember, skills);
+            myStudyRespDtos.add(myStudyRespDto);
+        }
+
+        return myStudyRespDtos;
     }
 }

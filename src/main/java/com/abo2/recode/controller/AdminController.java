@@ -78,7 +78,7 @@ public class AdminController {
     }//adminStudyRoomDelete()
 
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급
-    @PutMapping(value="/v1/study-member/{study_id}/{user_id}")
+  /*  @PutMapping(value="/v1/study-member/{study_id}/{user_id}")
     public ResponseEntity<ResponseDto> memberRoleChange(
             @PathVariable Long study_id,
             @PathVariable Long user_id,
@@ -91,9 +91,11 @@ public class AdminController {
 
         return new ResponseEntity < new ResponseDto<>(
                 1,"사용자 권한이 성공적으로 변경되었습니다",memberRoleResDto) >().status()
+    }*/
+    @GetMapping(value = "/v1/get-skills")
+    public ResponseEntity<?> getSkills(){
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
+        return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
     }
-
-
-
 
 }//AdminController

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.mapping.ToOne;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -20,17 +21,17 @@ public class Study_Member {
     @Id
     @Column(name="study_member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id; //스터디 룸 member 일련번호
+    private Long Id; //스터디 룸 member 일련번호
 
     @ManyToOne
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(unique = true,nullable = false,length = 50)
+    @Column(nullable = false,length = 50)
     private Integer status;
 
     @Builder

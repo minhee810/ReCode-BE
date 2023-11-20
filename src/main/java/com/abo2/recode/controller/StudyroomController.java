@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -62,10 +63,11 @@ public class StudyroomController {
         logger.info(loginUser.getUser().toString());
         // loginUser.getUser().getId() -> user id 담겨있음
 
-        studyApplyReqDto.setStudyId(study_id);
-        studyApplyReqDto.setUserId(loginUser.getUser().getId());
+        studyApplyReqDto.setStudy_id(study_id);
+        studyApplyReqDto.setUser_id(loginUser.getUser().getId());
 
         StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto =
+
         studyService.studyApply(studyApplyReqDto);
 
 
@@ -76,38 +78,14 @@ public class StudyroomController {
     }//studyApply()
 
     //study 소개 글 조회
-    @GetMapping(value = "/v1/study/{study_id}")
-    public ResponseEntity<ResponseDto> studyRoomDetailBrowse(
-            @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long study_id
-
-    ){
+    @GetMapping(value = "/study/{study_room_id}")
+    public ResponseEntity<?> studyRoomDetailBrowse(@PathVariable Long study_room_id){
         // 1. 요청에 대한 Entity 리턴
-        StudyRoom studyRoom
-                = studyService.studyRoomDetailBrowse(study_id);
-        //1. Studyroom entity -> StudyRoomDetailResDto 담기
-        StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto = new StudyResDto.StudyRoomDetailResDto();
-
-        studyRoomDetailResDto.setCreated_By(loginUser.getUser().getId());
-
-        studyRoomDetailResDto.setStudy_room_id(studyRoom.getId());
-        studyRoomDetailResDto.setStudy_name(studyRoom.getStudyName());
-        studyRoomDetailResDto.setTitle(studyRoom.getTitle());
-        studyRoomDetailResDto.setDescription(studyRoom.getDescription());
-
-        studyRoomDetailResDto.setStart_time(convertToString(studyRoom.getStartTime()));
-        studyRoomDetailResDto.setEnd_time(convertToString(studyRoom.getEndTime()));
-
-        studyRoomDetailResDto.setStart_date(studyRoom.getStartDate());
-        studyRoomDetailResDto.setEnd_date(studyRoom.getEndDate());
-        studyRoomDetailResDto.setMax_num(studyRoom.getMaxNum());
-        studyRoomDetailResDto.setCreatedAt(studyRoom.getCreatedAt());
-        studyRoomDetailResDto.setUpdatedAt(studyRoom.getUpdatedAt());
+        StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto =
+                studyService.studyRoomDetailBrowse(study_room_id);
 
         //2. 성공 return
-        ResponseDto<StudyResDto.StudyRoomDetailResDto> responseDto
-                = new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto), HttpStatus.OK);
     } //studyRoomDetailBrowse()
 
     // LocalDateTime 객체를 "Day Hour:Minute" 형식의 문자열로 변환
@@ -118,5 +96,20 @@ public class StudyroomController {
 
         return dayOfWeek + " " + String.format("%02d:%02d", hour, minute);
     }//convertToString()
+
+    // 스터디 룸 탈퇴
+    @PostMapping(value = "/v1/study/{study_id}/withdraw/{user_id}")
+    public ResponseEntity<?> withdrawStudy(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_room_id){
+        studyService.withdrawStudy(loginUser.getUser().getId(), study_room_id);
+        return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
+    }
+
+    // 스터디 목록 조회
+    @GetMapping(value = "/main/list")
+    public ResponseEntity<?> mainList(){
+        List<StudyResDto.StudyListRespDto> studyListRespDto;
+        studyListRespDto = studyService.mainList();
+        return new ResponseEntity<>(new ResponseDto<>(1, "목록 조회 성공", studyListRespDto), HttpStatus.OK);
+    }
 
 }//StudyRoomController class

@@ -22,9 +22,22 @@ public class PostRespDto {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
-            this.category = post.getCategory();
+            this.category = getCategory(post.getCategory());
             this.createdAt = post.getCreatedAt();
             this.nickname = post.getUser().getNickname();
+        }
+
+        private String getCategory(Integer category) {
+            switch (category) {
+                case 0:
+                    return "공지사항";
+                case 1:
+                    return "회고록";
+                case 2:
+                    return "자료 공유";
+                default:
+                    return "전체보기";
+            }
         }
     }
 }
