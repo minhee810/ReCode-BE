@@ -10,13 +10,9 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
-import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
-<<<<<<< HEAD
-=======
 import com.abo2.recode.handler.ex.CustomApiException;
->>>>>>> 97a91918e47165da50e3bc9e0d1837da941d1c1a
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,6 +101,15 @@ public class StudyService {
             studySkillRepository.save(studySkill);
         }
         System.out.println("Service createRoom() save !!!!!!");
+
+        //4. Study_member에 만든 사람(조장) 추가 하기
+        Study_Member studyMember = Study_Member.builder()
+                .studyRoom(studyRoom)
+                .user(master)
+                .status(1)
+                .build();
+
+        studyMemberRepository.save(studyMember);
 
     } //createRoom()
 
