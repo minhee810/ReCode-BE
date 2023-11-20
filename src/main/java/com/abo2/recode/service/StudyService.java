@@ -13,7 +13,10 @@ import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
+<<<<<<< HEAD
+=======
 import com.abo2.recode.handler.ex.CustomApiException;
+>>>>>>> 97a91918e47165da50e3bc9e0d1837da941d1c1a
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,7 +122,7 @@ public class StudyService {
     }//convertToDateTime()
 
     //study 가입 신청
-    public void studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
+    public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
         //  studyApplyReqDto
 //        @NotEmpty
@@ -149,6 +152,8 @@ public class StudyService {
                 .build();
 
         studyMemberRepository.save(studyMember);
+
+        return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
     }
 
     //스터디 모임 상세 조회
