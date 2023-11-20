@@ -25,7 +25,6 @@ public class StudyroomController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudyroomController.class);
 
-
     @Autowired
     StudyService studyService;
     public StudyroomController(StudyService studyService) {
