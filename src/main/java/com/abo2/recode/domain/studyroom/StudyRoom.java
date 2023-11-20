@@ -1,15 +1,10 @@
 package com.abo2.recode.domain.studyroom;
 
-import antlr.collections.impl.LList;
 import com.abo2.recode.domain.quiz.Quiz;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.abo2.recode.domain.skill.StudySkill;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
