@@ -126,7 +126,16 @@ public class UserService {
 
     @Transactional
     public void withdrawUser(Long userId){
-        userRepository.deleteById(userId);
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        userRepository.dissociateStudyRooms(userId);
+        userRepository.dissociatePosts(userId);
+        userRepository.dissociatePostReply(userId);
+        userRepository.dissociateQnas(userId);
+        userRepository.dissociateStudyMember(userId);
+        userRepository.dissociateQuiz(userId);
+        userRepository.deleteUsersAttendance(userId);
+        userRepository.deleteWithoutRelatedInfo(userId);
     }
 
     @Transactional
@@ -150,4 +159,23 @@ public class UserService {
 
         return myStudyRespDtos;
     }
+
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public UserRespDto.changePasswordRespDto changePassword(Long userId, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        userPS.changePassword(changePasswordReqDto.getPassword());
+
+        return new UserRespDto.changePasswordRespDto(userPS);
+    }
+
+
+
+
 }

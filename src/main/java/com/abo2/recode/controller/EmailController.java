@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.Optional;
 
 @Slf4j
@@ -23,21 +24,20 @@ public class EmailController {
 
     @GetMapping(value ="/email")
     public ResponseEntity<?> emailForm(){
-        return new ResponseEntity<>(new ResponseDto<>(1, "회원 인증을 위한 이메일 입력 폼입니다.", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "회원 인증을 위한 이메일 입력 페이지입니다.", null), HttpStatus.OK);
     }
 
-    @GetMapping(value = {"/v1/change-password", "/change-password"})
-
     @PostMapping(value = {"/v1/send-email", "/send-email"})
-    public ResponseEntity<?> sendEmail(@RequestParam String email){
-        User user = userRepository.findByEmailForPassword(email);
+    public ResponseEntity<?> sendEmail(@RequestParam String email) throws MessagingException {
+        Optional<User> userOpt = userRepository.findByEmail(email);
 
-        if(user == null) {
+        if(!userOpt.isPresent()) {
             ResponseEntity
                     .badRequest()
                     .body(new ResponseDto<>(-1, "유효한 이메일 주소가 아닙니다", null));
         }
 
+        User user = userOpt.get();
         user.generateEmailCheckToken();
         userRepository.save(user);
 
@@ -48,16 +48,17 @@ public class EmailController {
 
     @GetMapping(value = {"/v1/check-mail-token", "/check-mail-token"})
     public ResponseEntity<?> checkEmailToken(@RequestParam String token, @RequestParam String email){
-        User user = userRepository.findByEmailForPassword(email);
+        Optional<User> userOpt = userRepository.findByEmail(email);
 
-        if(user == null){
-            ResponseEntity
+        if (!userOpt.isPresent()) {
+            return ResponseEntity
                     .badRequest()
                     .body(new ResponseDto<>(-1, "해당 이메일이 존재하지 않습니다.", null));
         }
 
-        if(!user.getEmailCheckToken().equals(token)){
-            ResponseEntity
+        User user = userOpt.get();
+        if (!user.getEmailCheckToken().equals(token)) {
+            return ResponseEntity
                     .badRequest()
                     .body(new ResponseDto<>(-1, "토큰이 유효하지 않습니다", null));
         }

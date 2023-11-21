@@ -93,4 +93,14 @@ public class UserRespDto {
             this.email = user.getEmail();
         }
     }
+
+    @Getter
+    @Setter
+    public static class changePasswordRespDto{
+        private String password;
+
+        public changePasswordRespDto(User user){
+            this.password = user.getPassword();
+        }
+    }
 }

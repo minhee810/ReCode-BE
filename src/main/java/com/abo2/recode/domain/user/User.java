@@ -43,7 +43,7 @@ public class User {
     @Column(length = 100)
     private String essay;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 30)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -59,25 +59,11 @@ public class User {
     private LocalDateTime updatedAt;
 
     // 이메일 관련
-    @Column(nullable = false)
+    @Column(name = "email_check_token", nullable = true)
     private String emailCheckToken;
 
-    @Column(nullable = false)
+    @Column(name = "email_token_expiry", nullable = true)
     private LocalDateTime emailTokenExpiry;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<StudyRoom> studyRooms;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Post> posts;
-
-    @OneToMany
-    @JoinColumn(name = "quiz_id")
-    private List<Quiz> quizzes = new ArrayList<>();
-
-    @OneToMany
-    @JoinColumn(name = "attendence_id")
-    private List<Attendance> attendanceList = new ArrayList<>();
 
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -112,5 +98,9 @@ public class User {
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
         this.emailTokenExpiry = LocalDateTime.now().plusHours(1);
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
     }
 }

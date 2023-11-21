@@ -1,9 +1,9 @@
 package com.abo2.recode.dto.study;
 
-import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.Study_skill;
 import com.abo2.recode.domain.studymember.Study_Member;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -69,7 +69,9 @@ public class StudyResDto {
         private Integer max_num; //스터디 그룹 전체 티오
 
         @Column(nullable = false)
-        private Long created_By; // 스터디 장
+        private String master; // 스터디 장
+
+        private List<String> skillNames;
 
         @CreatedDate
         @Column(nullable = false)
@@ -78,6 +80,25 @@ public class StudyResDto {
         @LastModifiedDate
         @Column(nullable = false)
         private LocalDateTime updatedAt; //스터디 그룹 수정 시각
+
+        public StudyRoomDetailResDto(StudyRoom studyRoom, List<Study_skill> studySkills) {
+            this.study_room_id = studyRoom.getId();
+            this.study_name = studyRoom.getStudyName();
+            this.title = studyRoom.getTitle();
+            this.description = studyRoom.getDescription();
+            this.start_date = studyRoom.getStartDate();
+            this.end_date = studyRoom.getEndDate();
+            this.start_time = String.valueOf(studyRoom.getStartTime());
+            this.end_time = String.valueOf(studyRoom.getEndTime());
+            this.current_num = studyRoom.getCurrentNum();
+            this.max_num = studyRoom.getMaxNum();
+            this.master = studyRoom.getMaster().getNickname();
+            this.skillNames = studySkills.stream()
+                    .map(studySkill -> studySkill.getSkill().getSkillName())
+                    .collect(Collectors.toList());
+            this.createdAt = studyRoom.getCreatedAt();
+            this.updatedAt = studyRoom.getUpdatedAt();
+        }
 
     }
 
@@ -112,6 +133,34 @@ public class StudyResDto {
                     return "거절됨";
                 default:
                     return "unknown";
+            }
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class StudyListRespDto {
+        private Long id;
+        private String study_name;
+        private String title;
+        private List<String> skillNames;
+        private Integer current_num;
+        private Integer max_num;
+        private String masterEmail;
+        private String masterNickname;
+
+        public StudyListRespDto(StudyRoom studyRoom, List<Study_skill> studySkills) {
+            this.id = studyRoom.getId();
+            this.study_name = studyRoom.getStudyName();
+            this.title = studyRoom.getTitle();
+            this.skillNames = studySkills.stream()
+                    .map(studySkill -> studySkill.getSkill().getSkillName())
+                    .collect(Collectors.toList());
+            this.current_num = studyRoom.getCurrentNum();
+            this.max_num = studyRoom.getMaxNum();
+            if (studyRoom.getMaster() != null) {
+                this.masterNickname = studyRoom.getMaster().getNickname();
+                this.masterEmail = studyRoom.getMaster().getEmail();
             }
         }
     }

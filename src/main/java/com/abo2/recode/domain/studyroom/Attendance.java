@@ -4,6 +4,7 @@ import com.abo2.recode.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.mapping.ToOne;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -33,7 +34,7 @@ public class Attendance {
     @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 
