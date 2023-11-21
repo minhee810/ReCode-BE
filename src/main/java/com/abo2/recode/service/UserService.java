@@ -167,15 +167,19 @@ public class UserService {
 
     @Transactional
     public UserRespDto.changePasswordRespDto changePassword(Long userId, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
-        // 1. user 아이디 조회
-        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+        // 1. 사용자 찾기
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
-        userPS.changePassword(changePasswordReqDto.getPassword());
+        // 2. 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(changePasswordReqDto.getPassword());
 
-        return new UserRespDto.changePasswordRespDto(userPS);
+        // 3. 암호화된 비밀번호로 변경
+        user.changePassword(encodedPassword);
+
+        // 4. 변경된 사용자 정보 저장
+        userRepository.save(user);
+
+        return new UserRespDto.changePasswordRespDto(user);
     }
-
-
-
-
 }
