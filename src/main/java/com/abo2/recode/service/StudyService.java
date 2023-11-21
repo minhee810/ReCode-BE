@@ -12,6 +12,8 @@ import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
+import com.abo2.recode.dto.study.StudyResDto;
+import com.abo2.recode.handler.ex.CustomApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudyService {
@@ -54,6 +58,8 @@ public class StudyService {
         System.out.println("Service createRoom()");
 
         //1. 넘겨 받은 studyReqDto에서 정보 가져오기
+        User master = userRepository.findById(studyCreateReqDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         String study_name = studyCreateReqDto.getStudyName();
         String title = studyCreateReqDto.getTitle();
@@ -62,7 +68,6 @@ public class StudyService {
         LocalDate end_date = studyCreateReqDto.getEndDate();
         Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
         Integer max_num = studyCreateReqDto.getMaxNum();
-        Long user_id = studyCreateReqDto.getUserId();
 
         //1-1. start_time,end_time String -> LocalDateTime
         LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
@@ -79,7 +84,7 @@ public class StudyService {
                 .endDate(end_date)
                 .currentNum(current_num)
                 .maxNum(max_num)
-                .createdBy(user_id)
+                .master(master)
                 .build();
 
         studyRoomRepository.save(studyRoom);
@@ -108,7 +113,7 @@ public class StudyService {
         LocalDateTime sameWeekDay = now.with(TemporalAdjusters.nextOrSame(dayOfWeek));
         LocalDateTime time = LocalDateTime
                 .parse(sameWeekDay.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                + "T" + parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        + "T" + parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         return time;
     }//convertToDateTime()
@@ -147,18 +152,44 @@ public class StudyService {
     }
 
     //스터디 모임 상세 조회
-    public StudyRoom studyRoomDetailBrowse(Long studyId) {
+    @Transactional
+    public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long study_room_id) {
+        StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_room_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_room_id));
 
-        //0. 찾는 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
-        Optional<StudyRoom> optionalStudyRoom =  studyRoomRepository.findById(studyId);
-        StudyRoom studyRoom = optionalStudyRoom.orElse(null);
-
-        return studyRoom;
+        List<Study_skill> studySkills = studySkillRepository.findByStudyRoomId(study_room_id);
+        return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills);
     }
 
     // 스터디 탈퇴
     @Transactional
-    public void withdrawStudy(Long userId, Long studyId){
-        studyMemberRepository.deleteById(userId);
+    public void withdrawStudy(Long userId, Long study_room_id){
+        // 1. 해당 스터디룸 정보 가져오기
+        Optional<StudyRoom> studyRoom = studyRoomRepository.findById(study_room_id);
+
+        if(studyRoom.isPresent()) {
+            StudyRoom room = studyRoom.get();
+
+            if(!room.getMaster().equals(userId)){
+                studyMemberRepository.deleteByUserIdAndStudyRoomUd(userId, study_room_id);
+            } else {
+                throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
+            }
+        } else {
+            throw new CustomApiException("스터디를 찾을 수 없습니다.");
+        }
+    }
+
+    // 스터디 목록 불러오기
+    @Transactional
+    public List<StudyResDto.StudyListRespDto> mainList(){
+        List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
+        return studyRooms.stream()
+                .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
+                .collect(Collectors.toList());
+    }
+
+    private List<Study_skill> getStudySkills(StudyRoom studyRoom) {
+        return studySkillRepository.findByStudyRoomId(studyRoom.getId());
     }
 }//class StudyService

@@ -21,8 +21,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -102,4 +102,6 @@ public class UserController {
         List<StudyResDto.MyStudyRespDto> myStudyRespDto = userService.myStudy(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "사용자의 스터디 가입 신청 목록을 성공적으로 조회했습니다.", myStudyRespDto), HttpStatus.OK);
     }
+
+
 }
