@@ -116,9 +116,20 @@ public class UserController {
     }
 
     @PostMapping(value = {"/v1/change-password", "/change-password"})
-    public ResponseEntity<?> changePassword(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
-        UserRespDto.changePasswordRespDto changePasswordRespDto = userService.changePassword(loginUser.getUser().getId(), changePasswordReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "비밀번호 변경 성공",changePasswordRespDto), HttpStatus.OK);
+    public ResponseEntity<?> changePassword(@AuthenticationPrincipal LoginUser loginUser,
+                                            @RequestBody @Valid UserReqDto.ChangePasswordReqDto changePasswordReqDto,
+                                            @RequestParam(required = false) String emailCheckToken) {
+        UserRespDto.changePasswordRespDto changePasswordRespDto;
+
+        if (loginUser != null) {
+            changePasswordRespDto = userService.changePassword(loginUser.getUser().getId(), changePasswordReqDto);
+        } else if (emailCheckToken != null && !emailCheckToken.isEmpty()) {
+            changePasswordRespDto = userService.changePasswordWithToken(emailCheckToken, changePasswordReqDto);
+        } else {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "인증 정보가 제공되지 않았습니다.", null), HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "비밀번호 변경 성공", changePasswordRespDto), HttpStatus.OK);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.abo2.recode.controller;
 
+import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -28,7 +30,8 @@ public class EmailController {
     }
 
     @PostMapping(value = {"/v1/send-email", "/send-email"})
-    public ResponseEntity<?> sendEmail(@RequestParam String email) throws MessagingException {
+    public ResponseEntity<?> sendEmail(@AuthenticationPrincipal LoginUser loginUser,
+                                       @RequestParam String email) throws MessagingException {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if(!userOpt.isPresent()) {
@@ -47,7 +50,8 @@ public class EmailController {
     }
 
     @GetMapping(value = {"/v1/check-mail-token", "/check-mail-token"})
-    public ResponseEntity<?> checkEmailToken(@RequestParam String token, @RequestParam String email){
+    public ResponseEntity<?> checkEmailToken(@AuthenticationPrincipal LoginUser loginUser,
+                                             @RequestParam String emailCheckToken, @RequestParam String email){
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (!userOpt.isPresent()) {
@@ -57,7 +61,7 @@ public class EmailController {
         }
 
         User user = userOpt.get();
-        if (!user.getEmailCheckToken().equals(token)) {
+        if (!user.getEmailCheckToken().equals(emailCheckToken)) {
             return ResponseEntity
                     .badRequest()
                     .body(new ResponseDto<>(-1, "토큰이 유효하지 않습니다", null));

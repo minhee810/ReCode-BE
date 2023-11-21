@@ -20,7 +20,7 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
 
     public void sendConfirmEmail(User user) throws MessagingException {
-        String url = "http://localhost:3000/changePassword";
+        String url = "http://localhost:3000/changePassword?token=" + user.getEmailCheckToken() + "&email=" + user.getEmail();
 
         String msgg = "<div style='margin:20px;'>";
         msgg += "<h1> 안녕하세요 Recode 입니다. </h1>";
@@ -35,7 +35,6 @@ public class EmailService {
         msgg += "<a href='" + url + "'>링크를 통해 비밀번호 변경을 진행해주세요.</a></div><br/> ";
         msgg += "</div>";
 
-        // Create a MimeMessage using JavaMailSender
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 

@@ -182,4 +182,23 @@ public class UserService {
 
         return new UserRespDto.changePasswordRespDto(user);
     }
+
+    @Transactional
+    public UserRespDto.changePasswordRespDto changePasswordWithToken(String emailCheckToken, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
+        // 1. 토큰 유효성 검증 및 사용자 찾기
+        User user = userRepository.findByEmailCheckToken(emailCheckToken)
+                .orElseThrow(() -> new CustomApiException("유효하지 않은 토큰입니다."));
+
+        // 2. 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(changePasswordReqDto.getPassword());
+
+        // 3. 암호화된 비밀번호로 변경
+        user.changePassword(encodedPassword);
+
+        // 4. 변경된 사용자 정보 저장
+        userRepository.save(user);
+
+        return new UserRespDto.changePasswordRespDto(user);
+    }
+
 }
