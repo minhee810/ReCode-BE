@@ -2,10 +2,10 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
-import com.abo2.recode.domain.skill.Study_skill;
-import com.abo2.recode.domain.skill.Study_skillRepository;
-import com.abo2.recode.domain.studymember.Study_Member;
-import com.abo2.recode.domain.studymember.Study_memberRepository;
+import com.abo2.recode.domain.skill.StudySkill;
+import com.abo2.recode.domain.skill.StudySkillRepository;
+import com.abo2.recode.domain.studymember.StudyMember;
+import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
@@ -31,20 +31,20 @@ public class StudyService {
 
     private StudyRoomRepository studyRoomRepository;
 
-    private Study_skillRepository studySkillRepository;
+    private StudySkillRepository studySkillRepository;
 
     private SkillRepository skillRepository;
 
     private UserRepository userRepository;
 
-    private Study_memberRepository studyMemberRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Autowired
     public StudyService(StudyRoomRepository studyRoomRepository,
-                        Study_skillRepository studySkillRepository,
+                        StudySkillRepository studySkillRepository,
                         SkillRepository skillRepository,
                         UserRepository userRepository,
-                        Study_memberRepository studyMemberRepository) {
+                        StudyMemberRepository studyMemberRepository) {
         this.studyRoomRepository = studyRoomRepository;
         this.studySkillRepository = studySkillRepository;
         this.skillRepository = skillRepository;
@@ -94,7 +94,7 @@ public class StudyService {
         for (String skillName : studyCreateReqDto.getSkills()) {
             Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
 
-            Study_skill studySkill = Study_skill.builder()
+            StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
@@ -103,7 +103,7 @@ public class StudyService {
         System.out.println("Service createRoom() save !!!!!!");
 
         //4. Study_member에 만든 사람(조장) 추가 하기
-        Study_Member studyMember = Study_Member.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
                 .user(master)
                 .status(1)
@@ -150,7 +150,7 @@ public class StudyService {
         User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
         // 2. DB에 저장할 Study_Member Entity 선언,save
-        Study_Member studyMember = Study_Member.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
                 .user(user)
                 .status(0) //not approved
@@ -167,7 +167,7 @@ public class StudyService {
         StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_room_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_room_id));
 
-        List<Study_skill> studySkills = studySkillRepository.findByStudyRoomId(study_room_id);
+        List<StudySkill> studySkills = studySkillRepository.findByStudyRoomId(study_room_id);
         return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills);
     }
 
@@ -199,7 +199,7 @@ public class StudyService {
                 .collect(Collectors.toList());
     }
 
-    private List<Study_skill> getStudySkills(StudyRoom studyRoom) {
+    private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
         return studySkillRepository.findByStudyRoomId(studyRoom.getId());
     }
 }//class StudyService
