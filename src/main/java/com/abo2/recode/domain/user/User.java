@@ -1,10 +1,13 @@
 package com.abo2.recode.domain.user;
 
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.studyroom.Attendance;
+import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +20,7 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "users")
@@ -39,7 +43,7 @@ public class User {
     @Column(length = 100)
     private String essay;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 30)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -84,6 +88,7 @@ public class User {
     public void writeEssay(String essay){
         this.essay = essay;
     }
+
 
     public void completeSignUp() {
         this.email = email;

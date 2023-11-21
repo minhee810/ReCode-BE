@@ -30,9 +30,6 @@ public class EmailConfig {
     @Value("${AdminMail.password}")
     private String password;
 
-    public EmailConfig() {
-    }
-
     @Bean
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();

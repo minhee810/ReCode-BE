@@ -22,6 +22,7 @@ public interface Study_memberRepository extends JpaRepository<Study_Member,Long>
     @Query("DELETE FROM Study_Member sm WHERE sm.user.id = :userId AND sm.studyRoom.id = :studyId")
     void deleteByUserIdAndStudyRoomUd(@Param("userId") Long userId, @Param("studyId") Long studyId);
 
+
      @Transactional
      @Modifying
      @Query(value = "DELETE FROM study_skill WHERE study_room_id = ?1", nativeQuery = true)

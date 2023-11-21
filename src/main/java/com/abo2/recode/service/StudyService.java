@@ -113,7 +113,7 @@ public class StudyService {
         LocalDateTime sameWeekDay = now.with(TemporalAdjusters.nextOrSame(dayOfWeek));
         LocalDateTime time = LocalDateTime
                 .parse(sameWeekDay.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                + "T" + parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        + "T" + parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         return time;
     }//convertToDateTime()

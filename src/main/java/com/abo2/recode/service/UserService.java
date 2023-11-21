@@ -165,4 +165,17 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다."));
     }
 
+    @Transactional
+    public UserRespDto.changePasswordRespDto changePassword(Long userId, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
+        // 1. user 아이디 조회
+        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+
+        userPS.changePassword(changePasswordReqDto.getPassword());
+
+        return new UserRespDto.changePasswordRespDto(userPS);
+    }
+
+
+
+
 }
