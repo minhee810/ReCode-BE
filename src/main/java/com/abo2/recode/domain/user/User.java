@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
@@ -53,6 +54,13 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // 이메일 관련
+    @Column(name = "email_check_token", nullable = true)
+    private String emailCheckToken;
+
+    @Column(name = "email_token_expiry", nullable = true)
+    private LocalDateTime emailTokenExpiry;
+
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
@@ -77,4 +85,17 @@ public class User {
         this.essay = essay;
     }
 
+    public void completeSignUp() {
+        this.email = email;
+        this.createdAt = createdAt;
+    }
+
+    public void generateEmailCheckToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailTokenExpiry = LocalDateTime.now().plusHours(1);
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }
