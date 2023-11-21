@@ -3,16 +3,12 @@ package com.abo2.recode.domain.post;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -35,15 +31,15 @@ public class Post {
 
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @JoinColumn(name = "study_room_id", nullable = false)
     private StudyRoom studyRoom;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private String category;
+    private Integer category;
 
     @CreatedDate
     @Column(nullable = false)
@@ -54,12 +50,13 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Post(String title, String content, StudyRoom studyRoom,
-                User user, String category) {
+    public Post(String title, String content, StudyRoom studyRoom, User user, Integer category) {
         this.title = title;
         this.content = content;
         this.studyRoom = studyRoom;
         this.user = user;
         this.category = category;
     }
+
+
 }

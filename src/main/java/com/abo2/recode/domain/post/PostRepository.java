@@ -13,6 +13,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.studyRoom.Id = :studyRoomId")
     List<Post> findPostsByStudyRoomId(@Param("studyRoomId") Long studyRoomId);
 
+//    List<Post> findByStudyRoomId(Long studyId);
+//    List<Post> findByUserId(Long userId);
+
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM study_skill WHERE study_room_id = ?1", nativeQuery = true)

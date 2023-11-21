@@ -15,13 +15,13 @@ public class PostDetailRespDto {
     private String content;
     private Long studyRoomId;
     private Long userId;
-    private String category;
+    private Integer category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String nickname;
 
 
-    public PostDetailRespDto(Long id, String title, String content, Long studyRoomId, Long userId, String category, LocalDateTime createdAt, LocalDateTime updatedAt, String nickname) {
+    public PostDetailRespDto(Long id, String title, String content, Long studyRoomId, Long userId, Integer category, LocalDateTime createdAt, LocalDateTime updatedAt, String nickname) {
         this.id = id;
         this.title = title;
         this.content = content;

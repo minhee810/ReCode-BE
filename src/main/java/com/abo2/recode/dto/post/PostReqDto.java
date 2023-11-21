@@ -8,20 +8,47 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 
+
+@Getter
+@Setter
 public class PostReqDto {
 
-
-    @Getter
-    @Setter
     public static class PostWriteReqDto {
 
+        @NotEmpty
         private String title;
+
+        @NotEmpty
         private String content;
-        private String category;
-        private Long studyRoomId;  // StudyRoom 대신 실제 외래 키 값인 Long 으로 변경
-        private Long userId;
+
+        @NotEmpty
+        private StudyRoom studyRoomId;
+
+        @NotEmpty
+        private User userId;
+
+        @NotEmpty
+        private Integer category;
+
+
+        public Post toEntity() {
+            return Post.builder()
+                    .title(title)
+                    .content(content)
+                    .category(category)
+                    .studyRoom(studyRoomId)
+                    .user(userId)
+                    .build();
+        }
 
 
     }
+
+
+
+
+
 }
+
