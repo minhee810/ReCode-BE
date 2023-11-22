@@ -113,6 +113,7 @@ public class UserReqDto {
     public static class ChangePasswordReqDto{
         @NotEmpty
         private String password;
+        private String emailCheckToken;
     }
 
 }

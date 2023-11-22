@@ -35,9 +35,7 @@ public class EmailController {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if(!userOpt.isPresent()) {
-            ResponseEntity
-                    .badRequest()
-                    .body(new ResponseDto<>(-1, "유효한 이메일 주소가 아닙니다", null));
+            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 이메일이 존재하지 않습니다.", null));
         }
 
         User user = userOpt.get();
@@ -53,6 +51,7 @@ public class EmailController {
     public ResponseEntity<?> checkEmailToken(@AuthenticationPrincipal LoginUser loginUser,
                                              @RequestParam String emailCheckToken, @RequestParam String email){
         Optional<User> userOpt = userRepository.findByEmail(email);
+        Optional<User> userEm = userRepository.findByEmailCheckToken(emailCheckToken);
 
         if (!userOpt.isPresent()) {
             return ResponseEntity
