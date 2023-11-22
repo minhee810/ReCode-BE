@@ -95,6 +95,11 @@ public class AdminController {
     }*/
 
 
+    @GetMapping(value = "/v1/get-skills")
+    public ResponseEntity<?> getSkills(){
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
+        return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
+    }
 
 
 }//AdminController

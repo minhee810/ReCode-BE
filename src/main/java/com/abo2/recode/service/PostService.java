@@ -31,9 +31,9 @@ public class PostService {
     private final StudyRoomRepository studyRoomRepository;
     private final Study_memberRepository study_memberRepository;
 
-
-    // 게시글 목록
-    public List<PostRespDto.PostListRespDto> postList(Long studyId) {
+    // 게시글 불러오기
+    @Transactional
+    public List<PostRespDto.PostListRespDto> postList(Long studyId){
 
         List<Post> posts = postRepository.findPostsByStudyRoomId(studyId);
 
@@ -91,5 +91,33 @@ public class PostService {
     }
 
 
+    // 게시글 검색
+    @Transactional
+    public List<PostRespDto.PostListRespDto> searchList(Long studyId, String keyword){
+
+        List<Post> posts = postRepository.findPostsByKeyword(studyId, keyword);
+
+        if(posts.isEmpty()) {
+            throw new CustomApiException("해당 게시글이 존재하지 않습니다.");
+        }
+
+        return posts.stream()
+                .map((PostRespDto.PostListRespDto::new))
+                .collect(Collectors.toList());
+    }
+
+    // 게시글 필터링
+    @Transactional
+    public List<PostRespDto.PostListRespDto> filterList(Long studyId, Integer category){
+        List<Post> posts = postRepository.findPostsByCategory(studyId, category);
+
+        if(posts.isEmpty()) {
+            throw new CustomApiException("해당 게시글이 존재하지 않습니다.");
+        }
+
+        return posts.stream()
+                .map(((PostRespDto.PostListRespDto::new)))
+                .collect(Collectors.toList());
+    }
 }
 

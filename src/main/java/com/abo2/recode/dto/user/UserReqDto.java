@@ -22,7 +22,7 @@ public class UserReqDto {
     @Getter
     @Setter
     public static class JoinReqDto {
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
+        @Pattern(regexp = "^[a-zA-Z가-힣0-9]{1,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
         @NotEmpty
         private String username;
 
@@ -106,6 +106,13 @@ public class UserReqDto {
         @NotEmpty
         @Size(min = 2,  max = 300)
         private String essay;
+    }
+
+    @Setter
+    @Getter
+    public static class ChangePasswordReqDto{
+        @NotEmpty
+        private String password;
     }
 
 }

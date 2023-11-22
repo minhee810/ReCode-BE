@@ -29,16 +29,15 @@ public class Post {
     @Column(nullable = false, length = 300)
     private String content;
 
-
     @ManyToOne
     @JoinColumn(name = "study_room_id", nullable = false)
     private StudyRoom studyRoom;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @Column
     private Integer category;
 
     @CreatedDate

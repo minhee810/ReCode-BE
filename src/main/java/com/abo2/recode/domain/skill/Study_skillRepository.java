@@ -1,17 +1,16 @@
 package com.abo2.recode.domain.skill;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 
-@Repository
 public interface Study_skillRepository extends JpaRepository<Study_skill,Long> {
+
+    List<Study_skill> findByStudyRoomId(Long studyRoomId);
 
     @Transactional
     @Modifying

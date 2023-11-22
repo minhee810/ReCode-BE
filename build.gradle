@@ -41,6 +41,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    // dependency for sending Email to change password
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // SLF4J to Log4j2 Bridge (if you are using SLF4J APIs in your code)
     implementation 'org.apache.logging.log4j:log4j-api:2.21.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.21.1'
