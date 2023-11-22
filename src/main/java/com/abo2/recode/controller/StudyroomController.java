@@ -59,9 +59,10 @@ public class StudyroomController {
             @PathVariable Long study_id,
             @RequestBody StudyReqDto.StudyApplyReqDto studyApplyReqDto
     ){
+        //"study_id": 1, // 사용자가 신청하고자 하는 스터디의 ID
+        // "user_id": 42  // 신청하는 사용자의 ID
+
         //1. study_member에 status = 0으로 insert한다
-        logger.info(loginUser.getUser().toString());
-        // loginUser.getUser().getId() -> user id 담겨있음
 
         studyApplyReqDto.setStudy_id(study_id);
         studyApplyReqDto.setUser_id(loginUser.getUser().getId());
@@ -69,7 +70,6 @@ public class StudyroomController {
         StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto =
 
         studyService.studyApply(studyApplyReqDto);
-
 
         //2. 성공 return
         ResponseDto<StudyResDto.StudyRoomApplyResDto> responseDto
@@ -110,6 +110,6 @@ public class StudyroomController {
         List<StudyResDto.StudyListRespDto> studyListRespDto;
         studyListRespDto = studyService.mainList();
         return new ResponseEntity<>(new ResponseDto<>(1, "목록 조회 성공", studyListRespDto), HttpStatus.OK);
-    }
+    }//mainList()
 
 }//StudyRoomController class

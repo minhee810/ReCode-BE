@@ -34,8 +34,16 @@ public class AdminController {
     //관리자가 기술 스택 추가
     @PostMapping(value = "/v1/admin/addskill")
     public ResponseEntity<ResponseDto> adminSkillAdd(
-            @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto
+            @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto,
+            @AuthenticationPrincipal LoginUser loginUser
             ){
+
+        //유저가 관리자가 맞는지 검증
+        if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {
+            logger.error("관리자가 아님!!!!");
+            return (ResponseEntity<ResponseDto>) new CustomExceptionHandler()
+                    .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
+        }
 
         // 1. 쉼표로 분할하여 배열에 저장
         String[] addskills = adminSkillAddReqDto.getSkills().split(",");
@@ -56,7 +64,6 @@ public class AdminController {
             @PathVariable Long study_id,
             @AuthenticationPrincipal LoginUser loginUser
             ){
-
         // Debugging: Log the user information
         logger.info("Logged-in user: {}", loginUser);
 
@@ -80,8 +87,16 @@ public class AdminController {
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급/강등
     @PutMapping(value="/v1/study-member/{study_id}/{user_id}")
     public ResponseEntity<ResponseDto> memberRoleChange(
-            @RequestBody AdminReqDto.MemberRoleReqDto memberRoleReqDto
+            @RequestBody AdminReqDto.MemberRoleReqDto memberRoleReqDto,
+            @AuthenticationPrincipal LoginUser loginUser
             ){
+
+        //유저가 관리자가 맞는지 검증
+        if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {
+            logger.error("관리자가 아님!!!!");
+            return (ResponseEntity<ResponseDto>) new CustomExceptionHandler()
+                    .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
+        }
 
             /* MemberRoleReqDto
             {
@@ -101,6 +116,10 @@ public class AdminController {
                 HttpStatus.OK);
     }//memberRoleChange()
 
+
+    // 관리자 권한으로 글 삭제
+
+    // 관리자 기술 스택 불러오기 성공
     @GetMapping(value = "/v1/get-skills")
     public ResponseEntity<?> getSkills(){
         SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();

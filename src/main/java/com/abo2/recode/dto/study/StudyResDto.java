@@ -3,6 +3,7 @@ package com.abo2.recode.dto.study;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -179,8 +180,44 @@ public class StudyResDto {
         @NotEmpty
         private Long study_id;
 
+        @Builder
         public StudyRoomApplyResDto(Long study_id) {
             this.study_id = study_id;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class StudyMembershipResDto{
+      /*  {
+            "code":1
+            "msg": "가입 신청이 승인되었습니다."   // or "가입 신청이 거부되었습니다."
+            "data": {
+            "id": 2
+            "study_id": 1
+            "user_id": 2
+            "status": "approved" // or "rejected"
+        }
+        }*/
+
+        @NotEmpty
+        private Long id; //나(승인하는 스터디 조장)
+
+        @NotEmpty
+        private Long user_id;
+
+        @NotEmpty
+        private Long study_id;
+
+        @NotEmpty
+        private String status;
+
+        @Builder
+        public StudyMembershipResDto(Long id, Long user_id, Long study_id, String status) {
+            this.id = id;
+            this.user_id = user_id;
+            this.study_id = study_id;
+            this.status = status;
         }
     }
 }

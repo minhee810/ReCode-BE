@@ -52,6 +52,20 @@ public class StudyService {
         this.studyMemberRepository = studyMemberRepository;
     }
 
+    //스터디 조장의 스터디 멤버 승인/거부
+    @Transactional
+    public void membershipUpdate(String status, Long studyId, Long userId) {
+
+        if(status.equals("Approved")){
+            //StudyMember 테이블 업데이트(상태값 0 -> 1)
+            studyMemberRepository.membershipUpdate(1,studyId,userId);
+
+        } else if (status.equals("Rejected")) {
+            //StudyMember 테이블 업데이트(상태값 0 -> 2)
+            studyMemberRepository.membershipUpdate(2,studyId,userId);
+        }
+    }
+
     public void createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto){
 
         System.out.println("Service createRoom()");
@@ -137,11 +151,11 @@ public class StudyService {
 //        Long user_id;
 
         //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
-        StudyRoom studyRoom = new StudyRoom();
-        Optional<StudyRoom> optionalStudyRoom = Optional.of(studyRoom);
+        StudyRoom studyRoom;
+        Optional<StudyRoom> optionalStudyRoom;
 
         optionalStudyRoom =
-                studyRoomRepository.findById(studyApplyReqDto.getUser_id());
+                studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
         studyRoom = optionalStudyRoom.orElse(null);
 
         // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
@@ -202,4 +216,6 @@ public class StudyService {
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
         return studySkillRepository.findByStudyRoomId(studyRoom.getId());
     }
+
+
 }//class StudyService
