@@ -28,12 +28,15 @@ public class StudyMemberController {
 
     //스터디 조장의 스터디 조원 승인
     @PostMapping(value = "/v1/study-member/{study_id}/{user_id}")
-    public ResponseEntity<?> memberMembershipApprove(
+    public ResponseEntity<?> membershipUpdate(
             @RequestBody StudyReqDto.StudyMembershipReqDto studyMembershipReqDto,
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(name = "study_id") Long study_id,
             @PathVariable(name="user_id") Long user_id
     ){
+
+        System.out.println(study_id);
+        System.out.println(user_id);
 
         StudyResDto.StudyMembershipResDto studyMembershipResDto;
 

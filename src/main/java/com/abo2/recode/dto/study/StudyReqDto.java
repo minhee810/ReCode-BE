@@ -94,5 +94,7 @@ public class StudyReqDto {
         public StudyMembershipReqDto(String status) {
             this.status = status;
         }
+
+        public StudyMembershipReqDto() {}
     }
 }

@@ -26,7 +26,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
 
     @Modifying
     @Query(value = "UPDATE study_member as sm SET sm.status =:status WHERE sm.study_room_id=:studyId" +
-            "and sm.user_id=:userId",nativeQuery = true)
+            " and sm.user_id=:userId",nativeQuery = true)
     void membershipUpdate(@Param(value = "status") Integer status,
                           @Param(value = "studyId")Long studyId,
                           @Param(value = "userId")Long userId);
