@@ -42,23 +42,23 @@ public class PostController {
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", null), HttpStatus.OK);
     }
 
-//    // 게시글 상세보기
-//    @GetMapping("/v1/study/posts/{post_id}")
-//    public ResponseEntity<PostRespDto> getPostById(@PathVariable Long post_id) {
-//        PostRespDto postRespDto = postService.getPostById(post_id);
-//        return new ResponseEntity<>(postRespDto, HttpStatus.OK);
-//    }
-//
-//
-//    // 게시글 수정
-//    @PutMapping("/v1/study/posts/{post_id}")
-//    public ResponseEntity<PostRespDto> updatePost(
-//            @PathVariable Long post_id,
-//            @RequestBody PostReqDto postReqDto
-//    ) {
-//        PostRespDto responseDto = postService.updatePost(post_id, postReqDto);
-//        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-//    }
+    // 게시글 상세보기
+    @GetMapping("/v1/study/posts/{post_id}")
+    public ResponseEntity<?> getPostById(@PathVariable Long post_id) {
+        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id);
+        return new ResponseEntity<>(postDetailRespDto, HttpStatus.OK);
+    }
+
+
+    // 게시글 수정
+    @PutMapping("/v1/study/posts/{post_id}")
+    public ResponseEntity<?> updatePost(
+            @PathVariable Long post_id,
+            @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto
+    ) {
+        PostRespDto.PostWriteRespDto postWriteRespDto = postService.updatePost(post_id, postWriteReqDto);
+        return new ResponseEntity<>(postWriteRespDto, HttpStatus.OK);
+    }
 
 
     // 게시글 삭제

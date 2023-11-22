@@ -58,5 +58,12 @@ public class Post {
         this.category = category;
     }
 
+    public void PostWrite(String title, String content, StudyRoom studyRoom, User user, Integer category) {
+        this.title = title;
+        this.content = content;
+        this.studyRoom = studyRoom;
+        this.user = user;
+        this.category = category;
+    }
 
 }

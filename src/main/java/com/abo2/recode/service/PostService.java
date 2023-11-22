@@ -2,6 +2,7 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostRepository;
+import com.abo2.recode.domain.studymember.Study_memberRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
@@ -28,6 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final StudyRoomRepository studyRoomRepository;
+    private final Study_memberRepository study_memberRepository;
 
 
     // 게시글 목록
@@ -46,37 +48,37 @@ public class PostService {
 
 
     // 게시글 작성
-    public void writePost(PostReqDto.PostWriteReqDto postWriteReqDto) {
+    public void writePost(Long userId, PostReqDto.PostWriteReqDto postWriteReqDto, Long study_room_id) {
+
+        userRepository.findById(userId);
+        study_memberRepository.findByUserId(userId);
+        studyRoomRepository.findById(study_room_id);
 
         Post savedPost = postWriteReqDto.toEntity();
         postRepository.save(savedPost);
+
     }
 
 
-//    // 게시글 상세보기
-//    public PostRespDto getPostById(Long post_id) {
-//        Post post = postRepository.findById(post_id)
-//                .orElseThrow(() -> new CustomApiException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
-//
-//        return new PostRespDto(post);
-//    }
-
-
-/*
-    // 게시글 수정
-    public PostRespDto updatePost(Long post_id, PostReqDto postReqDto) {
+    // 게시글 상세보기
+    public PostRespDto.PostDetailRespDto getPostById(Long post_id) {
         Post post = postRepository.findById(post_id)
                 .orElseThrow(() -> new CustomApiException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
 
-        post.setTitle(postReqDto.getTitle());
-        post.setContent(postReqDto.getContent());
-        post.setCategory(postReqDto.getCategory());
 
-        Post updatedPost = postRepository.save(post);
-
-        return new PostRespDto(updatedPost);
+        return new PostRespDto.PostDetailRespDto(post);
     }
-*/
+
+
+    // 게시글 수정
+    public PostRespDto.PostWriteRespDto updatePost(Long post_id, PostReqDto.PostWriteReqDto postWriteReqDto) {
+        Post post = postRepository.findById(post_id)
+                .orElseThrow(() -> new CustomApiException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
+
+        Post updatedPost = postRepository.save(postWriteReqDto.toEntity());
+
+        return new PostRespDto.PostWriteRespDto(updatedPost);
+    }
 
 
     // 게시글 삭제
