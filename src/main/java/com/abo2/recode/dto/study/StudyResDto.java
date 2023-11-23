@@ -1,9 +1,8 @@
 package com.abo2.recode.dto.study;
 
-import com.abo2.recode.domain.skill.Study_skill;
-import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.skill.StudySkill;
+import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
-import com.abo2.recode.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -82,7 +81,7 @@ public class StudyResDto {
         @Column(nullable = false)
         private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
-        public StudyRoomDetailResDto(StudyRoom studyRoom, List<Study_skill> studySkills) {
+        public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills) {
             this.study_room_id = studyRoom.getId();
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
@@ -112,7 +111,7 @@ public class StudyResDto {
         private String status;
         private List<String> skillNames;
 
-        public MyStudyRespDto(Study_Member studyMember, List<Study_skill> studySkills) {
+        public MyStudyRespDto(StudyMember studyMember, List<StudySkill> studySkills) {
             StudyRoom studyRoom = studyMember.getStudyRoom();
 
             this.id = studyRoom.getId();
@@ -150,7 +149,7 @@ public class StudyResDto {
         private String masterEmail;
         private String masterNickname;
 
-        public StudyListRespDto(StudyRoom studyRoom, List<Study_skill> studySkills) {
+        public StudyListRespDto(StudyRoom studyRoom, List<StudySkill> studySkills) {
             this.id = studyRoom.getId();
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();

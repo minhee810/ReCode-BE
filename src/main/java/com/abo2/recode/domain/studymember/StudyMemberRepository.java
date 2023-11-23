@@ -4,19 +4,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface Study_memberRepository extends JpaRepository<Study_Member,Long> {
+public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
 
-    List<Study_Member> findByUserId(Long userId);
+    List<StudyMember> findByUserId(Long userId);
 
     // 스터디 탈퇴
     @Transactional
     @Modifying
-    @Query("DELETE FROM Study_Member sm WHERE sm.user.id = :userId AND sm.studyRoom.id = :studyId")
+    @Query(value = "DELETE FROM Study_Member sm WHERE sm.user.id = :userId AND sm.studyRoom.id = :studyId", nativeQuery = true)
     void deleteByUserIdAndStudyRoomUd(@Param("userId") Long userId, @Param("studyId") Long studyId);
 
      @Transactional

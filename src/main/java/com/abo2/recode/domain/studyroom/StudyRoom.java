@@ -3,8 +3,8 @@ package com.abo2.recode.domain.studyroom;
 
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
-import com.abo2.recode.domain.skill.Study_skill;
-import com.abo2.recode.domain.studymember.Study_Member;
+import com.abo2.recode.domain.skill.StudySkill;
+import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -75,11 +75,11 @@ public class StudyRoom {
 
     // StudyRoom을 참조하는 StudySkill 엔티티
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
-    private List<Study_skill> studySkills;
+    private List<StudySkill> studySkills;
 
     // StudyRoom을 참조하는 Study_Member 엔티티
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
-    private List<Study_Member> studyMembers;
+    private List<StudyMember> studyMembers;
 
     // StudyRoom을 참조하는 attendance 엔티티
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)

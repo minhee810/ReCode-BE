@@ -26,6 +26,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(unique = true, nullable = false, length = 20)
     private String username;
 
@@ -65,8 +66,6 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
-
 
     public void updateUser(String nickname, String email){
         this.email = email;

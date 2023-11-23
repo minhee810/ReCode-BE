@@ -11,7 +11,7 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
 
     Optional<StudyRoom> findById(Long Id);
 
-    @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master LEFT JOIN FETCH sr.studySkills WHERE sr.id = :id")
+    @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master LEFT JOIN FETCH sr.studySkills WHERE sr.id = :id" )
     Optional<StudyRoom> findWithMasterAndSkillsById(@Param("id") Long id);
 
     @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master")

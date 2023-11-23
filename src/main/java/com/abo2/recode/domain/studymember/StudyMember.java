@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.mapping.ToOne;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -16,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-public class Study_Member {
+public class StudyMember {
 
     @Id
     @Column(name="study_member_id")
@@ -35,7 +34,7 @@ public class Study_Member {
     private Integer status;
 
     @Builder
-    public Study_Member(StudyRoom studyRoom, User user, Integer status) {
+    public StudyMember(StudyRoom studyRoom, User user, Integer status) {
         this.studyRoom = studyRoom;
         this.user = user;
         this.status = status;

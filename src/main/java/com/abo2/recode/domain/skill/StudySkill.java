@@ -15,22 +15,21 @@ import javax.persistence.*;
 public class StudySkill {
 
     @Id
+    @Column(name = "study_skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studySkill_id")
     private Long id; //스터디 그룹 스킬 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "studyRoom_id")
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
     @OneToOne
     @JoinColumn(name = "skill_id")
-    private Skill skills;
+    private Skill skill;
 
     @Builder
-    public StudySkill(StudyRoom studyRoom, Skill skills) {
+    public StudySkill(StudyRoom studyRoom, Skill skill) {
         this.studyRoom = studyRoom;
-        this.skills = skills;
+        this.skill = skill;
     }
 }
-

@@ -1,9 +1,9 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.skill.Study_skill;
-import com.abo2.recode.domain.skill.Study_skillRepository;
-import com.abo2.recode.domain.studymember.Study_Member;
-import com.abo2.recode.domain.studymember.Study_memberRepository;
+import com.abo2.recode.domain.skill.StudySkill;
+import com.abo2.recode.domain.skill.StudySkillRepository;
+import com.abo2.recode.domain.studymember.StudyMember;
+import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.study.StudyResDto;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -29,8 +28,8 @@ public class UserService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final Study_memberRepository studyMemberRepository;
-    private final Study_skillRepository studySkillRepository;
+    private final StudyMemberRepository studyMemberRepository;
+    private final StudySkillRepository studySkillRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -98,7 +97,6 @@ public class UserService {
 
         // 2. update()로 객체에 변경사항 반영
         userPS.updateUser(updateUserReqDto.getNickname(), updateUserReqDto.getEmail());
-
         // 3. dto 응답
         return new UserRespDto.UpdateUserRespDto(userPS);
     }
@@ -148,11 +146,11 @@ public class UserService {
     }
 
     public List<StudyResDto.MyStudyRespDto> myStudy(Long userId) {
-        List<Study_Member> studyMembers = studyMemberRepository.findByUserId(userId);
+        List<StudyMember> studyMembers = studyMemberRepository.findByUserId(userId);
         List<StudyResDto.MyStudyRespDto> myStudyRespDtos = new ArrayList<>();
 
-        for (Study_Member studyMember : studyMembers) {
-            List<Study_skill> skills = studySkillRepository.findByStudyRoomId(studyMember.getStudyRoom().getId());
+        for (StudyMember studyMember : studyMembers) {
+            List<StudySkill> skills = studySkillRepository.findByStudyRoomId(studyMember.getStudyRoom().getId());
             StudyResDto.MyStudyRespDto myStudyRespDto = new StudyResDto.MyStudyRespDto(studyMember, skills);
             myStudyRespDtos.add(myStudyRespDto);
         }
