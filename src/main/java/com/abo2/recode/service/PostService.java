@@ -47,15 +47,24 @@ public class PostService {
 
 
     // 게시글 작성
-    public void writePost(Long userId, PostReqDto.PostWriteReqDto postWriteReqDto, Long study_room_id) {
+    public PostRespDto.PostWriteRespDto writePost(Long userId, PostReqDto.PostWriteReqDto postWriteReqDto, Long studyRoomId) {
 
-        userRepository.findById(userId);
-        study_memberRepository.findByUserId(userId);
-        studyRoomRepository.findById(study_room_id);
+        User user = userRepository.findById(postWriteReqDto.getUserId())
+                .orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다" + userId));
 
-        Post savedPost = postWriteReqDto.toEntity();
-        postRepository.save(savedPost);
+        StudyRoom studyRoom = studyRoomRepository.findById(postWriteReqDto.getStudyRoomId())
+                .orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다" + studyRoomId));
 
+        Post post = new Post();
+        post.setTitle(postWriteReqDto.getTitle());
+        post.setContent(postWriteReqDto.getContent());
+        post.setCategory(postWriteReqDto.getCategory());
+        post.setStudyRoom(studyRoom);
+        post.setUser(user);
+
+        Post savedPost = postRepository.save(post);
+
+        return new PostRespDto.PostWriteRespDto(savedPost);
     }
 
 
@@ -70,14 +79,14 @@ public class PostService {
 
 
     // 게시글 수정
-    public PostRespDto.PostWriteRespDto updatePost(Long post_id, PostReqDto.PostWriteReqDto postWriteReqDto) {
-        Post post = postRepository.findById(post_id)
-                .orElseThrow(() -> new CustomApiException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
-
-        Post updatedPost = postRepository.save(postWriteReqDto.toEntity());
-
-        return new PostRespDto.PostWriteRespDto(updatedPost);
-    }
+//    public PostRespDto.PostWriteRespDto updatePost(Long post_id, PostReqDto.PostWriteReqDto postWriteReqDto) {
+//        Post post = postRepository.findById(post_id)
+//                .orElseThrow(() -> new CustomApiException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
+//
+//        Post updatedPost = postRepository.save(postWriteReqDto.toEntity());
+//
+//        return new PostRespDto.PostWriteRespDto(updatedPost);
+//    }
 
 
     // 게시글 삭제

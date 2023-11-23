@@ -10,11 +10,10 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-
-@Getter
-@Setter
 public class PostReqDto {
 
+    @Getter
+    @Setter
     public static class PostWriteReqDto {
 
         @NotEmpty
@@ -24,24 +23,13 @@ public class PostReqDto {
         private String content;
 
         @NotEmpty
-        private StudyRoom studyRoomId;
+        private Long studyRoomId;
 
         @NotEmpty
-        private User userId;
+        private Long userId;
 
         @NotEmpty
         private Integer category;
-
-
-        public Post toEntity() {
-            return Post.builder()
-                    .title(title)
-                    .content(content)
-                    .category(category)
-                    .studyRoom(studyRoomId)
-                    .user(userId)
-                    .build();
-        }
 
 
     }
