@@ -60,7 +60,7 @@ public class NoticeReqDto {
         @NotEmpty
         private User userId;
 
-        public AdminUpdateNoticeReqDto(String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        public AdminUpdateNoticeReqDto(String title, String content) {
             this.title = title;
             this.content = content;
         }
@@ -72,6 +72,26 @@ public class NoticeReqDto {
                     .createdBy(userId)
                     .build();
         }
+    }
 
+    @Getter
+    @Setter
+    public static class GetAllNoticeReqDto{
+
+        @NotEmpty
+        private String id;
+
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String title;
+
+        @NotEmpty
+        private String content;
+
+        public GetAllNoticeReqDto(String id, String title, String content){
+            this.id = id;
+            this.title = title;
+            this.content = content;
+        }
     }
 }

@@ -13,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
@@ -23,7 +27,7 @@ public class NoticeService {
 
     // 공지사항 작성
     @Transactional
-    public NoticeRespDto.AdminAddNoticeRespDto createNotice(NoticeReqDto.AdminAddNoticeReqDto adminAddNoticeReqDto){
+    public NoticeRespDto createNotice(NoticeReqDto.AdminAddNoticeReqDto adminAddNoticeReqDto){
         // Notice 엔티티를 생성하고 작성자 정보 설정
 
         User admin = userRepository.findById(adminAddNoticeReqDto.getUserId().getId())
@@ -37,7 +41,7 @@ public class NoticeService {
 
         noticeRepository.save(notice);
 
-        NoticeRespDto.AdminAddNoticeRespDto adminAddNoticeRespDto = NoticeRespDto.AdminAddNoticeRespDto.builder()
+        NoticeRespDto adminAddNoticeRespDto = NoticeRespDto.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
@@ -48,15 +52,14 @@ public class NoticeService {
 
     // 공지사항 수정
     @Transactional
-    public NoticeRespDto.UpdateNoticeRespDto updateNotice(Long noticeId,
-                                                          NoticeReqDto.AdminUpdateNoticeReqDto adminUpdateNoticeReqDto) {
+    public NoticeRespDto updateNotice(Long noticeId, NoticeReqDto.AdminUpdateNoticeReqDto adminUpdateNoticeReqDto) {
         // 공지사항 게시물 조회
         Notice updateNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 공지사항 글 입니다. "));
 
         updateNotice.setNoticeInfo(adminUpdateNoticeReqDto.getContent(), adminUpdateNoticeReqDto.getTitle());
 
-        NoticeRespDto.UpdateNoticeRespDto updateNoticeRespDto = NoticeRespDto.UpdateNoticeRespDto.builder()
+        NoticeRespDto updateNoticeRespDto = NoticeRespDto.builder()
                 .id(adminUpdateNoticeReqDto.getUserId().getId())
                 .title(adminUpdateNoticeReqDto.getTitle())
                 .content(adminUpdateNoticeReqDto.getContent())
@@ -65,14 +68,40 @@ public class NoticeService {
        return updateNoticeRespDto;
     }
 
+    // 공지사항 상세보기
+    @Transactional
+    public NoticeRespDto detailNotice(Long noticeId){
+
+        Optional<Notice> detailNotice = noticeRepository.findById(noticeId); // null 값 체크
+        if (detailNotice.isPresent()) {
+            return convertToDto(detailNotice.get());        // 값이 존재할 때만 dto 형태로 반환
+        }else {
+            throw new CustomApiException("존재하지 않는 공지사항 글입니다. ");
+        }
+    }
+
+    // 공지사항 삭제
     @Transactional
     public void deleteNotice(Long noticeId){
         noticeRepository.deleteById(noticeId);
     }
 
-    // 공지사항 삭제
 
+    // 공지사항 목록 조회
+    @Transactional
+    public List<NoticeRespDto> getAllNotices(){
+        List<Notice> notice = noticeRepository.findAll();
+        return notice.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 
-
+    private NoticeRespDto convertToDto (Notice notice){
+        NoticeRespDto dto = new NoticeRespDto();
+        dto.setId(notice.getId());
+        dto.setTitle(notice.getTitle());
+        dto.setContent(notice.getContent());
+        return dto;
+    }
 
 }

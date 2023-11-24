@@ -10,14 +10,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.security.cert.CertPathBuilder;
 import java.time.LocalDateTime;
-
+import java.util.List;
+@Getter
+@Setter
+@NoArgsConstructor
 public class NoticeRespDto {
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class AdminAddNoticeRespDto{
-
         @NotEmpty
         private Long id;
 
@@ -29,33 +27,11 @@ public class NoticeRespDto {
         private String content;
 
         @Builder
-        public AdminAddNoticeRespDto(Long id, String title, String content) {
+        public NoticeRespDto(Long id, String title, String content) {
             this.id = id;
             this.title = title;
             this.content = content;
         }
-    }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class UpdateNoticeRespDto{
 
-        @NotEmpty
-        private Long id;
-
-        @NotEmpty
-        @Size(min = 1, max = 50)
-        private String title;
-
-        @NotEmpty
-        private String content;
-
-        @Builder
-        public UpdateNoticeRespDto(Long id, String title, String content) {
-            this.id = id;
-            this.title = title;
-            this.content = content;
-        }
-    }
 }
