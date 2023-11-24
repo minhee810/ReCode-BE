@@ -25,11 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE StudyRoom sr SET sr.master = null WHERE sr.master.id = :userId")
-    void dissociateStudyRooms(@Param("userId") Long userId);
-
-    @Transactional
-    @Modifying
     @Query("UPDATE Post p SET p.user = null WHERE p.user.id = :userId")
     void dissociatePosts(@Param("userId") Long userId);
 
@@ -45,7 +40,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE StudyMember sm SET sm.user.id = null WHERE sm.user.id = :userId",nativeQuery = true)
+    @Query(value = "UPDATE StudyMember sm SET sm.user.id = null WHERE sm.user.id = :userId")
     void dissociateStudyMember(@Param("userId") Long userId);
 
     @Transactional

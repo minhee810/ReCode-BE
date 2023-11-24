@@ -18,8 +18,8 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
     // 스터디 탈퇴
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM StudyMember sm WHERE sm.user.id = :userId AND sm.studyRoom.id = :studyId", nativeQuery = true)
-    void deleteByUserIdAndStudyRoomUd(@Param("userId") Long userId, @Param("studyId") Long studyId);
+    @Query(value = "DELETE FROM Study_Member sm WHERE sm.user.id = :userId AND sm.studyRoom.id = :studyId", nativeQuery = true)
+    void deleteByUserIdAndStudyRoomId(@Param("userId") Long userId, @Param("studyId") Long studyId);
 
 
      @Transactional
@@ -29,4 +29,5 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
 
      // 사용자가 스터디 룸에 참여 중인지 여부 확인
      Optional<StudyMember> findByUserAndStudyRoom(User user, StudyRoom studyRoom);
+
 }

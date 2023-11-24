@@ -4,6 +4,7 @@ import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
+import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.study.StudyResDto;
@@ -30,6 +31,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final StudyMemberRepository studyMemberRepository;
     private final StudySkillRepository studySkillRepository;
+    private final StudyRoomRepository studyRoomRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -125,16 +127,24 @@ public class UserService {
 
     @Transactional
     public void withdrawUser(Long userId){
-        User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
-        userRepository.dissociateStudyRooms(userId);
+        // 가입 중인 스터디룸 중에서 스터디장의 권한으로 있는 스터디 룸이 있는지 확인
+        boolean isMasterOfAnyRoom = studyRoomRepository.existsByMaster(user);
+
+        if (isMasterOfAnyRoom) {
+            throw new CustomApiException("스터디장의 권한을 갖고 계신 스터디룸이 존재합니다. 권한을 양도한 후에 탈퇴를 진행해주시기 바랍니다.");
+        }
+
+        // 스터디장의 권한으로 있는 스터디 룸이 없다면 스터디룸에 작성한 글, 퀴즈, Qna 에서 작성한 글을 제외한 정보 삭제
+        userRepository.dissociateStudyMember(userId);
         userRepository.dissociatePosts(userId);
         userRepository.dissociatePostReply(userId);
         userRepository.dissociateQnas(userId);
-        userRepository.dissociateStudyMember(userId);
         userRepository.dissociateQuiz(userId);
         userRepository.deleteUsersAttendance(userId);
         userRepository.deleteWithoutRelatedInfo(userId);
+
     }
 
     @Transactional
