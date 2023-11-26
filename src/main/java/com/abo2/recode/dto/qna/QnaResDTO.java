@@ -1,6 +1,5 @@
 package com.abo2.recode.dto.qna;
 
-import com.abo2.recode.domain.qna.Qna;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +8,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class QnaReqDTO {
-
+@Builder
+public class QnaResDTO {
     private Long id;
     private Long user_id;
     private String title;

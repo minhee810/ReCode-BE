@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.study;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
@@ -20,7 +21,7 @@ public class StudyReqDto {
         // Study_Room
         @NotEmpty
         @Size(min = 1, max = 50)
-        private String study_name;
+        private String studyName;
 
         @NotEmpty
         @Size(min = 1, max = 50)
@@ -31,22 +32,22 @@ public class StudyReqDto {
         private String description;
 
         @NotEmpty
-        private String start_time; //스터디 출석 인정 시작 시간 "monday 12:00"
+        private String startTime; //스터디 출석 인정 시작 시간 "monday 12:00"
 
         @NotEmpty
-        private String end_time; //스터디 출석 인정 끝 시간 "monday 12:10"
+        private String endTime; //스터디 출석 인정 끝 시간 "monday 12:10"
 
         @NotEmpty
-        private LocalDate start_date;
+        private LocalDate startDate;
 
         @NotEmpty
-        private LocalDate end_date;
+        private LocalDate endDate;
 
         @NotEmpty
-        private Integer max_num;
+        private Integer maxNum;
 
         @NotEmpty
-        private Long user_id; //별도로 가져오는 코드 필요(입력 받지 않음)
+        private Long userId; // 별도로 가져오는 코드 필요(입력 받지 않음)
 
         @NotEmpty
         private LocalDateTime createdAt;
@@ -56,7 +57,6 @@ public class StudyReqDto {
         //======================================
         // skill 테이블의 스킬들,모집분야
         private String[] skills;
-
     }
 
     @Getter
@@ -70,5 +70,31 @@ public class StudyReqDto {
 
         @NotEmpty
         Long user_id;
+
+        @Builder
+        public StudyApplyReqDto(Long study_id, Long user_id) {
+            this.study_id = study_id;
+            this.user_id = user_id;
+        }
+    }
+
+
+    @Getter
+    @Setter
+    public static class StudyMembershipReqDto{
+     /*   {
+            "status" : "approved" //"Rejected"
+        }*/
+
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String status;
+
+        @Builder
+        public StudyMembershipReqDto(String status) {
+            this.status = status;
+        }
+
+        public StudyMembershipReqDto() {}
     }
 }

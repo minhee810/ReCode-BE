@@ -1,5 +1,6 @@
 package com.abo2.recode.domain.skill;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,13 +15,15 @@ public class Skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "skill_id")
     private Long id; //skill 일련번호
 
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(unique = true, nullable = true, length = 50)
     private String skillName; // skill 네임
 
+    @Builder
+    public Skill(Long id, String skillName) {
+        this.id = id;
+        this.skillName = skillName;
+    }
 }
-
-//    Table Skill {
-//        id integer [primary key]
-//        skill_name varchar

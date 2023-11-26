@@ -1,7 +1,5 @@
-package com.abo2.recode.domain.post;
+package com.abo2.recode.domain.notice;
 
-
-import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,31 +13,23 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Post {
+public class Notice { //홈페이지 메인 공지사항
 
     @Id
-    @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id; // Post 일련번호 - PK
+    @Column(name = "notice_id")
+    private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
-    private StudyRoom studyRoom;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "created_by")
     private User user;
-
-    @Column(nullable = false)
-    private Integer category;
 
     @CreatedDate
     @Column(nullable = false)
@@ -50,11 +40,12 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Post(String title, String content, StudyRoom studyRoom, User user, Integer category) {
+    public Notice(Long id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
+        this.id = id;
         this.title = title;
         this.content = content;
-        this.studyRoom = studyRoom;
         this.user = user;
-        this.category = category;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

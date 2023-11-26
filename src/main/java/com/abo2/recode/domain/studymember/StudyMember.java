@@ -15,36 +15,29 @@ import javax.persistence.*;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-public class Study_Member {
+public class StudyMember {
 
     @Id
-    @Column(name="studyMember_id")
+    @Column(name="study_member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id; //스터디 룸 member 일련번호
+    private Long Id; //스터디 룸 member 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "studyRoom_id")
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(unique = true,nullable = false,length = 50)
+    @Column(nullable = false,length = 50)
     private Integer status;
 
     @Builder
-    public Study_Member(StudyRoom studyRoom, User user, Integer status) {
+    public StudyMember(StudyRoom studyRoom, User user, Integer status) {
         this.studyRoom = studyRoom;
         this.user = user;
         this.status = status;
     }
 
 }
-
-/*    Table Study_member {
-        id integer [primary key]
-        study_id integer
-        user_id integer
-        status integer
-        }*/

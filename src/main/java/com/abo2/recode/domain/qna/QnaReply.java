@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.Qna;
+package com.abo2.recode.domain.qna;
 
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ public class QnaReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "qna_reply")
+    @Column(name = "qna_reply_id")
     private Long id;
 
     @Column(nullable = false)

@@ -1,45 +1,52 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
-import com.abo2.recode.domain.skill.Study_skill;
-import com.abo2.recode.domain.skill.Study_skillRepository;
-import com.abo2.recode.domain.studymember.Study_Member;
-import com.abo2.recode.domain.studymember.Study_memberRepository;
+import com.abo2.recode.domain.skill.StudySkill;
+import com.abo2.recode.domain.skill.StudySkillRepository;
+import com.abo2.recode.domain.studymember.StudyMember;
+import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
+import com.abo2.recode.dto.study.StudyResDto;
+import com.abo2.recode.handler.ex.CustomApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudyService {
 
     private StudyRoomRepository studyRoomRepository;
 
-    private Study_skillRepository studySkillRepository;
+    private StudySkillRepository studySkillRepository;
 
     private SkillRepository skillRepository;
 
     private UserRepository userRepository;
 
-    private Study_memberRepository studyMemberRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Autowired
     public StudyService(StudyRoomRepository studyRoomRepository,
-                        Study_skillRepository studySkillRepository,
+                        StudySkillRepository studySkillRepository,
                         SkillRepository skillRepository,
                         UserRepository userRepository,
-                        Study_memberRepository studyMemberRepository) {
+                        StudyMemberRepository studyMemberRepository) {
         this.studyRoomRepository = studyRoomRepository;
         this.studySkillRepository = studySkillRepository;
         this.skillRepository = skillRepository;
@@ -47,24 +54,39 @@ public class StudyService {
         this.studyMemberRepository = studyMemberRepository;
     }
 
+    //스터디 조장의 스터디 멤버 승인/거부
+    @Transactional
+    public void membershipUpdate(String status, Long studyId, Long userId) {
+
+        if(status.equals("Approved")){
+            //StudyMember 테이블 업데이트(상태값 0 -> 1)
+            studyMemberRepository.membershipUpdate(1,studyId,userId);
+
+        } else if (status.equals("Rejected")) {
+            //StudyMember 테이블 업데이트(상태값 0 -> 2)
+            studyMemberRepository.membershipUpdate(2,studyId,userId);
+        }
+    }
+
     public void createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto){
 
         System.out.println("Service createRoom()");
 
         //1. 넘겨 받은 studyReqDto에서 정보 가져오기
+        User master = userRepository.findById(studyCreateReqDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        String study_name = studyCreateReqDto.getStudy_name();
+        String study_name = studyCreateReqDto.getStudyName();
         String title = studyCreateReqDto.getTitle();
         String description = studyCreateReqDto.getDescription();
-        LocalDate start_date = studyCreateReqDto.getStart_date();
-        LocalDate end_date = studyCreateReqDto.getEnd_date();
+        LocalDate start_date = studyCreateReqDto.getStartDate();
+        LocalDate end_date = studyCreateReqDto.getEndDate();
         Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
-        Integer max_num = studyCreateReqDto.getMax_num();
-        Long user_id = studyCreateReqDto.getUser_id();
+        Integer max_num = studyCreateReqDto.getMaxNum();
 
         //1-1. start_time,end_time String -> LocalDateTime
-        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStart_time());
-        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEnd_time());
+        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
+        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEndTime());
 
         //2. DB에 전송할 studyRoom Entity 선언, studyRoom Entity에 데이터 집어 넣기, DB에 Insert
         StudyRoom studyRoom = StudyRoom.builder()
@@ -77,7 +99,7 @@ public class StudyService {
                 .endDate(end_date)
                 .currentNum(current_num)
                 .maxNum(max_num)
-                .createdBy(user_id)
+                .master(master)
                 .build();
 
         studyRoomRepository.save(studyRoom);
@@ -88,13 +110,22 @@ public class StudyService {
         for (String skillName : studyCreateReqDto.getSkills()) {
             Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
 
-            Study_skill studySkill = Study_skill.builder()
+            StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
             studySkillRepository.save(studySkill);
         }
         System.out.println("Service createRoom() save !!!!!!");
+
+        //4. Study_member에 만든 사람(조장) 추가 하기
+        StudyMember studyMember = StudyMember.builder()
+                .studyRoom(studyRoom)
+                .user(master)
+                .status(1)
+                .build();
+
+        studyMemberRepository.save(studyMember);
 
     } //createRoom()
 
@@ -111,9 +142,8 @@ public class StudyService {
         return time;
     }//convertToDateTime()
 
-
     //study 가입 신청
-    public void studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
+    public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
         //  studyApplyReqDto
 //        @NotEmpty
@@ -123,27 +153,123 @@ public class StudyService {
 //        Long user_id;
 
         //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
-        StudyRoom studyRoom = new StudyRoom();
-        Optional<StudyRoom> optionalStudyRoom = Optional.of(studyRoom);
+        StudyRoom studyRoom;
+        Optional<StudyRoom> optionalStudyRoom;
 
         optionalStudyRoom =
                 studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
         studyRoom = optionalStudyRoom.orElse(null);
 
         // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
-        User user = new User(); // Replace this with your actual value
-        Optional<User> optionalUser = Optional.of(user);
+        Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
 
-        optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
-        user = optionalUser.orElse(null); // Provide a default value (null in this case)
+        User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
         // 2. DB에 저장할 Study_Member Entity 선언,save
-        Study_Member studyMember = Study_Member.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
                 .user(user)
                 .status(0) //not approved
                 .build();
 
         studyMemberRepository.save(studyMember);
+
+        return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
+    }
+
+    //스터디 모임 상세 조회
+    @Transactional
+    public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long study_room_id) {
+        StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_room_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_room_id));
+
+        List<StudySkill> studySkills = studySkillRepository.findByStudyRoomId(study_room_id);
+        return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills);
+    }
+
+    // 스터디 탈퇴
+    @Transactional
+    public void withdrawStudy(Long userId, Long study_room_id){
+        // 1. 해당 스터디룸 정보 가져오기
+        Optional<StudyRoom> studyRoom = studyRoomRepository.findById(study_room_id);
+
+        if(studyRoom.isPresent()) {
+            StudyRoom room = studyRoom.get();
+
+            if(!room.getMaster().equals(userId)){
+                studyMemberRepository.deleteByUserIdAndStudyRoomUd(userId, study_room_id);
+            } else {
+                throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
+            }
+        } else {
+            throw new CustomApiException("스터디를 찾을 수 없습니다.");
+        }
+    }
+
+    // 스터디 목록 불러오기
+    @Transactional
+    public List<StudyResDto.StudyListRespDto> mainList(){
+        List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
+        return studyRooms.stream()
+                .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
+                .collect(Collectors.toList());
+    }//mainList()
+
+    // Study_skill 불러오기
+    private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
+        return studySkillRepository.findByStudyRoomId(studyRoom.getId());
+    }//getStudySkills()
+
+
+
+    //관리자 스터디 그룹 관리 페이지에서 스터디 멤버 목록 조회
+    public List<PostRespDto.StudyMemberListDto> postStudyMemberListInAdminPage(Long studyId) {
+
+        List<StudyMember> studyMembers = studyMemberRepository.findApprovedMemberById(studyId);
+
+       /* if (studyMembers.isEmpty()) {
+            throw new CustomApiException("멤버가 존재하지 않습니다.");
+        }*/
+
+        return studyMembers.stream()
+                .map(PostRespDto.StudyMemberListDto::new)
+                .collect(Collectors.toList());
+
+        /*
+        조회된 게시물은 List<StudyMember> 형태로 반환
+        stream() 메서드를 사용하여 이 리스트를 스트림으로 변환합니다.
+        스트림을 사용하면 데이터를 조작하고 변환할 수 있는 다양한 기능을 사용할 수 있습니다.
+
+        .map(PostRespDto.StudyMemberListDto::new)
+        map() 메서드를 사용하여 각 StudyMember를 PostRespDto.StudyMemberListDto로 반환. DTO로의 매핑 작업
+        PostRespDto.StudyMemberListDto::new : StudyMemberListDto의 생성자를 이용해 StudyMember를 해당 DTO로 변환
+
+        collect(Collectors.toList()):
+        collect() 메서드를 사용하여 스트림의 요소들을 다시 리스트로 수집합니다.
+        이 때, Collectors.toList()를 사용하여 스트림의 요소들을 리스트로 변환합니다.
+
+        최종적으로 변환된 List<PostRespDto.StudyMemberListDto>가 반환됩니다.
+        */
+
+    }//postStudyMemberListInAdminPage()
+
+
+    public List<StudyResDto.ApplicationResDto> applications(Long groupId) {
+
+        List<Object> objectList = studyMemberRepository.applications(groupId);
+
+        //(List<?>) resultList는 resultList를 원시 유형으로 캐스팅한 다음,
+        // 다시 List<StudyResDto.ApplicationResDto>로 캐스팅
+        List<StudyResDto.ApplicationResDto> applicationResDtoList =
+                (List<StudyResDto.ApplicationResDto>) (List<?>) objectList;
+
+   /*     if (resultList instanceof List) {
+            List<YourSpecificType> typedList = (List<YourSpecificType>) (List<?>) resultList;
+            // 다음 작업 수행
+        } else {
+            // 처리할 예외 상황 처리
+        }*/
+
+        return applicationResDtoList;
     }
 }//class StudyService
