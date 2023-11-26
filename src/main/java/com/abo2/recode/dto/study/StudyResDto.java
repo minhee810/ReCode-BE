@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -219,6 +220,49 @@ public class StudyResDto {
             this.study_id = study_id;
             this.status = status;
         }
-    }
+    }//StudyMembershipResDto
+
+    @Getter
+    @Setter
+    public static class ApplicationResDto{
+/*        ApplicationResponse
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+        {
+            "code": 1,
+                "message": "신청 인원 목록을 성공적으로 조회했습니다.",
+                "data": [
+            {
+                "user_id": 100,
+                    "username": "applicant_username1",
+                    "status": "pending" // 또는 'accepted', 'rejected'
+            },
+            {
+                "userId": 101,
+                    "username": "applicant_username2",
+                    "status": "pending"
+            }
+            // 추가 신청자 데이터...
+            ]
+        }*/
+
+        @NotEmpty
+        private Long user_id;
+
+        @NotEmpty
+        private String username;
+
+        @NotEmpty
+        private Integer status;
+
+        @NotEmpty
+        private String email;
+
+        public ApplicationResDto(){}
+
+    }//ApplicationResDto
+
+
 }
 

@@ -26,8 +26,8 @@ public class StudyroomController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudyroomController.class);
 
-    @Autowired
     StudyService studyService;
+    @Autowired
     public StudyroomController(StudyService studyService) {
         this.studyService = studyService;
     }
@@ -111,5 +111,18 @@ public class StudyroomController {
         studyListRespDto = studyService.mainList();
         return new ResponseEntity<>(new ResponseDto<>(1, "목록 조회 성공", studyListRespDto), HttpStatus.OK);
     }//mainList()
+    
+    // 스터디룸 관리 화면에서 신청 현황 멤버 목록 불러오기
+    @GetMapping(value = "/study-groups/{groupId}/applications")
+    public ResponseEntity<?> applications(
+            @PathVariable(name = "groupId") Long groupId
+    ){
+        List<StudyResDto.ApplicationResDto> applicationResDtoList;
+
+        applicationResDtoList = studyService.applications(groupId);
+
+        return new ResponseEntity<>(new ResponseDto<>(1,"신청 인원 목록을 성공적으로 조회했습니다.",applicationResDtoList)
+                ,HttpStatus.OK);
+    }
 
 }//StudyRoomController class

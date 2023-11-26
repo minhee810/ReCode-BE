@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,8 @@ public class AdminController {
     }
 
     //관리자가 기술 스택 추가
-    @PostMapping(value = "/v1/admin/addskill")
+    @Secured(value = "ROLE_ADMIN")
+    @PostMapping(value = "/admin/v1/addskill")
     public ResponseEntity<ResponseDto> adminSkillAdd(
             @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto,
             @AuthenticationPrincipal LoginUser loginUser
@@ -59,7 +61,8 @@ public class AdminController {
     } //adminSkillAdd()
 
     // 관리자의 스터디 모임 삭제 /api/v1/study/{study_id}
-    @DeleteMapping(value = "/v1/study/{study_id}")
+    @Secured(value = "ROLE_ADMIN")
+    @DeleteMapping(value = "/admin/v1/study/{study_id}")
     public ResponseEntity<ResponseDto> adminStudyRoomDelete(
             @PathVariable Long study_id,
             @AuthenticationPrincipal LoginUser loginUser
@@ -85,7 +88,8 @@ public class AdminController {
     }//adminStudyRoomDelete()
 
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급/강등
-    @PutMapping(value="/v1/study-member/{study_id}/{user_id}")
+    @Secured(value = "ROLE_ADMIN")
+    @PutMapping(value="/admin/v1/study-member/{study_id}/{user_id}")
     public ResponseEntity<ResponseDto> memberRoleChange(
             @RequestBody AdminReqDto.MemberRoleReqDto memberRoleReqDto,
             @AuthenticationPrincipal LoginUser loginUser
@@ -120,10 +124,14 @@ public class AdminController {
     // 관리자 권한으로 글 삭제
 
     // 관리자 기술 스택 불러오기 성공
-    @GetMapping(value = "/v1/get-skills")
+    @Secured(value = "ROLE_ADMIN")
+    @GetMapping(value = "/admin/v1/get-skills")
     public ResponseEntity<?> getSkills(){
         SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
         return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
     }
+
+
+
 
 }//AdminController

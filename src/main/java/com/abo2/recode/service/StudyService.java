@@ -1,5 +1,6 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -10,6 +11,7 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -211,11 +213,63 @@ public class StudyService {
         return studyRooms.stream()
                 .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
                 .collect(Collectors.toList());
-    }
+    }//mainList()
 
+    // Study_skill 불러오기
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
         return studySkillRepository.findByStudyRoomId(studyRoom.getId());
+    }//getStudySkills()
+
+
+
+    //관리자 스터디 그룹 관리 페이지에서 스터디 멤버 목록 조회
+    public List<PostRespDto.StudyMemberListDto> postStudyMemberListInAdminPage(Long studyId) {
+
+        List<StudyMember> studyMembers = studyMemberRepository.findApprovedMemberById(studyId);
+
+       /* if (studyMembers.isEmpty()) {
+            throw new CustomApiException("멤버가 존재하지 않습니다.");
+        }*/
+
+        return studyMembers.stream()
+                .map(PostRespDto.StudyMemberListDto::new)
+                .collect(Collectors.toList());
+
+        /*
+        조회된 게시물은 List<StudyMember> 형태로 반환
+        stream() 메서드를 사용하여 이 리스트를 스트림으로 변환합니다.
+        스트림을 사용하면 데이터를 조작하고 변환할 수 있는 다양한 기능을 사용할 수 있습니다.
+
+        .map(PostRespDto.StudyMemberListDto::new)
+        map() 메서드를 사용하여 각 StudyMember를 PostRespDto.StudyMemberListDto로 반환. DTO로의 매핑 작업
+        PostRespDto.StudyMemberListDto::new : StudyMemberListDto의 생성자를 이용해 StudyMember를 해당 DTO로 변환
+
+        collect(Collectors.toList()):
+        collect() 메서드를 사용하여 스트림의 요소들을 다시 리스트로 수집합니다.
+        이 때, Collectors.toList()를 사용하여 스트림의 요소들을 리스트로 변환합니다.
+
+        최종적으로 변환된 List<PostRespDto.StudyMemberListDto>가 반환됩니다.
+        */
+
+    }//postStudyMemberListInAdminPage()
+
+
+    public List<StudyResDto.ApplicationResDto> applications(Long groupId) {
+
+        List<Object> objectList = studyMemberRepository.applications(groupId);
+
+        //(List<?>) resultList는 resultList를 원시 유형으로 캐스팅한 다음,
+        // 다시 List<StudyResDto.ApplicationResDto>로 캐스팅
+        List<StudyResDto.ApplicationResDto> applicationResDtoList =
+                (List<StudyResDto.ApplicationResDto>) (List<?>) objectList;
+
+   /*     if (resultList instanceof List) {
+            List<YourSpecificType> typedList = (List<YourSpecificType>) (List<?>) resultList;
+            // 다음 작업 수행
+        } else {
+            // 처리할 예외 상황 처리
+        }*/
+
+        return applicationResDtoList;
     }
-
-
 }//class StudyService
