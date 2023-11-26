@@ -8,11 +8,15 @@ import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.notice.NoticeReqDto;
 
 import com.abo2.recode.dto.notice.NoticeRespDto;
+import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NoticeService {
 
-    private final LoginService loginService;
+    private static final Logger logger = LoggerFactory.getLogger(NoticeService.class);
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
 
@@ -101,6 +105,12 @@ public class NoticeService {
         dto.setId(notice.getId());
         dto.setTitle(notice.getTitle());
         dto.setContent(notice.getContent());
+        dto.setCreatedBy(notice.getCreatedBy().getUsername());  // User 타입 반환해야함.
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+        String formatterCreatedAt = notice.getCreatedAt().format(formatter);
+        dto.setCreatedAt(formatterCreatedAt);  // LocalDateTime 반환해야함.
+
         return dto;
     }
 

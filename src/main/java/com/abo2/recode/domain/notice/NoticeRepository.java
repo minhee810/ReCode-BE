@@ -10,6 +10,4 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     Optional<Notice> findById(Long studyId);
 
     List<Notice> findAll();
-
-
 }

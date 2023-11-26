@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserRespDto {
 
     @Setter
@@ -97,4 +99,6 @@ public class UserRespDto {
             this.email = user.getEmail();
         }
     }
+
+
 }

@@ -1,37 +1,43 @@
 package com.abo2.recode.dto.notice;
 
-import com.abo2.recode.domain.notice.Notice;
 import com.abo2.recode.domain.user.User;
-import com.abo2.recode.dto.user.UserRespDto;
 import lombok.*;
-import org.hibernate.sql.Update;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.security.cert.CertPathBuilder;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class NoticeRespDto {
 
-        @NotEmpty
-        private Long id;
+    @NotEmpty
+    private Long id;
 
-        @NotEmpty
-        @Size(min = 1, max = 50)
-        private String title;
+    @NotEmpty
+    @Size(min = 1, max = 50)
+    private String title;
 
-        @NotEmpty
-        private String content;
+    @NotEmpty
+    private String content;
 
-        @Builder
-        public NoticeRespDto(Long id, String title, String content) {
-            this.id = id;
-            this.title = title;
-            this.content = content;
-        }
+    @NotEmpty
+    private String createdBy;
+
+    @NotEmpty
+    private String createdAt;
+
+
+    @Builder
+    public NoticeRespDto(Long id, String title, String content, String createdBy, String createdAt) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+    }
 
 
 }
