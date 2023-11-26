@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import java.util.List;
 
 public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
@@ -35,10 +39,17 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
     @Query(value = "SELECT * FROM study_member as sm WHERE study_id=:studyId AND status=1",nativeQuery = true)
     List<StudyMember> findApprovedMemberById(@Param(value = "studyId") Long studyId);
 
-    @Query(value="SELECT sm.user_id,u.username,sm.status,u.email " +
-            "FROM Study_Member as sm " +
-            "LEFT OUTER JOIN Users as u ON sm.user_id = u.user_id " +
-            "WHERE sm.study_room_id=:study_room_id AND sm.status = 0"
-            ,nativeQuery = true)
-    List<Object> applications(@Param("study_room_id") Long study_room_id);
+   @Query(
+           name="getApplicationResDto",
+           nativeQuery = true
+   )
+    List<StudyResDto.ApplicationResDto> applications(@Param("study_room_id") Long study_room_id);
+
+
+    @Query(
+            name = "getApplicationEssayResDto",
+            nativeQuery = true
+    )
+    StudyResDto.ApplicationEssayResDto applicationsEssay(@Param("study_room_id") Long study_room_id,
+                                                         @Param("user_id") Long user_id);
 }

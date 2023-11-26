@@ -15,6 +15,7 @@ import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
+import lombok.extern.flogger.Flogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -256,20 +257,11 @@ public class StudyService {
 
     public List<StudyResDto.ApplicationResDto> applications(Long groupId) {
 
-        List<Object> objectList = studyMemberRepository.applications(groupId);
+        return studyMemberRepository.applications(groupId);
+    }
 
-        //(List<?>) resultList는 resultList를 원시 유형으로 캐스팅한 다음,
-        // 다시 List<StudyResDto.ApplicationResDto>로 캐스팅
-        List<StudyResDto.ApplicationResDto> applicationResDtoList =
-                (List<StudyResDto.ApplicationResDto>) (List<?>) objectList;
+    public StudyResDto.ApplicationEssayResDto applicationsEssay(Long groupId, Long userId) {
 
-   /*     if (resultList instanceof List) {
-            List<YourSpecificType> typedList = (List<YourSpecificType>) (List<?>) resultList;
-            // 다음 작업 수행
-        } else {
-            // 처리할 예외 상황 처리
-        }*/
-
-        return applicationResDtoList;
+        return studyMemberRepository.applicationsEssay(groupId,userId);
     }
 }//class StudyService

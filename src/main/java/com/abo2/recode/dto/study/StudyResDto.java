@@ -3,9 +3,7 @@ package com.abo2.recode.dto.study;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -224,6 +222,8 @@ public class StudyResDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ApplicationResDto{
 /*        ApplicationResponse
         HTTP/1.1 200 OK
@@ -259,10 +259,33 @@ public class StudyResDto {
         @NotEmpty
         private String email;
 
-        public ApplicationResDto(){}
-
     }//ApplicationResDto
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApplicationEssayResDto{
+
+    /*    {
+            "code": 1,
+                "message": "신청 인원의 자기소개서를 성공적으로 조회했습니다.",
+                "data": {
+            "username" : "user2",
+                    "email" : "user1234@google.com",
+                    "essay" : "asjskdfljfeifh",
+        }
+        }*/
+
+        @NotEmpty
+        private String username;
+
+        @NotEmpty
+        private String email;
+
+        @NotEmpty
+        private String essay;
+    }//class ApplicationEssayResDto
 
 }
 
