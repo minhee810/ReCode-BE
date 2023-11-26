@@ -117,11 +117,23 @@ public class StudyroomController {
     public ResponseEntity<?> applications(
             @PathVariable(name = "groupId") Long groupId
     ){
-        List<StudyResDto.ApplicationResDto> applicationResDtoList;
 
-        applicationResDtoList = studyService.applications(groupId);
+        List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(groupId);
 
         return new ResponseEntity<>(new ResponseDto<>(1,"신청 인원 목록을 성공적으로 조회했습니다.",applicationResDtoList)
+                ,HttpStatus.OK);
+    }
+
+    // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
+    @GetMapping(value = "/study-groups/{groupId}/applications/{user_id}")
+    public ResponseEntity<?> applicationsEssay(
+            @PathVariable(name = "groupId") Long groupId,
+            @PathVariable(name = "user_id") Long user_Id
+    ){
+        StudyResDto.ApplicationEssayResDto applicationEssayResDto =
+                studyService.applicationsEssay(groupId,user_Id);
+
+        return new ResponseEntity<>(new ResponseDto<>(1,"신청 인원의 자기소개서를 성공적으로 조회했습니다.",applicationEssayResDto)
                 ,HttpStatus.OK);
     }
 
