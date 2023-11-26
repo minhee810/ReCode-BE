@@ -61,7 +61,7 @@ public class NoticeService {
         Notice updateNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 공지사항 글 입니다. "));
 
-        updateNotice.setNoticeInfo(adminUpdateNoticeReqDto.getContent(), adminUpdateNoticeReqDto.getTitle());
+        updateNotice.setNoticeInfo( adminUpdateNoticeReqDto.getTitle(), adminUpdateNoticeReqDto.getContent());
 
         NoticeRespDto updateNoticeRespDto = NoticeRespDto.builder()
                 .id(adminUpdateNoticeReqDto.getUserId().getId())
@@ -107,7 +107,7 @@ public class NoticeService {
         dto.setContent(notice.getContent());
         dto.setCreatedBy(notice.getCreatedBy().getUsername());  // User 타입 반환해야함.
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
         String formatterCreatedAt = notice.getCreatedAt().format(formatter);
         dto.setCreatedAt(formatterCreatedAt);  // LocalDateTime 반환해야함.
 
