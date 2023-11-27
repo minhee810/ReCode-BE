@@ -1,5 +1,6 @@
 package com.abo2.recode.domain.studyroom;
 
+import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.study.StudyResDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,6 +22,10 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
 
     @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master")
     List<StudyRoom> findAllWithMaster();
+
+    // 사욪자가 스터디 장으로 있는지 확인
+    @Query("SELECT COUNT(sr) > 0 FROM StudyRoom sr WHERE sr.master = :master")
+    boolean existsByMaster(@Param("master") User master);
 
     @Modifying
     @Query(value = "UPDATE Study_Room s SET s.created_by = :user_id WHERE s.study_room_id = :study_room_id",nativeQuery = true)
