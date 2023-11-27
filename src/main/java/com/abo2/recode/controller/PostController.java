@@ -1,7 +1,6 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
-import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.post.PostReqDto;
 import com.abo2.recode.dto.post.PostRespDto;
@@ -29,7 +28,7 @@ public class PostController {
     public ResponseEntity<?> postList(@AuthenticationPrincipal LoginUser loginUser,
                                       @PathVariable Long study_id,
                                       @RequestParam(value = "keyword", required = false) String keyword,
-                                      @RequestParam(value = "category", required = false) Integer category){
+                                      @RequestParam(value = "category", required = false) Integer category) {
         List<PostRespDto.PostListRespDto> postListRespDto;
 
         if (keyword != null && !keyword.trim().isEmpty()) {
@@ -57,24 +56,24 @@ public class PostController {
     @GetMapping("/v1/study/posts/{post_id}")
     public ResponseEntity<?> getPostById(@PathVariable Long post_id) {
         PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id);
-        return new ResponseEntity<>(postDetailRespDto, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1,"게시글 상세보기 완료", postDetailRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 수정
-//    @PutMapping("/v1/study/posts/{post_id}")
-//    public ResponseEntity<?> updatePost(
-//            @PathVariable Long post_id,
-//            @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto
-//    ) {
-//        PostRespDto.PostWriteRespDto postWriteRespDto = postService.updatePost(post_id, postWriteReqDto);
-//        return new ResponseEntity<>(postWriteRespDto, HttpStatus.OK);
-//    }
+    @PutMapping("/v1/study/posts/{post_id}")
+    public ResponseEntity<?> updatePost(
+            @PathVariable Long post_id,
+            @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
+    ) {
+        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(post_id, postUpdateReqDto);
+        return new ResponseEntity<>("게시글이 성공적으로 수정되었습니다.", HttpStatus.OK);
+    }
 
 
     // 게시글 삭제
     @DeleteMapping("/v1/study/posts/{post_id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long post_id) {
+    public ResponseEntity<?> deletePost(@PathVariable Long post_id) {
         postService.deletePost(post_id);
         return new ResponseEntity<>("게시글이 성공적으로 삭제되었습니다.", HttpStatus.OK);
     }

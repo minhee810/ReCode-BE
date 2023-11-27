@@ -1,6 +1,7 @@
 package com.abo2.recode.dto.post;
 
 import com.abo2.recode.domain.post.Post;
+import com.abo2.recode.domain.post.PostReply;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +31,13 @@ public class PostRespDto {
         private LocalDateTime createdAt;
         private String nickname;
 
-        public PostWriteRespDto(Post post) {
+        public PostWriteRespDto(Post post, String nickname) {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
             this.category = post.getCategory();
+            this.createdAt = post.getCreatedAt();
+            this.nickname = nickname;
         }
 
     }
@@ -94,4 +97,43 @@ public class PostRespDto {
     }
 
 
+    @Getter
+    @Setter
+    public static class PostUpdateRespDto {
+        private Long id;
+        private String title;
+        private String content;
+        private Integer category;
+        private LocalDateTime updatedAt;
+
+        public PostUpdateRespDto(Post post) {
+            this.id = post.getId();
+            this.title = post.getTitle();
+            this.content = post.getContent();
+            this.category = post.getCategory();
+            this.updatedAt = post.getUpdatedAt();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class PostReplyRespDto {
+        private Long id;
+        private String content;
+        private Long postId;
+        private Long userId;
+        private String nickName;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public PostReplyRespDto(PostReply postReply, String nickName) {
+            this.id = postReply.getId();
+            this.content = postReply.getContent();
+            this.postId = postReply.getPost().getId();
+            this.userId = postReply.getUser().getId();
+            this.createdAt = postReply.getCreatedAt();
+            this.updatedAt = postReply.getUpdatedAt();
+            this.nickName = nickName;
+        }
+    }
 }
