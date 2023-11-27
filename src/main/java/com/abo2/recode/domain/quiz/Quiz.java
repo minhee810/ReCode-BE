@@ -2,6 +2,7 @@ package com.abo2.recode.domain.quiz;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,4 +45,14 @@ public class Quiz {
 
     @Column(nullable = false)
     private Integer difficulty;
+
+    @Builder
+    public Quiz(Long id, String title, StudyRoom studyRoom, User user, String quiz_link, Integer difficulty) {
+        this.id = id;
+        this.title = title;
+        this.studyRoom = studyRoom;
+        this.user = user;
+        this.quiz_link = quiz_link;
+        this.difficulty = difficulty;
+    }
 }
