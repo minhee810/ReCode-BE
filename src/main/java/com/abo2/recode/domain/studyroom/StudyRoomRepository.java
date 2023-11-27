@@ -1,6 +1,7 @@
 package com.abo2.recode.domain.studyroom;
 
 import com.abo2.recode.domain.user.User;
+import com.abo2.recode.dto.study.StudyResDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +34,5 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
     @Modifying
     @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :study_room_id",nativeQuery = true)
     void memberRoleDemote(@Param("study_room_id") Long study_room_id);
-
 
 }

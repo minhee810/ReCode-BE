@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.study;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
@@ -56,9 +57,6 @@ public class StudyReqDto {
         //======================================
         // skill 테이블의 스킬들,모집분야
         private String[] skills;
-
-
-
     }
 
     @Getter
@@ -72,5 +70,31 @@ public class StudyReqDto {
 
         @NotEmpty
         Long user_id;
+
+        @Builder
+        public StudyApplyReqDto(Long study_id, Long user_id) {
+            this.study_id = study_id;
+            this.user_id = user_id;
+        }
+    }
+
+
+    @Getter
+    @Setter
+    public static class StudyMembershipReqDto{
+     /*   {
+            "status" : "approved" //"Rejected"
+        }*/
+
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String status;
+
+        @Builder
+        public StudyMembershipReqDto(String status) {
+            this.status = status;
+        }
+
+        public StudyMembershipReqDto() {}
     }
 }
