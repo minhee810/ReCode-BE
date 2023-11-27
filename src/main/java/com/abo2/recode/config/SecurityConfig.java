@@ -3,7 +3,12 @@ package com.abo2.recode.config;
 import com.abo2.recode.config.jwt.JwtAuthenticationFilter;
 import com.abo2.recode.config.jwt.JwtAuthorizationFilter;
 import com.abo2.recode.domain.user.UserEnum;
+import com.abo2.recode.handler.OAuth2AuthenticationFailureHandler;
+import com.abo2.recode.handler.OAuth2AuthenticationSuccessHandler;
+import com.abo2.recode.oauth2.user.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.abo2.recode.service.CustomOAuth2UserService;
 import com.abo2.recode.util.CustomResponseUtil;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,9 +26,15 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -71,6 +83,14 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/**").authenticated()
                 .antMatchers("/api/admin/v1/**").hasRole("" + UserEnum.ADMIN)
                 .anyRequest().permitAll();
+
+        http.oauth2Login(configure ->
+                configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                        .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
+        );
+
 
         return http.build();
     }
