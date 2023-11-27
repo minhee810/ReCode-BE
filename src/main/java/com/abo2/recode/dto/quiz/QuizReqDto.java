@@ -14,6 +14,7 @@ public class QuizReqDto {
     @Getter
     @Setter
     public static class QuizWriteReqDto {
+        private Long quizId;
         private String title;
         private Integer difficulty;
         private String quiz_link;

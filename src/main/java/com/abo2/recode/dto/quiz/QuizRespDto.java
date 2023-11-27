@@ -42,6 +42,7 @@ public class QuizRespDto {
         public QuizListRespDto(Quiz quiz) {
             this.id = quiz.getId();
             this.title = quiz.getTitle();
+            this.difficulty = quiz.getDifficulty();
             this.quiz_link = quiz.getQuiz_link();
             this.nickname = quiz.getUser().getNickname();
             this.study_room_id = quiz.getStudyRoom().getId();
