@@ -56,7 +56,7 @@ public class PostController {
     @GetMapping("/v1/study/posts/{post_id}")
     public ResponseEntity<?> getPostById(@PathVariable Long post_id) {
         PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id);
-        return new ResponseEntity<>(new ResponseDto<>(1,"게시글 상세보기 완료", postDetailRespDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세보기 완료", postDetailRespDto), HttpStatus.OK);
     }
 
 
@@ -67,15 +67,15 @@ public class PostController {
             @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
     ) {
         PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(post_id, postUpdateReqDto);
-        return new ResponseEntity<>("게시글이 성공적으로 수정되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 수정되었습니다.", postUpdateRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 삭제
     @DeleteMapping("/v1/study/posts/{post_id}")
-    public ResponseEntity<?> deletePost(@PathVariable Long post_id) {
-        postService.deletePost(post_id);
-        return new ResponseEntity<>("게시글이 성공적으로 삭제되었습니다.", HttpStatus.OK);
+    public ResponseEntity<?> deletePost(@PathVariable("post_id") Long postId, Long userId) {
+        postService.deletePost(postId, userId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 삭제되었습니다.", null), HttpStatus.OK);
     }
 
 }

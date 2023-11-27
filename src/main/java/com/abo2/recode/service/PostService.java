@@ -13,6 +13,7 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,10 +52,10 @@ public class PostService {
     public PostRespDto.PostWriteRespDto writePost(Long userId, PostReqDto.PostWriteReqDto postWriteReqDto, Long studyRoomId) {
 
         User user = userRepository.findById(postWriteReqDto.getUserId())
-                .orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다" + userId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다" + userId));
 
         StudyRoom studyRoom = studyRoomRepository.findById(postWriteReqDto.getStudyRoomId())
-                .orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다" + studyRoomId));
+                .orElseThrow(() -> new EntityNotFoundException("해당 스터디 룸이 존재하지 않습니다" + studyRoomId));
 
         Post post = new Post();
         post.setTitle(postWriteReqDto.getTitle());
@@ -73,7 +74,7 @@ public class PostService {
     // 게시글 상세보기
     public PostRespDto.PostDetailRespDto getPostById(Long post_id) {
         Post post = postRepository.findById(post_id)
-                .orElseThrow(() -> new CustomApiException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
+                .orElseThrow(() -> new EntityNotFoundException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
 
 
         return new PostRespDto.PostDetailRespDto(post);
@@ -81,9 +82,9 @@ public class PostService {
 
 
     //게시글 수정
-    public PostRespDto.PostUpdateRespDto updatePost(Long post_id, PostReqDto.PostUpdateReqDto postUpdateReqDto) {
-        Post post = postRepository.findById(post_id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다: " + post_id));
+    public PostRespDto.PostUpdateRespDto updatePost(Long postId, PostReqDto.PostUpdateReqDto postUpdateReqDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다: " + postId));
 
         post.setTitle(postUpdateReqDto.getTitle());
         post.setContent(postUpdateReqDto.getContent());
@@ -95,9 +96,17 @@ public class PostService {
 
 
     // 게시글 삭제
-    public void deletePost(Long post_id) {
-        Post post = postRepository.findById(post_id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다: " + post_id));
+    public void deletePost(Long userId, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다. " + postId));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다." + userId));
+
+        // 게시글 작성자와 현재 사용자가 동일한지 확인
+        if (!user.getId().equals(userId)) {
+            throw new AccessDeniedException("게시글 삭제 권한이 없습니다.");
+        }
 
         // 게시글 삭제 로직
         postRepository.delete(post);
@@ -130,6 +139,7 @@ public class PostService {
                 .map(((PostRespDto.PostListRespDto::new)))
                 .collect(Collectors.toList());
     }
+
 
 
 }

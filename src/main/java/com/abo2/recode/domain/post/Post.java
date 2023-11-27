@@ -30,7 +30,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id", nullable = false)
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
     @ManyToOne

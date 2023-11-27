@@ -90,6 +90,9 @@ public class PostReqDto {
         private Long postId;
 
         @NotEmpty
+        private Long postReplyId;
+
+        @NotEmpty
         private Long userId;
 
         @NotEmpty
