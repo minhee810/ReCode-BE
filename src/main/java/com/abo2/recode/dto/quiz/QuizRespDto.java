@@ -8,14 +8,14 @@ public class QuizRespDto {
 
     @Getter
     @Setter
-    public static class QuizWriteRespDto {
+    public static class QuizResDto {
         private Long id;
         private String title;
         private Integer difficulty;
         private String quiz_link;
         private String nickname;
 
-        public QuizWriteRespDto(Quiz quiz) {
+        public QuizResDto(Quiz quiz) {
             this.id = quiz.getId();
             this.title = quiz.getTitle();
             this.difficulty = quiz.getDifficulty();

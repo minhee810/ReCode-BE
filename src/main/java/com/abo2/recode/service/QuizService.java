@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class QuizService {
@@ -24,7 +27,7 @@ public class QuizService {
     private final StudyRoomRepository studyRoomRepository;
 
     @Transactional
-    public QuizRespDto.QuizWriteRespDto writeQuiz(Long study_room_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto){
+    public QuizRespDto.QuizResDto writeQuiz(Long study_room_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto){
         // 1. user 아이디 조회
         User user = userRepository.findById(quizWriteReqDto.getUserId()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -41,6 +44,20 @@ public class QuizService {
 
         Quiz saveQuiz = quizRepository.save(quiz);
 
-        return new QuizRespDto.QuizWriteRespDto(saveQuiz);
+        return new QuizRespDto.QuizResDto(saveQuiz);
+    }
+
+    @Transactional
+    public List<QuizRespDto.QuizResDto> quizList(Long study_room_id) {
+
+        List<Quiz> quizList = quizRepository.findQuizByStudyRoomId(study_room_id);
+
+        if (quizList.isEmpty()) {
+            throw new CustomApiException("스터디에 등록된 퀴즈가 없습니다. 등록해주세요!");
+        }
+
+        return quizList.stream()
+                .map(QuizRespDto.QuizResDto::new)
+                .collect(Collectors.toList());
     }
 }
