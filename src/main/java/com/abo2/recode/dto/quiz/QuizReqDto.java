@@ -4,6 +4,8 @@ import com.abo2.recode.domain.quiz.Quiz;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 public class QuizReqDto {
 
     /*
@@ -17,5 +19,6 @@ public class QuizReqDto {
         private String quiz_link;
         private Long studyRoomId;
         private Long userId;
+        private LocalDateTime created_At;
     }
 }
