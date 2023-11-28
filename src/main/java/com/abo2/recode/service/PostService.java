@@ -97,14 +97,12 @@ public class PostService {
 
     // 게시글 삭제
     public void deletePost(Long userId, Long postId) {
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다. " + postId));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다." + userId));
-
         // 게시글 작성자와 현재 사용자가 동일한지 확인
-        if (!user.getId().equals(userId)) {
+        if (!post.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("게시글 삭제 권한이 없습니다.");
         }
 
