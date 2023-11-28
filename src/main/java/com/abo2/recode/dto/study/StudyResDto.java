@@ -6,6 +6,7 @@ import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,7 +18,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+<<<<<<< HEAD
 import java.time.LocalTime;
+=======
+import java.util.ArrayList;
+>>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -184,11 +189,13 @@ public class StudyResDto {
         @NotEmpty
         private Long study_id;
 
+        @Builder
         public StudyRoomApplyResDto(Long study_id) {
             this.study_id = study_id;
         }
     }
 
+<<<<<<< HEAD
 
 //    @Getter
 //    @Setter
@@ -272,6 +279,109 @@ public class StudyResDto {
             this.skills = skills;
         }
     }
+=======
+    @Getter
+    @Setter
+    public static class StudyMembershipResDto{
+      /*  {
+            "code":1
+            "msg": "가입 신청이 승인되었습니다."   // or "가입 신청이 거부되었습니다."
+            "data": {
+            "id": 2
+            "study_id": 1
+            "user_id": 2
+            "status": "approved" // or "rejected"
+        }
+        }*/
+
+        @NotEmpty
+        private Long id; //나(승인하는 스터디 조장)
+
+        @NotEmpty
+        private Long user_id;
+
+        @NotEmpty
+        private Long study_id;
+
+        @NotEmpty
+        private String status;
+
+        @Builder
+        public StudyMembershipResDto(Long id, Long user_id, Long study_id, String status) {
+            this.id = id;
+            this.user_id = user_id;
+            this.study_id = study_id;
+            this.status = status;
+        }
+    }//StudyMembershipResDto
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApplicationResDto{
+/*        ApplicationResponse
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+        {
+            "code": 1,
+                "message": "신청 인원 목록을 성공적으로 조회했습니다.",
+                "data": [
+            {
+                "user_id": 100,
+                    "username": "applicant_username1",
+                    "status": "pending" // 또는 'accepted', 'rejected'
+            },
+            {
+                "userId": 101,
+                    "username": "applicant_username2",
+                    "status": "pending"
+            }
+            // 추가 신청자 데이터...
+            ]
+        }*/
+
+        @NotEmpty
+        private Long user_id;
+
+        @NotEmpty
+        private String username;
+
+        @NotEmpty
+        private Integer status;
+
+        @NotEmpty
+        private String email;
+
+    }//ApplicationResDto
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApplicationEssayResDto{
+
+    /*    {
+            "code": 1,
+                "message": "신청 인원의 자기소개서를 성공적으로 조회했습니다.",
+                "data": {
+            "username" : "user2",
+                    "email" : "user1234@google.com",
+                    "essay" : "asjskdfljfeifh",
+        }
+        }*/
+
+        @NotEmpty
+        private String username;
+
+        @NotEmpty
+        private String email;
+
+        @NotEmpty
+        private String essay;
+    }//class ApplicationEssayResDto
+>>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
 
 }
 

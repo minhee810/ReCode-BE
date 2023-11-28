@@ -27,9 +27,12 @@ public class StudyroomController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudyroomController.class);
 
-    @Autowired
     StudyService studyService;
+<<<<<<< HEAD
 
+=======
+    @Autowired
+>>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
     public StudyroomController(StudyService studyService) {
         this.studyService = studyService;
     }
@@ -57,20 +60,16 @@ public class StudyroomController {
     @PostMapping(value="/v1/study/{study_id}/apply")
     public ResponseEntity<ResponseDto> studyApply(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long study_id,
-            @RequestBody StudyReqDto.StudyApplyReqDto studyApplyReqDto
+            @PathVariable Long study_id
     ){
+        //"study_id": 1, // 사용자가 신청하고자 하는 스터디의 ID
+        // "user_id": 42  // 신청하는 사용자의 ID
+
         //1. study_member에 status = 0으로 insert한다
-        logger.info(loginUser.getUser().toString());
-        // loginUser.getUser().getId() -> user id 담겨있음
+        StudyReqDto.StudyApplyReqDto studyApplyReqDto =
+                new StudyReqDto.StudyApplyReqDto(study_id,loginUser.getUser().getId());
 
-        studyApplyReqDto.setStudy_id(study_id);
-        studyApplyReqDto.setUser_id(loginUser.getUser().getId());
-
-        StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto =
-
-        studyService.studyApply(studyApplyReqDto);
-
+        StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto = studyService.studyApply(studyApplyReqDto);
 
         //2. 성공 return
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 신청에 성공하였습니다.", studyRoomApplyResDto), HttpStatus.OK);
@@ -110,6 +109,31 @@ public class StudyroomController {
         studyListRespDto = studyService.mainList();
         System.out.println("studyListRespDto = " + studyListRespDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "목록 조회 성공", studyListRespDto), HttpStatus.OK);
+    }//mainList()
+    
+    // 스터디룸 관리 화면에서 신청 현황 멤버 목록 불러오기
+    @GetMapping(value = "/study-groups/{groupId}/applications")
+    public ResponseEntity<?> applications(
+            @PathVariable(name = "groupId") Long groupId
+    ){
+
+        List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(groupId);
+
+        return new ResponseEntity<>(new ResponseDto<>(1,"신청 인원 목록을 성공적으로 조회했습니다.",applicationResDtoList)
+                ,HttpStatus.OK);
+    }
+
+    // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
+    @GetMapping(value = "/study-groups/{groupId}/applications/{user_id}")
+    public ResponseEntity<?> applicationsEssay(
+            @PathVariable(name = "groupId") Long groupId,
+            @PathVariable(name = "user_id") Long user_Id
+    ){
+        StudyResDto.ApplicationEssayResDto applicationEssayResDto =
+                studyService.applicationsEssay(groupId,user_Id);
+
+        return new ResponseEntity<>(new ResponseDto<>(1,"신청 인원의 자기소개서를 성공적으로 조회했습니다.",applicationEssayResDto)
+                ,HttpStatus.OK);
     }
 
 }//StudyRoomController class

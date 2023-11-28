@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.admin;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,6 +44,12 @@ public class AdminResDto {
         @NotEmpty
         private LocalDateTime updatedAt;
 
+        @Builder
+        public MemberRoleResDto(Long userId, String newRole, LocalDateTime updatedAt) {
+            this.userId = userId;
+            this.newRole = newRole;
+            this.updatedAt = updatedAt;
+        }
     }//MemberRoleResDto
 
 }//AdminResDto

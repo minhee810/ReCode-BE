@@ -1,11 +1,11 @@
 package com.abo2.recode.domain.notice;
 
 import com.abo2.recode.domain.user.User;
-import com.abo2.recode.dto.notice.NoticeRespDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -33,7 +33,7 @@ public class Notice {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -60,4 +60,3 @@ public class Notice {
     }
 
 }
-

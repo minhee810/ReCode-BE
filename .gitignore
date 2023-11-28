@@ -38,3 +38,7 @@ out/
 
 /.github/
 /.run/
+
+### application files
+application-dev.yml
+email.properites
