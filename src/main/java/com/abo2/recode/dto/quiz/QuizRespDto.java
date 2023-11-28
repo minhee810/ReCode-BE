@@ -53,4 +53,20 @@ public class QuizRespDto {
             this.updated_At = quiz.getUpdatedAt();
         }
     }
+
+    @Getter
+    @Setter
+    public static class QuizDetailRespDto {
+        private Long id;
+        private String title;
+        private String quiz_link;
+        private String nickname;
+
+        public QuizDetailRespDto(Quiz quiz) {
+            this.id = quiz.getId();
+            this.title = quiz.getTitle();
+            this.quiz_link = quiz.getQuiz_link();
+            this.nickname = quiz.getUser().getNickname();
+        }
+    }
 }

@@ -59,4 +59,14 @@ public class QuizController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 삭제 왼료", null), HttpStatus.OK);
     }
+
+    // 퀴즈 상세보기
+    @PostMapping(value = "/v1/study/{study_room_id}/quiz/{quiz_id}/detail")
+    public ResponseEntity<?> quizDetail(@AuthenticationPrincipal LoginUser loginUser,
+                                        @PathVariable Long study_room_id,
+                                        @PathVariable Long quiz_id) {
+        QuizRespDto.QuizDetailRespDto quizDetailRespDto = quizService.quizDetail(loginUser.getUser().getId(), study_room_id, quiz_id);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 상세보기", quizDetailRespDto), HttpStatus.OK);
+    }
 }

@@ -106,4 +106,10 @@ public class QuizService {
             throw new CustomApiException("해당 퀴즈의 작성자와 스터디의 장만이 퀴즈를 삭제할 수 있습니다.");
         }
     }
+
+//    @Transactional
+//    public QuizRespDto.QuizDetailRespDto quizDetail(Long userId, Long study_room_id, Long quizId){
+//
+//        return QuizRespDto.QuizDetailRespDto;
+//    }
 }
