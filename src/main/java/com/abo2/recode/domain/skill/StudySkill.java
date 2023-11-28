@@ -33,12 +33,3 @@ public class StudySkill {
         this.skill = skill;
     }
 }
-
-
-  /*  Table Study_skill {
-        id integer [primary key]
-        study_id integer
-        skill_id integer
-        }
-
-        }*/

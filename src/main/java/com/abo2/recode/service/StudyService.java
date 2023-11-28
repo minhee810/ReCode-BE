@@ -11,19 +11,27 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
+import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.extern.flogger.Flogger;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
@@ -69,44 +77,60 @@ public class StudyService {
         }
     }
 
-    public void createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto){
 
-        System.out.println("Service createRoom()");
+    // 민희 수정
+    // 요일 문자열을 enum 타입으로 변환하는 메서드
+    private DayOfWeek parseDayOfWeek(String dayOfWeekString) {
+        try {
+            return DayOfWeek.valueOf(dayOfWeekString);
+        } catch (IllegalArgumentException e) {
+            // 유효하지 않은 요일 값 처리
+            throw new IllegalArgumentException("유효하지 않은 요일 값: " + dayOfWeekString);
+        }
+    }
 
-        //1. 넘겨 받은 studyReqDto에서 정보 가져오기
+
+
+    // 민희 수정
+    // 시간 문자열을 LocalTime 객체로 변환하는 메서드
+    private LocalTime parseTime(String timeString) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return LocalTime.parse(timeString, formatter);
+        } catch (DateTimeParseException e) {
+            // 유효하지 않은 시간 값 처리
+            throw new IllegalArgumentException("유효하지 않은 시간 값: " + timeString);
+        }
+    }
+
+    // 민희 수정
+    public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
+
+        // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        String study_name = studyCreateReqDto.getStudyName();
-        String title = studyCreateReqDto.getTitle();
-        String description = studyCreateReqDto.getDescription();
-        LocalDate start_date = studyCreateReqDto.getStartDate();
-        LocalDate end_date = studyCreateReqDto.getEndDate();
-        Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
-        Integer max_num = studyCreateReqDto.getMaxNum();
+        LocalTime startTime = parseTime(studyCreateReqDto.getStartTime());
+        LocalTime endTime = parseTime(studyCreateReqDto.getEndTime());
 
-        //1-1. start_time,end_time String -> LocalDateTime
-        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
-        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEndTime());
-
-        //2. DB에 전송할 studyRoom Entity 선언, studyRoom Entity에 데이터 집어 넣기, DB에 Insert
         StudyRoom studyRoom = StudyRoom.builder()
-                .studyName(study_name)
-                .title(title)
-                .description(description)
-                .startTime(startDateTime)
-                .endTime(endDateTime)
-                .startDate(start_date)
-                .endDate(end_date)
-                .currentNum(current_num)
-                .maxNum(max_num)
+                .studyName(studyCreateReqDto.getStudyName())
+                .title(studyCreateReqDto.getTitle())
+                .description(studyCreateReqDto.getDescription())
+                .startDate(studyCreateReqDto.getStartDate())
+                .endDate(studyCreateReqDto.getEndDate())
+                .startTime(startTime)
+                .endTime(endTime)
+                .currentNum(1)
+                .allowedDays(studyCreateReqDto.getAllowedDays())
+                .maxNum(studyCreateReqDto.getMaxNum())
                 .master(master)
                 .build();
 
         studyRoomRepository.save(studyRoom);
 
-        //3.study_skill 테이블에 skill 삽입
-        //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
+        // 3. study_skill 테이블에 skill 삽입
+        // 3-1. Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
         // expertise
         for (String skillName : studyCreateReqDto.getSkills()) {
             Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
@@ -115,9 +139,24 @@ public class StudyService {
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
+
             studySkillRepository.save(studySkill);
         }
-        System.out.println("Service createRoom() save !!!!!!");
+
+
+        StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
+                .studyName(studyRoom.getStudyName())
+                .createdAt(studyRoom.getCreatedAt())
+                .allowedDays(studyRoom.getAllowedDays())
+                .description(studyRoom.getDescription())
+                .endDate(studyRoom.getEndDate())
+                .endTime(studyRoom.getEndTime())
+                .startTime(studyRoom.getStartTime())
+                .maxNum(studyRoom.getMaxNum())
+                .startDate(studyRoom.getStartDate())
+                .title(studyRoom.getTitle())
+                .updatedAt(studyRoom.getUpdatedAt())
+                .build();
 
         //4. Study_member에 만든 사람(조장) 추가 하기
         StudyMember studyMember = StudyMember.builder()
@@ -128,7 +167,9 @@ public class StudyService {
 
         studyMemberRepository.save(studyMember);
 
-    } //createRoom()
+        return studyCreateRespDto;
+    }
+
 
     // 문자열을 LocalDateTime 객체로 변환
     private LocalDateTime convertToDateTime(String dateTimeStr) {
@@ -142,6 +183,11 @@ public class StudyService {
 
         return time;
     }//convertToDateTime()
+
+    // 반환 타입이 Long인지 확인하는 메소드
+    public boolean checkReturnType(Object returnValue) {
+        return returnValue instanceof Long;
+    }//checkReturnType()
 
     //study 가입 신청
     public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
@@ -166,6 +212,17 @@ public class StudyService {
 
         User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
+        if(     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
+                checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
+                        studyApplyReqDto.getUser_id()))
+        ){
+            throw new CustomForbiddenException("이미 가입한 유저입니다.");
+        } else if (!(optionalUser.isPresent())) {         //User가 NUll인 경우
+            throw new CustomForbiddenException("존재하지 않는 유저입니다.");
+        } else if (!(optionalStudyRoom.isPresent())) { //스터디룸이 Null인 경우 -> 비어있는 스터디룸
+            throw new CustomForbiddenException("존재하지 않는 스터디룸입니다.");
+        }
+
         // 2. DB에 저장할 Study_Member Entity 선언,save
         StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
@@ -176,7 +233,8 @@ public class StudyService {
         studyMemberRepository.save(studyMember);
 
         return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
-    }
+
+    }//studyApply()
 
     //스터디 모임 상세 조회
     @Transactional

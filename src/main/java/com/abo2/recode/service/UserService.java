@@ -31,7 +31,9 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final StudyMemberRepository studyMemberRepository;
     private final StudySkillRepository studySkillRepository;
+
     private final StudyRoomRepository studyRoomRepository;
+
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -99,7 +101,6 @@ public class UserService {
 
         // 2. update()로 객체에 변경사항 반영
         userPS.updateUser(updateUserReqDto.getNickname(), updateUserReqDto.getEmail());
-
         // 3. dto 응답
         return new UserRespDto.UpdateUserRespDto(userPS);
     }

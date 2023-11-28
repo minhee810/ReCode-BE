@@ -45,7 +45,7 @@ public class QuizController {
     public ResponseEntity<?> quizModify(@AuthenticationPrincipal LoginUser loginUser,
                                         @PathVariable Long study_room_id,
                                         @RequestBody @Valid QuizReqDto.QuizWriteReqDto quizWriteReqDto){
-        QuizRespDto.QuizWriteRespDto quizzedModify = quizService.quizModify(loginUser.getUser().getId(), study_room_id, quizWriteReqDto);
+        QuizRespDto.QuizListRespDto quizzedModify = quizService.quizModify(loginUser.getUser().getId(), study_room_id, quizWriteReqDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 수정 완료", quizzedModify), HttpStatus.OK);
     }
@@ -58,5 +58,15 @@ public class QuizController {
         quizService.quizDelete(loginUser.getUser().getId(), study_room_id, quiz_id);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 삭제 왼료", null), HttpStatus.OK);
+    }
+
+    // 퀴즈 상세보기
+    @GetMapping(value = "/v1/study/{study_room_id}/quiz/{quiz_id}/detail")
+    public ResponseEntity<?> quizDetail(@AuthenticationPrincipal LoginUser loginUser,
+                                        @PathVariable Long study_room_id,
+                                        @PathVariable Long quiz_id) {
+        QuizRespDto.QuizDetailRespDto quizDetailRespDto = quizService.quizDetail(loginUser.getUser().getId(), study_room_id, quiz_id);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 상세보기", quizDetailRespDto), HttpStatus.OK);
     }
 }

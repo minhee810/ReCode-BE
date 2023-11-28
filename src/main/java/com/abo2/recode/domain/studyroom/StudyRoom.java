@@ -1,5 +1,6 @@
 package com.abo2.recode.domain.studyroom;
 
+
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -8,6 +9,7 @@ import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,8 +17,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -45,10 +49,15 @@ public class StudyRoom {
     private LocalDate endDate; //스터디 마무리 기간
 
     @Column(nullable = false)
-    private LocalDateTime startTime; //스터디 출석 인정 시작 시간
+    private LocalTime startTime; //스터디 출석 인정 시작 시간
 
     @Column(nullable = false)
-    private LocalDateTime endTime; //스터디 출석 인정 끝 시간
+    private LocalTime endTime; //스터디 출석 인정 끝 시간
+
+    @ElementCollection
+    @CollectionTable(name = "study_room_allowed_days", joinColumns = @JoinColumn(name = "study_room_id"))
+    @Column(name = "day")
+    private List<String> allowedDays;
 
     @Column(nullable = false)
     private Integer currentNum = 1; // 필드 선언 시 기본값 지정,스터디 그룹 현재 인원
@@ -59,6 +68,7 @@ public class StudyRoom {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by")
     private User master;
+
 
     @CreatedDate
     @Column(nullable = false)
@@ -94,8 +104,8 @@ public class StudyRoom {
 
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
-                     LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime,
-                     Integer currentNum, Integer maxNum, User master) {
+                     LocalDate endDate, LocalTime startTime, LocalTime endTime,
+                     Integer currentNum, Integer maxNum, User master, List<String> allowedDays ) {
 
         this.id = id;
         this.studyName = studyName;
@@ -108,5 +118,8 @@ public class StudyRoom {
         this.currentNum = currentNum;
         this.maxNum = maxNum;
         this.master = master;
+        this.allowedDays = allowedDays;
     }
+
 }
+

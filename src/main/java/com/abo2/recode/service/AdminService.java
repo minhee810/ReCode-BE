@@ -99,7 +99,7 @@ public class AdminService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        Long study_id = studyRoomRepository.findCreated_byBYstudy_id(memberRoleReqDto.getStudy_id());
+        Long study_id = studyRoomRepository.findCreated_byBystudy_id(memberRoleReqDto.getStudy_id());
 
         if((memberRoleReqDto.getRole().equals("group_leader")) && !(memberRoleReqDto.getUser_id()==study_id)){
             //조원을 조장으로 승격. studyRoom의 created_by를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
@@ -132,7 +132,6 @@ public class AdminService {
         return memberRoleResDto;
     } //memberRoleChange()
 
-
 //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
 //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
 
@@ -147,4 +146,5 @@ public class AdminService {
         response.setSkills(skillNames);
         return response;
     }//getSkills()
+
 }//AdminService class

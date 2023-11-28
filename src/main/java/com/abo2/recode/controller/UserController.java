@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class UserController {
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", joinRespDto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/admin_join")
+    @PostMapping("/admin-join")
     public ResponseEntity<?> admin_join(@RequestBody @Valid UserReqDto.JoinAdminReqDto joinAdminReqDto, BindingResult bindingResult) {
         UserRespDto.JoinRespDto joinRespDto = userService.admin_join(joinAdminReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "관리자 회원가입 성공", joinRespDto), HttpStatus.CREATED);

@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -51,14 +52,14 @@ public class Quiz {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Builder
-    public Quiz(Long id, String title, StudyRoom studyRoom, User user, String quiz_link, Integer difficulty, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Quiz(Long id, String title, StudyRoom studyRoom, User user, String quiz_link, Integer difficulty, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
         this.title = title;
         this.studyRoom = studyRoom;
