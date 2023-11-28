@@ -3,6 +3,7 @@ package com.abo2.recode.dto.study;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,8 +14,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -153,9 +156,11 @@ public class StudyResDto {
             this.id = studyRoom.getId();
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
+
             this.skillNames = studySkills.stream()
                     .map(studySkill -> studySkill.getSkill().getSkillName())
                     .collect(Collectors.toList());
+
             this.current_num = studyRoom.getCurrentNum();
             this.max_num = studyRoom.getMaxNum();
             if (studyRoom.getMaster() != null) {
@@ -183,5 +188,90 @@ public class StudyResDto {
             this.study_id = study_id;
         }
     }
+
+
+//    @Getter
+//    @Setter
+//    public static class StudyRoomCreateResDto{
+//
+//        private Long id;
+//        private String study_name;
+//        private String title;
+//        private List<String> skillNames;
+//        private Integer current_num;
+//        private Integer max_num;
+//        private String masterEmail;
+//        private String masterNickname;
+//
+//    }
+
+    @Getter
+    @Setter
+    public static class StudyCreateRespDto{
+
+        // Study_Room
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String studyName;
+
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String title;
+
+        @NotEmpty
+        @Size(min = 1, max = 300)
+        private String description;
+
+        @NotEmpty
+        private LocalTime startTime; //스터디 출석 인정 시작 시간 " 12:00"
+
+        @NotEmpty
+        private LocalTime endTime; //스터디 출석 인정 끝 시간 " 12:10"
+
+        @NotEmpty
+        private List<String> allowedDays; // 출석 인정 요일 - minhee 추가
+
+        @NotEmpty
+        private LocalDate startDate;
+
+        @NotEmpty
+        private LocalDate endDate;
+
+        @NotEmpty
+        private Integer maxNum;
+
+        @NotEmpty
+        private Long userId; // 별도로 가져오는 코드 필요(입력 받지 않음)
+
+        @NotEmpty
+        private LocalDateTime createdAt;
+
+        @NotEmpty
+        private LocalDateTime updatedAt;
+        //======================================
+        // skill 테이블의 스킬들,모집분야
+        private String[] skills;
+
+        @Builder
+        public StudyCreateRespDto(String studyName, String title, String description,
+                                  LocalTime startTime, LocalTime endTime, List<String> allowedDays,
+                                  LocalDate startDate, LocalDate endDate, Integer maxNum, Long userId,
+                                  LocalDateTime createdAt, LocalDateTime updatedAt, String[] skills) {
+            this.studyName = studyName;
+            this.title = title;
+            this.description = description;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.allowedDays = allowedDays;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.maxNum = maxNum;
+            this.userId = userId;
+            this.createdAt = createdAt;
+            this.updatedAt = updatedAt;
+            this.skills = skills;
+        }
+    }
+
 }
 

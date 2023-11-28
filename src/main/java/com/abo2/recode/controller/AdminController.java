@@ -35,8 +35,7 @@ public class AdminController {
     //관리자가 기술 스택 추가
     @PostMapping(value = "/v1/admin/addskill")
     public ResponseEntity<ResponseDto> adminSkillAdd(
-            @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto
-            ){
+            @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto){
 
         // 1. 쉼표로 분할하여 배열에 저장
         String[] addskills = adminSkillAddReqDto.getSkills().split(",");

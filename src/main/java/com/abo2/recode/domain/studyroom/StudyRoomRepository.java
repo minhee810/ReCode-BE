@@ -16,4 +16,5 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
 
     @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master")
     List<StudyRoom> findAllWithMaster();
+
 }

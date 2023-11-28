@@ -14,13 +14,17 @@ import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
@@ -52,44 +56,61 @@ public class StudyService {
         this.studyMemberRepository = studyMemberRepository;
     }
 
-    public void createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto){
 
-        System.out.println("Service createRoom()");
 
-        //1. 넘겨 받은 studyReqDto에서 정보 가져오기
+    // 민희 수정
+    // 요일 문자열을 enum 타입으로 변환하는 메서드
+    private DayOfWeek parseDayOfWeek(String dayOfWeekString) {
+        try {
+            return DayOfWeek.valueOf(dayOfWeekString);
+        } catch (IllegalArgumentException e) {
+            // 유효하지 않은 요일 값 처리
+            throw new IllegalArgumentException("유효하지 않은 요일 값: " + dayOfWeekString);
+        }
+    }
+
+
+
+    // 민희 수정
+    // 시간 문자열을 LocalTime 객체로 변환하는 메서드
+    private LocalTime parseTime(String timeString) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return LocalTime.parse(timeString, formatter);
+        } catch (DateTimeParseException e) {
+            // 유효하지 않은 시간 값 처리
+            throw new IllegalArgumentException("유효하지 않은 시간 값: " + timeString);
+        }
+    }
+
+    // 민희 수정
+    public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
+
+        // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        String study_name = studyCreateReqDto.getStudyName();
-        String title = studyCreateReqDto.getTitle();
-        String description = studyCreateReqDto.getDescription();
-        LocalDate start_date = studyCreateReqDto.getStartDate();
-        LocalDate end_date = studyCreateReqDto.getEndDate();
-        Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
-        Integer max_num = studyCreateReqDto.getMaxNum();
+        LocalTime startTime = parseTime(studyCreateReqDto.getStartTime());
+        LocalTime endTime = parseTime(studyCreateReqDto.getEndTime());
 
-        //1-1. start_time,end_time String -> LocalDateTime
-        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
-        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEndTime());
-
-        //2. DB에 전송할 studyRoom Entity 선언, studyRoom Entity에 데이터 집어 넣기, DB에 Insert
         StudyRoom studyRoom = StudyRoom.builder()
-                .studyName(study_name)
-                .title(title)
-                .description(description)
-                .startTime(startDateTime)
-                .endTime(endDateTime)
-                .startDate(start_date)
-                .endDate(end_date)
-                .currentNum(current_num)
-                .maxNum(max_num)
+                .studyName(studyCreateReqDto.getStudyName())
+                .title(studyCreateReqDto.getTitle())
+                .description(studyCreateReqDto.getDescription())
+                .startDate(studyCreateReqDto.getStartDate())
+                .endDate(studyCreateReqDto.getEndDate())
+                .startTime(startTime)
+                .endTime(endTime)
+                .currentNum(1)
+                .allowedDays(studyCreateReqDto.getAllowedDays())
+                .maxNum(studyCreateReqDto.getMaxNum())
                 .master(master)
                 .build();
 
         studyRoomRepository.save(studyRoom);
 
-        //3.study_skill 테이블에 skill 삽입
-        //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
+        // 3. study_skill 테이블에 skill 삽입
+        // 3-1. Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
         // expertise
         for (String skillName : studyCreateReqDto.getSkills()) {
             Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
@@ -98,11 +119,89 @@ public class StudyService {
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
+
             studySkillRepository.save(studySkill);
         }
-        System.out.println("Service createRoom() save !!!!!!");
 
-    } //createRoom()
+        StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
+                .studyName(studyRoom.getStudyName())
+                .createdAt(studyRoom.getCreatedAt())
+                .allowedDays(studyRoom.getAllowedDays())
+                .description(studyRoom.getDescription())
+                .endDate(studyRoom.getEndDate())
+                .endTime(studyRoom.getEndTime())
+                .startTime(studyRoom.getStartTime())
+                .maxNum(studyRoom.getMaxNum())
+                .startDate(studyRoom.getStartDate())
+                .title(studyRoom.getTitle())
+                .updatedAt(studyRoom.getUpdatedAt())
+                .build();
+
+        return studyCreateRespDto;
+    }
+
+    // 문자열을 LocalTime으로 파싱하는 메서드
+
+    // 문자열로부터 LocalDateTime으로 변환하는 메서드
+//    private LocalDateTime parseToLocalDateTime(String dateTimeStr) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // 포맷 지정
+//        return LocalDateTime.parse(dateTimeStr, formatter); // 파싱
+//    }
+
+
+
+
+//    public void createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto){
+//
+//        System.out.println("Service createRoom()");
+//
+//        //1. 넘겨 받은 studyReqDto에서 정보 가져오기
+//        User master = userRepository.findById(studyCreateReqDto.getUserId())
+//                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+//
+//        String study_name = studyCreateReqDto.getStudyName();
+//        String title = studyCreateReqDto.getTitle();
+//        String description = studyCreateReqDto.getDescription();
+//        LocalDate start_date = studyCreateReqDto.getStartDate();
+//        LocalDate end_date = studyCreateReqDto.getEndDate();
+//        Integer current_num = 1; //스터디 그룹 현재 인원은 기본 1명으로 설정
+//        Integer max_num = studyCreateReqDto.getMaxNum();
+//
+//        //1-1. start_time,end_time String -> LocalDateTime
+//        LocalDateTime startDateTime = convertToDateTime(studyCreateReqDto.getStartTime());
+//        LocalDateTime endDateTime = convertToDateTime(studyCreateReqDto.getEndTime());
+//
+//        //2. DB에 전송할 studyRoom Entity 선언, studyRoom Entity에 데이터 집어 넣기, DB에 Insert
+//        StudyRoom studyRoom = StudyRoom.builder()
+//                .studyName(study_name)
+//                .title(title)
+//                .description(description)
+//                .startTime(startDateTime)
+//                .endTime(endDateTime)
+//                .startDate(start_date)
+//                .endDate(end_date)
+//                .currentNum(current_num)
+//                .maxNum(max_num)
+//                .master(master)
+//                .build();
+//
+//        studyRoomRepository.save(studyRoom);
+//
+//        //3.study_skill 테이블에 skill 삽입
+//        //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
+//        // expertise
+//        for (String skillName : studyCreateReqDto.getSkills()) {
+//            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
+//
+//            StudySkill studySkill = StudySkill.builder()
+//                    .studyRoom(studyRoom)
+//                    .skill(skill)
+//                    .build();
+//            studySkillRepository.save(studySkill);
+//        }
+//        System.out.println("Service createRoom() save !!!!!!");
+//
+//    } //createRoom()
 
     // 문자열을 LocalDateTime 객체로 변환
     private LocalDateTime convertToDateTime(String dateTimeStr) {
