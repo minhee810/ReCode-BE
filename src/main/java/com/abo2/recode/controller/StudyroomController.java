@@ -67,9 +67,7 @@ public class StudyroomController {
         studyApplyReqDto.setStudy_id(study_id);
         studyApplyReqDto.setUser_id(loginUser.getUser().getId());
 
-        StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto =
-
-        studyService.studyApply(studyApplyReqDto);
+        StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto = studyService.studyApply(studyApplyReqDto);
 
         //2. 성공 return
         ResponseDto<StudyResDto.StudyRoomApplyResDto> responseDto

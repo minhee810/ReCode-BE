@@ -145,6 +145,11 @@ public class StudyService {
         return time;
     }//convertToDateTime()
 
+    // 반환 타입이 Long인지 확인하는 메소드
+    public boolean checkReturnType(Object returnValue) {
+        return returnValue instanceof Long;
+    }//checkReturnType()
+
     //study 가입 신청
     public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
@@ -154,31 +159,43 @@ public class StudyService {
 //
 //        @NotEmpty
 //        Long user_id;
+        
+        // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입했거나 가입한 상태인지 체크
+        if(
+                checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
+                        studyApplyReqDto.getUser_id()))
+        ){
+            //return new StudyResDto.StudyRoomApplyResDto(studyApplyReqDto.getStudy_id());
+        }
 
-        //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
-        StudyRoom studyRoom;
-        Optional<StudyRoom> optionalStudyRoom;
+            //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
+            StudyRoom studyRoom;
+            Optional<StudyRoom> optionalStudyRoom;
 
-        optionalStudyRoom =
-                studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
-        studyRoom = optionalStudyRoom.orElse(null);
+            optionalStudyRoom =
+                    studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
+            studyRoom = optionalStudyRoom.orElse(null);
 
-        // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
-        Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
+            // 0.5 스터디룸이 Null인 경우 -> 비어있는 스터디룸
 
-        User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
-        // 2. DB에 저장할 Study_Member Entity 선언,save
-        StudyMember studyMember = StudyMember.builder()
-                .studyRoom(studyRoom)
-                .user(user)
-                .status(0) //not approved
-                .build();
+            // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
+            Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
 
-        studyMemberRepository.save(studyMember);
+            User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
-        return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
-    }
+            // 2. DB에 저장할 Study_Member Entity 선언,save
+            StudyMember studyMember = StudyMember.builder()
+                    .studyRoom(studyRoom)
+                    .user(user)
+                    .status(0) //not approved
+                    .build();
+
+            studyMemberRepository.save(studyMember);
+
+            return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
+
+    }//studyApply()
 
     //스터디 모임 상세 조회
     @Transactional

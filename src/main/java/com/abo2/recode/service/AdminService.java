@@ -98,7 +98,7 @@ public class AdminService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        Long study_id = studyRoomRepository.findCreated_byBYstudy_id(memberRoleReqDto.getStudy_id());
+        Long study_id = studyRoomRepository.findCreated_byBystudy_id(memberRoleReqDto.getStudy_id());
 
         if((memberRoleReqDto.getRole().equals("group_leader")) && !(memberRoleReqDto.getUser_id()==study_id)){
             //조원을 조장으로 승격. studyRoom의 created_by를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
