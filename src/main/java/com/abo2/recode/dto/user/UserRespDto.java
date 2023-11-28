@@ -17,6 +17,7 @@ public class UserRespDto {
         private Long id;
         private String username;
         private String role; // minhee - 권한 추가
+        private String nickname;
         private String createdAt;
 
         public LoginRespDto(User user) {
@@ -24,6 +25,7 @@ public class UserRespDto {
             this.role = String.valueOf(user.getRole());
             this.username = user.getUsername();
             this.createdAt = CustomDateUtil.toStringFormat(user.getCreatedAt());
+            this.nickname = user.getNickname();
         }
     }
 
