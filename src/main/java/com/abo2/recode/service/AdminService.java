@@ -8,6 +8,7 @@ import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
+import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import org.springframework.beans.factory.annotation.Autowired;
