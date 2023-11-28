@@ -10,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class StudyReqDto {
@@ -36,6 +37,9 @@ public class StudyReqDto {
 
         @NotEmpty
         private String endTime; //스터디 출석 인정 끝 시간 "monday 12:10"
+
+        @NotEmpty
+        private List<String> allowedDays; // 출석 인정 요일 - minhee 추가
 
         @NotEmpty
         private LocalDate startDate;

@@ -35,9 +35,13 @@ public class AdminController {
     @Secured(value = "ROLE_ADMIN")
     @PostMapping(value = "/admin/v1/addskill")
     public ResponseEntity<ResponseDto> adminSkillAdd(
+<<<<<<< HEAD
+            @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto){
+=======
             @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto,
             @AuthenticationPrincipal LoginUser loginUser
             ){
+>>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
 
         //유저가 관리자가 맞는지 검증
         if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {

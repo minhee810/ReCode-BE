@@ -1,6 +1,5 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.config.auth.LoginService;
 import com.abo2.recode.domain.notice.Notice;
 import com.abo2.recode.domain.notice.NoticeRepository;
 import com.abo2.recode.domain.user.User;
@@ -8,7 +7,6 @@ import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.notice.NoticeReqDto;
 
 import com.abo2.recode.dto.notice.NoticeRespDto;
-import com.abo2.recode.dto.user.UserRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
