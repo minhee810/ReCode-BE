@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -33,7 +34,7 @@ public class Notice {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -61,3 +62,13 @@ public class Notice {
 
 }
 
+    @Builder
+    public Notice(Long id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user = user;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+}

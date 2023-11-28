@@ -2,11 +2,15 @@ package com.abo2.recode.domain.quiz;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -44,4 +48,24 @@ public class Quiz {
 
     @Column(nullable = false)
     private Integer difficulty;
+
+    @CreatedDate
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Builder
+    public Quiz(Long id, String title, StudyRoom studyRoom, User user, String quiz_link, Integer difficulty, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.title = title;
+        this.studyRoom = studyRoom;
+        this.user = user;
+        this.quiz_link = quiz_link;
+        this.difficulty = difficulty;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -20,12 +19,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    void deleteById(Long userId);
+    Optional<User> findByEmailCheckToken(String emailCheckToken);
+
 
     @Transactional
     @Modifying
     @Query(value = "UPDATE StudyRoom sr SET sr.master = null WHERE sr.master.id = :userId", nativeQuery = true)
     void dissociateStudyRooms(@Param("userId") Long userId);
+
+    void deleteById(Long userId);
 
     @Transactional
     @Modifying

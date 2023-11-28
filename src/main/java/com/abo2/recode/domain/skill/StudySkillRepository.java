@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface StudySkillRepository extends JpaRepository<StudySkill,Long> {
 
     List<StudySkill> findByStudyRoomId(Long studyRoomId);
+
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM study_skill WHERE study_room_id = ?1", nativeQuery = true)

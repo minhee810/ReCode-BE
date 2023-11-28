@@ -109,4 +109,12 @@ public class UserReqDto {
         private String essay;
     }
 
+    @Setter
+    @Getter
+    public static class ChangePasswordReqDto{
+        @NotEmpty
+        private String password;
+        private String emailCheckToken;
+    }
+
 }
