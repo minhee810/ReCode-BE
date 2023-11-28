@@ -1,12 +1,11 @@
 package com.abo2.recode.domain.notice;
 
 import com.abo2.recode.domain.user.User;
-import com.abo2.recode.dto.notice.NoticeRespDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -60,15 +59,4 @@ public class Notice {
         this.content = content;
     }
 
-}
-
-    @Builder
-    public Notice(Long id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.user = user;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

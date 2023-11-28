@@ -1,6 +1,8 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
+import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.dto.user.UserReqDto;

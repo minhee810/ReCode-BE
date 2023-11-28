@@ -16,12 +16,14 @@ import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
+import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.extern.flogger.Flogger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -159,14 +161,6 @@ public class StudyService {
 //
 //        @NotEmpty
 //        Long user_id;
-        
-        // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입했거나 가입한 상태인지 체크
-        if(
-                checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
-                        studyApplyReqDto.getUser_id()))
-        ){
-            //return new StudyResDto.StudyRoomApplyResDto(studyApplyReqDto.getStudy_id());
-        }
 
             //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
             StudyRoom studyRoom;
@@ -176,15 +170,23 @@ public class StudyService {
                     studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
             studyRoom = optionalStudyRoom.orElse(null);
 
-            // 0.5 스터디룸이 Null인 경우 -> 비어있는 스터디룸
-
-
             // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
             Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
 
             User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
-            // 2. DB에 저장할 Study_Member Entity 선언,save
+        if(     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
+                checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
+                        studyApplyReqDto.getUser_id()))
+        ){
+            throw new CustomForbiddenException("이미 가입한 유저입니다.");
+        } else if (!(optionalUser.isPresent())) {         //User가 NUll인 경우
+            throw new CustomForbiddenException("존재하지 않는 유저입니다.");
+        } else if (!(optionalStudyRoom.isPresent())) { //스터디룸이 Null인 경우 -> 비어있는 스터디룸
+            throw new CustomForbiddenException("존재하지 않는 스터디룸입니다.");
+        }
+
+        // 2. DB에 저장할 Study_Member Entity 선언,save
             StudyMember studyMember = StudyMember.builder()
                     .studyRoom(studyRoom)
                     .user(user)
