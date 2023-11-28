@@ -119,10 +119,6 @@ public class AdminController {
                 HttpStatus.OK);
     }//memberRoleChange()
 
-
-    // 관리자 권한으로 글 삭제
-
-
     // 관리자 기술 스택 불러오기 성공
     @Secured(value = "ROLE_ADMIN")
     @GetMapping(value = "/admin/v1/get-skills")
