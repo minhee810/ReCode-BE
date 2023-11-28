@@ -28,11 +28,8 @@ public class StudyroomController {
     private static final Logger logger = LoggerFactory.getLogger(StudyroomController.class);
 
     StudyService studyService;
-<<<<<<< HEAD
 
-=======
     @Autowired
->>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
     public StudyroomController(StudyService studyService) {
         this.studyService = studyService;
     }
