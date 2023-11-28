@@ -18,11 +18,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-<<<<<<< HEAD
 import java.time.LocalTime;
-=======
-import java.util.ArrayList;
->>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,19 +27,6 @@ public class StudyResDto {
     @Getter
     @Setter
     public static class StudyRoomDetailResDto{
-
-//        {
-//            "id": 1,
-//                "study_name": "Study Group for XYZ",
-//                "title": "Looking for members to study XYZ!",
-//                "description": "We are a group of learners looking to deepen our understanding of XYZ. Join us!",
-//                "start_date": "2023-12-01",
-//                "end_date": "2024-01-01",
-//                "max_num": 10,
-//                "user_id": 42,
-//                "createdAt": "2023-11-01T12:00:00Z",
-//                "updatedAt": "2023-11-02T15:30:00Z"
-//        }
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -195,23 +178,6 @@ public class StudyResDto {
         }
     }
 
-<<<<<<< HEAD
-
-//    @Getter
-//    @Setter
-//    public static class StudyRoomCreateResDto{
-//
-//        private Long id;
-//        private String study_name;
-//        private String title;
-//        private List<String> skillNames;
-//        private Integer current_num;
-//        private Integer max_num;
-//        private String masterEmail;
-//        private String masterNickname;
-//
-//    }
-
     @Getter
     @Setter
     public static class StudyCreateRespDto{
@@ -279,7 +245,7 @@ public class StudyResDto {
             this.skills = skills;
         }
     }
-=======
+
     @Getter
     @Setter
     public static class StudyMembershipResDto{
@@ -381,7 +347,7 @@ public class StudyResDto {
         @NotEmpty
         private String essay;
     }//class ApplicationEssayResDto
->>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
+
 
 }
 
