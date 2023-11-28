@@ -1,5 +1,6 @@
 package com.abo2.recode.domain.studyroom;
 
+
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -8,6 +9,7 @@ import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +30,7 @@ public class StudyRoom {
     @Column(name="study_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 일련번호
+
 
     @Column(unique = true,nullable = false,length = 50)
     private String studyName; //스터디 그룹 네임
@@ -109,4 +112,6 @@ public class StudyRoom {
         this.maxNum = maxNum;
         this.master = master;
     }
+
 }
+

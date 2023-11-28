@@ -11,11 +11,13 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.extern.flogger.Flogger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -4,6 +4,7 @@ import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
+import com.abo2.recode.dto.notice.NoticeRespDto;
 import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import com.abo2.recode.handler.CustomExceptionHandler;
@@ -130,8 +131,5 @@ public class AdminController {
         SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
         return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
     }
-
-
-
 
 }//AdminController

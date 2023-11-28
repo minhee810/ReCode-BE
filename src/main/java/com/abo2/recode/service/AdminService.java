@@ -8,7 +8,6 @@ import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
-import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +131,6 @@ public class AdminService {
         return memberRoleResDto;
     } //memberRoleChange()
 
-
 //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
 //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
 
@@ -147,4 +145,5 @@ public class AdminService {
         response.setSkills(skillNames);
         return response;
     }//getSkills()
+
 }//AdminService class

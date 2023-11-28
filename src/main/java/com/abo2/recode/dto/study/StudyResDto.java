@@ -3,6 +3,8 @@ package com.abo2.recode.dto.study;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

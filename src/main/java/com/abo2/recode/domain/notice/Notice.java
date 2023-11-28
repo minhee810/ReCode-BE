@@ -1,10 +1,12 @@
 package com.abo2.recode.domain.notice;
 
 import com.abo2.recode.domain.user.User;
+import com.abo2.recode.dto.notice.NoticeRespDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
+
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,7 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Notice { //홈페이지 메인 공지사항
+@EntityListeners(AuditingEntityListener.class)
+public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,15 +32,35 @@ public class Notice { //홈페이지 메인 공지사항
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private User user;
+    private User createdBy;
 
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+
+    @Builder
+    public Notice(Long id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User createdBy) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.createdBy = createdBy;
+    }
+
+    public void setUser(Long userId) {
+    }
+
+    public void setNoticeInfo(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+
+}
 
     @Builder
     public Notice(Long id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
