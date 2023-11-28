@@ -199,18 +199,18 @@ public class StudyService {
 //        @NotEmpty
 //        Long user_id;
 
-            //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
-            StudyRoom studyRoom;
-            Optional<StudyRoom> optionalStudyRoom;
+        //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
+        StudyRoom studyRoom;
+        Optional<StudyRoom> optionalStudyRoom;
 
-            optionalStudyRoom =
-                    studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
-            studyRoom = optionalStudyRoom.orElse(null);
+        optionalStudyRoom =
+                studyRoomRepository.findById(studyApplyReqDto.getStudy_id());
+        studyRoom = optionalStudyRoom.orElse(null);
 
-            // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
-            Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
+        // 1.DB에 저장할 User 엔티티를 User_id를 기반으로 가져와야 함.
+        Optional<User> optionalUser = userRepository.findById(studyApplyReqDto.getUser_id());
 
-            User user = optionalUser.orElse(null); // Provide a default value (null in this case)
+        User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
         if(     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
                 checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
@@ -224,15 +224,15 @@ public class StudyService {
         }
 
         // 2. DB에 저장할 Study_Member Entity 선언,save
-            StudyMember studyMember = StudyMember.builder()
-                    .studyRoom(studyRoom)
-                    .user(user)
-                    .status(0) //not approved
-                    .build();
+        StudyMember studyMember = StudyMember.builder()
+                .studyRoom(studyRoom)
+                .user(user)
+                .status(0) //not approved
+                .build();
 
-            studyMemberRepository.save(studyMember);
+        studyMemberRepository.save(studyMember);
 
-            return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
+        return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
 
     }//studyApply()
 

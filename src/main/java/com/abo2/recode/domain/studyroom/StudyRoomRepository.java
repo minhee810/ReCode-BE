@@ -28,8 +28,6 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
     @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master")
     List<StudyRoom> findAllWithMaster();
 
-<<<<<<< HEAD
-=======
     // 사욪자가 스터디 장으로 있는지 확인
     @Query("SELECT COUNT(sr) > 0 FROM StudyRoom sr WHERE sr.master = :master")
     boolean existsByMaster(@Param("master") User master);
@@ -41,6 +39,4 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
     @Modifying
     @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :study_room_id",nativeQuery = true)
     void memberRoleDemote(@Param("study_room_id") Long study_room_id);
-
->>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
 }

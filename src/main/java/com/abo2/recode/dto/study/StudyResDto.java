@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.study;
 
+import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
@@ -19,7 +20,9 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StudyResDto {
@@ -84,9 +87,16 @@ public class StudyResDto {
             this.current_num = studyRoom.getCurrentNum();
             this.max_num = studyRoom.getMaxNum();
             this.master = studyRoom.getMaster().getNickname();
-            this.skillNames = studySkills.stream()
-                    .map(studySkill -> studySkill.getSkill().getSkillName())
-                    .collect(Collectors.toList());
+            if (studySkills != null) {
+                this.skillNames = studySkills.stream()
+                        .filter(Objects::nonNull) // 리스트 내 null 객체 필터링
+                        .map(StudySkill::getSkill)
+                        .filter(Objects::nonNull) // getSkill() 결과가 null이 아닌 것만 필터링
+                        .map(Skill::getSkillName)
+                        .collect(Collectors.toList());
+            } else {
+                this.skillNames = new ArrayList<>();
+            }
             this.createdAt = studyRoom.getCreatedAt();
             this.updatedAt = studyRoom.getUpdatedAt();
         }
@@ -109,10 +119,21 @@ public class StudyResDto {
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
             this.status = getStatusString(studyMember.getStatus());
-            this.skillNames = studySkills.stream()
-                    .map(studySkill -> studySkill.getSkill().getSkillName())
-                    .collect(Collectors.toList());
+
+            if (studySkills != null) {
+                this.skillNames = studySkills.stream()
+                        .filter(Objects::nonNull) // Check if each studySkill object is not null
+                        .map(studySkill -> {
+                            Skill skill = studySkill.getSkill();
+                            return (skill != null) ? skill.getSkillName() : null; // Check if getSkill() is not null
+                        })
+                        .filter(Objects::nonNull) // Filter out null skill names
+                        .collect(Collectors.toList());
+            } else {
+                this.skillNames = new ArrayList<>(); // Initialize as an empty list if studySkills is null
+            }
         }
+
 
         private String getStatusString(Integer status) {
             switch (status) {
@@ -145,9 +166,18 @@ public class StudyResDto {
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
 
-            this.skillNames = studySkills.stream()
-                    .map(studySkill -> studySkill.getSkill().getSkillName())
-                    .collect(Collectors.toList());
+            if (studySkills != null) {
+                this.skillNames = studySkills.stream()
+                        .filter(Objects::nonNull) // Check if studySkill is not null
+                        .map(studySkill -> {
+                            Skill skill = studySkill.getSkill();
+                            return (skill != null) ? skill.getSkillName() : null; // Check if getSkill() is not null
+                        })
+                        .filter(Objects::nonNull) // Filter out null skill names
+                        .collect(Collectors.toList());
+            } else {
+                this.skillNames = new ArrayList<>(); // Initialize as an empty list if studySkills is null
+            }
 
             this.current_num = studyRoom.getCurrentNum();
             this.max_num = studyRoom.getMaxNum();
