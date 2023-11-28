@@ -38,6 +38,7 @@ public class QuizRespDto {
         private String quiz_link;
         private String nickname;
         private Long study_room_id;
+        private LocalDateTime created_At;
 
         public QuizListRespDto(Quiz quiz) {
             this.id = quiz.getId();
@@ -46,6 +47,7 @@ public class QuizRespDto {
             this.quiz_link = quiz.getQuiz_link();
             this.nickname = quiz.getUser().getNickname();
             this.study_room_id = quiz.getStudyRoom().getId();
+            this.created_At = quiz.getCreatedAt();
         }
     }
 }
