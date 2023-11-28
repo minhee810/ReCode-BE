@@ -6,11 +6,10 @@ import com.abo2.recode.domain.skill.Study_skill;
 import com.abo2.recode.domain.skill.Study_skillRepository;
 import com.abo2.recode.domain.studymember.Study_Member;
 import com.abo2.recode.domain.studymember.Study_memberRepository;
-import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
-import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -18,12 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -205,4 +206,28 @@ public class StudyService {
         return studyMember.isPresent();
     }
 
+
+
+    // 스터디룸 참가 인원 리스트 조회
+    public List<Study_Member> getStudyMembersByRoomId(Long studyRoomId) {
+        Optional<StudyRoom> optionalStudyRoom = studyRoomRepository.findById(studyRoomId);
+
+        if(optionalStudyRoom.isPresent()) {
+            StudyRoom studyRoom = optionalStudyRoom.get();
+            return studyRoom.getStudyMembers();
+
+        }else{
+            throw new NoSuchElementException("ID " + studyRoomId + "에 해당하는 스터디 룸을 찾을 수 없습니다");
+
+        }
+    }
+
+
+    // 스터디룸 멤버 강제 퇴출
+    public void deleteMember(Long id, Long studyRoomId, Long memberId) {
+        Study_Member study_member = studyMemberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
+
+        studyMemberRepository.delete(study_member);
+    }
 }//class StudyService
