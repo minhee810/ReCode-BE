@@ -20,11 +20,11 @@ public class PostReplyController {
 
 
     // 게시글 댓글 작성
-    @PostMapping("/v1/study/{postId}/postReply")
-    public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
-        PostRespDto.PostReplyRespDto createdPostReply = postReplyService.createPostReply(loginUser.getUser().getId(), postReplyReqDto);
+    @PostMapping("/v1/study/{post_id}/postReply")
+    public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
+        PostRespDto.PostReplyRespDto createdPostReply = postReplyService.createPostReply(loginUser.getUser().getId(), postId, postReplyReqDto);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 완료", postReplyReqDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 완료", createdPostReply), HttpStatus.OK);
     }
 
     // 게시글 댓글 수정

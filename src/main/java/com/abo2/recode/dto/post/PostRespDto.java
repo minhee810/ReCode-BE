@@ -9,8 +9,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 
-@Getter
-@AllArgsConstructor
 public class PostRespDto {
 
     private Long id;

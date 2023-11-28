@@ -33,7 +33,6 @@ public class PostReqDto {
         @NotEmpty
         private User nickname;
 
-
     }
 
 
