@@ -29,16 +29,16 @@ public class PostReplyController {
 
     // 게시글 댓글 수정
     @PutMapping("/v1/study/{post_id}/postReply/{postReply_id}")
-    public ResponseEntity<?> updatePostReply(@PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
-        PostRespDto.PostReplyRespDto updatedPostReply = postReplyService.updatePostReply(postId, postReplyId, postReplyReqDto);
+    public ResponseEntity<?> updatePostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
+        PostRespDto.PostReplyRespDto updatedPostReply = postReplyService.updatePostReply(loginUser.getUser().getId(), postId, postReplyId, postReplyReqDto);
 
         return new ResponseEntity<>(new ResponseDto(1, "댓글 수정 완료", updatedPostReply), HttpStatus.OK);
     }
 
     // 게시글 댓글 삭제
     @DeleteMapping("/v1/study/{post_id}/postReply/{postReply_id}")
-    public ResponseEntity<?> deletePostReply(@PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId) {
-        postReplyService.deletePostReply(postId, postReplyId);
+    public ResponseEntity<?> deletePostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId) {
+        postReplyService.deletePostReply(loginUser.getUser().getId(), postId, postReplyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 완료", null), HttpStatus.OK);
     }

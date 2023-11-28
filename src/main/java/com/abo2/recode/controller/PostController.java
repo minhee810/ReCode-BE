@@ -6,6 +6,7 @@ import com.abo2.recode.dto.post.PostReqDto;
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -63,10 +64,11 @@ public class PostController {
     // 게시글 수정
     @PutMapping("/v1/study/posts/{post_id}")
     public ResponseEntity<?> updatePost(
+            @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable Long post_id,
             @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
     ) {
-        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(post_id, postUpdateReqDto);
+        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), post_id, postUpdateReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 수정되었습니다.", postUpdateRespDto), HttpStatus.OK);
     }
 

@@ -50,17 +50,22 @@ public class PostReplyService {
 
 
     // 게시글 댓글 수정
-    public PostRespDto.PostReplyRespDto updatePostReply(Long postReply_id, Long userId, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto updatePostReply(Long userId, Long postId, Long postReply_id, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
 
         PostReply postReply = postReplyRepository.findById(postReply_id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 댓글이 없습니다." + postReply_id));
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postReply_id));
 
-        User user = userRepository.findById(postReplyReqDto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다" + userId));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 postId가 존재하지 않습니다." + postId));
+
+        // 댓글이 해당 게시글에 속해있는지 확인
+        if (!postReply.getPost().getId().equals(postId)) {
+            throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
+        }
 
         // 댓글 작성자와 현재 사용자가 동일한지 확인
-        if(!postReply.getUser().getId().equals(userId)) {
+        if (!postReply.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("댓글 수정 권한이 없습니다.");
         }
 
@@ -73,9 +78,12 @@ public class PostReplyService {
 
 
     // 게시글 댓글 삭제
-    public void deletePostReply(Long postReplyId, Long userId) {
+    public void deletePostReply(Long userId, Long postId, Long postReplyId) {
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 댓글이 없습니다." + postReplyId));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 postId가 존재하지 않습니다." + postId));
 
         // 게시글 작성자와 현재 사용자가 동일한지 확인
         if (!postReply.getUser().getId().equals(userId)) {

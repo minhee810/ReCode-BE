@@ -82,15 +82,21 @@ public class PostService {
 
 
     //게시글 수정
-    public PostRespDto.PostUpdateRespDto updatePost(Long postId, PostReqDto.PostUpdateReqDto postUpdateReqDto) {
+    public PostRespDto.PostUpdateRespDto updatePost(Long userId, Long postId, PostReqDto.PostUpdateReqDto postUpdateReqDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다: " + postId));
+
+        // 게시글 작성자와 현재 사용자가 동일한지 확인
+        if (!post.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("게시글 수정 권한이 없습니다.");
+        }
 
         post.setTitle(postUpdateReqDto.getTitle());
         post.setContent(postUpdateReqDto.getContent());
         post.setCategory(postUpdateReqDto.getCategory());
 
         Post updatedPost = postRepository.save(post);
+
         return new PostRespDto.PostUpdateRespDto(updatedPost);
     }
 
@@ -137,7 +143,6 @@ public class PostService {
                 .map(((PostRespDto.PostListRespDto::new)))
                 .collect(Collectors.toList());
     }
-
 
 
 }
