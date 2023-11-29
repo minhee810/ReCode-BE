@@ -110,9 +110,15 @@ public class UserController {
     @GetMapping("/v1/users/{userId}/studyrooms/{studyRoomId}/isInStudyRoom")
     public ResponseEntity<Boolean> isInStudyRoom(@PathVariable Long userId, @PathVariable Long studyRoomId) {
         User user = userService.findUserById(userId);
+        logger.info(user.toString());
         StudyRoom studyRoom = studyService.findStudyRoomById(studyRoomId);
+        logger.info(studyRoom.toString());
 
-        boolean isInStudyRoom = studyService.isUserInStudyRoom(user, studyRoom);
+        boolean isInStudyRoom = studyService.isUserInStudyRoom(user.getId(), studyRoom.getId());
+
+        String myString = String.valueOf(isInStudyRoom);
+        logger.info("isInStudyRoom : "+myString);
+
         return ResponseEntity.ok(isInStudyRoom);
     }
 

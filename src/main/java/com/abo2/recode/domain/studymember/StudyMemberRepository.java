@@ -31,11 +31,16 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
 
      @Transactional
      @Modifying
-     @Query(value = "DELETE FROM study_skill WHERE study_room_id = ?1", nativeQuery = true)
-     void deleteByStudyId(Long studyId);
+     @Query(value = "DELETE FROM study_skill WHERE study_room_id =:studyId", nativeQuery = true)
+     void deleteByStudyId(@Param(value = "studyId") Long studyId);
 
      // 사용자가 스터디 룸에 참여 중인지 여부 확인
-     Optional<StudyMember> findByUserAndStudyRoom(User user, StudyRoom studyRoom);
+    @Query(
+            value = "SELECT * FROM Study_Member as sm WHERE sm.user_id=:user_id AND sm.study_room_id=:study_id",
+            nativeQuery = true
+    )
+     Optional<StudyMember> findByUserAndStudyRoom(@Param(value = "user_id") Long user_id,
+                                                  @Param(value = "study_id") Long study_id);
 
     @Modifying
     @Query(value = "UPDATE study_member as sm SET sm.status =:status WHERE sm.study_room_id=:studyId" +

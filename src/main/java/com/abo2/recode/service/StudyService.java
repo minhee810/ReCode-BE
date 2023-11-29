@@ -199,6 +199,13 @@ public class StudyService {
 //        @NotEmpty
 //        Long user_id;
 
+        if(     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
+                checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
+                        studyApplyReqDto.getUser_id()))
+        ){
+            throw new CustomForbiddenException("이미 가입한 유저입니다.");
+        }
+
         //0. DB에 저장할 스터디룸 엔티티를 study_id를 기반으로 가져와야 함.
         StudyRoom studyRoom;
         Optional<StudyRoom> optionalStudyRoom;
@@ -212,12 +219,7 @@ public class StudyService {
 
         User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
-        if(     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
-                checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
-                        studyApplyReqDto.getUser_id()))
-        ){
-            throw new CustomForbiddenException("이미 가입한 유저입니다.");
-        } else if (!(optionalUser.isPresent())) {         //User가 NUll인 경우
+        if (!(optionalUser.isPresent())) {         //User가 NUll인 경우
             throw new CustomForbiddenException("존재하지 않는 유저입니다.");
         } else if (!(optionalStudyRoom.isPresent())) { //스터디룸이 Null인 경우 -> 비어있는 스터디룸
             throw new CustomForbiddenException("존재하지 않는 스터디룸입니다.");
@@ -328,8 +330,8 @@ public class StudyService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 스터디룸을 찾을 수 없습니다."));
     }
 
-    public boolean isUserInStudyRoom(User user, StudyRoom studyRoom) {
-        Optional<StudyMember> studyMember = studyMemberRepository.findByUserAndStudyRoom(user, studyRoom);
+    public boolean isUserInStudyRoom(Long user_id, Long Study_id) {
+        Optional<StudyMember> studyMember = studyMemberRepository.findByUserAndStudyRoom(user_id, Study_id);
         return studyMember.isPresent();
     }
 
