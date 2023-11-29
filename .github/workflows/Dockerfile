@@ -14,4 +14,4 @@ WORKDIR /recode-be
 COPY --from=builder /build/build/libs/*.jar .
 
 EXPOSE 8080
-CMD ["java", "-jar", "recode-0.0.1-SNAPSHOT.jar",  "--spring.config.location=file:/recode-be/application.properties"] 
+CMD ["java", "-jar", "recode-0.0.1-SNAPSHOT.jar",  "sudo su --spring.config.location=file:/var/lib/docker/volumes/properties/_data/application.properties"] 
