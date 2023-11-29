@@ -2,7 +2,7 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostRepository;
-import com.abo2.recode.domain.studymember.Study_memberRepository;
+import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
@@ -30,7 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final StudyRoomRepository studyRoomRepository;
-    private final Study_memberRepository study_memberRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
     // 게시글 불러오기
     public List<PostRespDto.PostListRespDto> postList(Long studyId) {

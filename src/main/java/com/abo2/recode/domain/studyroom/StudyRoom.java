@@ -118,10 +118,4 @@ public class StudyRoom {
         this.maxNum = maxNum;
         this.master = master;
     }
-<<<<<<< HEAD
 }
-=======
-
-}
-
->>>>>>> 0f5ee41165fbf6993b08aecf59ea674e534b498c
