@@ -1,44 +1,46 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.post.Post;
+import com.abo2.recode.domain.attendanceDay.AttendanceDay;
+import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
-import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
-
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
-import lombok.extern.flogger.Flogger;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
-import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StudyService {
+
+
+    @Autowired
+    private AttendanceDayRepository attendanceDayRepository;
 
     private StudyRoomRepository studyRoomRepository;
 
@@ -51,7 +53,7 @@ public class StudyService {
     private StudyMemberRepository studyMemberRepository;
 
     @Autowired
-    public StudyService(StudyRoomRepository studyRoomRepository,
+    public StudyService(AttendanceDayRepository attendanceDayRepository, StudyRoomRepository studyRoomRepository,
                         StudySkillRepository studySkillRepository,
                         SkillRepository skillRepository,
                         UserRepository userRepository,
@@ -104,15 +106,21 @@ public class StudyService {
     }
 
     // 민희 수정
+    @Transactional
     public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
 
         // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
+        System.out.println("master = " + master);
+        System.out.println("studyCreateReqDto.getAttendanceDay() = " + studyCreateReqDto.getAttendanceDay());
+        
+        // 문자열로 받은 시간 localTime 타입으로 파싱
         LocalTime startTime = parseTime(studyCreateReqDto.getStartTime());
         LocalTime endTime = parseTime(studyCreateReqDto.getEndTime());
 
+        // StudyRoom 저장
         StudyRoom studyRoom = StudyRoom.builder()
                 .studyName(studyCreateReqDto.getStudyName())
                 .title(studyCreateReqDto.getTitle())
@@ -122,12 +130,22 @@ public class StudyService {
                 .startTime(startTime)
                 .endTime(endTime)
                 .currentNum(1)
-                .allowedDays(studyCreateReqDto.getAllowedDays())
                 .maxNum(studyCreateReqDto.getMaxNum())
                 .master(master)
                 .build();
 
         studyRoomRepository.save(studyRoom);
+
+        // 연관관계 AttendanceDay 저장
+        for(String day : studyCreateReqDto.getAttendanceDay()){
+            AttendanceDay attendanceDay = AttendanceDay.builder()
+                    .attendanceDay(day)
+                    .studyRoom(studyRoom)
+                    .build();
+
+            studyRoom.getAttendanceDay().add(attendanceDay);
+        }
+
 
         // 3. study_skill 테이블에 skill 삽입
         // 3-1. Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
@@ -144,10 +162,20 @@ public class StudyService {
         }
 
 
+        // StudyRoom의 AttendanceDay 정보를String Set으로 변환
+        Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .map(AttendanceDay::getAttendanceDay)
+                .collect(Collectors.toSet());
+
+
+         String[] skillNames = studyCreateReqDto.getSkills();
+
+        // ResponseDto 생성
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
                 .studyName(studyRoom.getStudyName())
-                .createdAt(studyRoom.getCreatedAt())
-                .allowedDays(studyRoom.getAllowedDays())
+                .createdAt(studyRoom.getCreatedAt())      
                 .description(studyRoom.getDescription())
                 .endDate(studyRoom.getEndDate())
                 .endTime(studyRoom.getEndTime())
@@ -156,8 +184,13 @@ public class StudyService {
                 .startDate(studyRoom.getStartDate())
                 .title(studyRoom.getTitle())
                 .updatedAt(studyRoom.getUpdatedAt())
+                .attendanceDay(attendanceDays) // Set<String>으로 변환한 정보를 저장
+                .skills(skillNames)
+                .userId(master.getId())
                 .build();
 
+        System.out.println("studyCreateRespDto.getAttendanceDay() = " + studyCreateRespDto.getAttendanceDay());
+        
         //4. Study_member에 만든 사람(조장) 추가 하기
         StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
@@ -238,15 +271,30 @@ public class StudyService {
 
     }//studyApply()
 
-    //스터디 모임 상세 조회
+    //스터디 모임 상세 조회 + 민희 수정 (출석요일 추가)
     @Transactional
     public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long study_room_id) {
         StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(study_room_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디룸이 없습니다. id=" + study_room_id));
 
+        log.info("study_id {}", study_room_id);
+
         List<StudySkill> studySkills = studySkillRepository.findByStudyRoomId(study_room_id);
-        return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills);
-    }
+
+        log.info("studySkills {} : ", studySkills);
+
+        Set<AttendanceDay> attendanceDaySet = attendanceDayRepository.findByStudyRoomId(study_room_id);
+
+        log.info("attendanceDaySet{}", attendanceDaySet);
+
+        Set<String> attendanceDays = attendanceDaySet.stream()
+                .map(AttendanceDay::getAttendanceDay)
+                .collect(Collectors.toSet());
+
+        log.info("attendanceDays: {}", attendanceDays);
+
+        return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills, attendanceDays);
+    }// studyRoomDetailBrowse()
 
     // 스터디 탈퇴
     @Transactional

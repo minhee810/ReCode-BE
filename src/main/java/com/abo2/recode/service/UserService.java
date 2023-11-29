@@ -137,24 +137,29 @@ public class UserService {
             throw new CustomApiException("스터디장의 권한을 갖고 계신 스터디룸이 존재합니다. 권한을 양도한 후에 탈퇴를 진행해주시기 바랍니다.");
         }
 
-        // 스터디장의 권한으로 있는 스터디 룸이 없다면 스터디룸에 작성한 글, 퀴즈, Qna 에서 작성한 글을 제외한 정보 삭제
-        userRepository.dissociateStudyMember(userId);
-        userRepository.dissociatePosts(userId);
-        userRepository.dissociatePostReply(userId);
-        userRepository.dissociateQnas(userId);
-        userRepository.dissociateQuiz(userId);
-        userRepository.deleteUsersAttendance(userId);
-        userRepository.deleteWithoutRelatedInfo(userId);
+        if(studyMemberRepository.existsById(userId)){
+            // 스터디장의 권한으로 있는 스터디 룸이 없다면 스터디룸에 작성한 글, 퀴즈, Qna 에서 작성한 글을 제외한 정보 삭제
+            userRepository.dissociateStudyMember(userId);
+            userRepository.dissociatePosts(userId);
+            userRepository.dissociatePostReply(userId);
+            userRepository.dissociateQnas(userId);
+            userRepository.dissociateQuiz(userId);
+            userRepository.deleteUsersAttendance(userId);
+            userRepository.deleteWithoutRelatedInfo(userId);
+            userRepository.deleteById(userId);
+        } else {
+            userRepository.deleteById(userId);
+        }
 
     }
 
     @Transactional
-    public UserRespDto.getUserInfoDto getUserInfo(Long userId){
+    public UserRespDto.GetUserInfoDto getUserInfo(Long userId){
         // 1. user 아이디 조회
         User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
         // 2. dto 응답
-        return new UserRespDto.getUserInfoDto(userPS);
+        return new UserRespDto.GetUserInfoDto(userPS);
     }
 
     public List<StudyResDto.MyStudyRespDto> myStudy(Long userId) {
@@ -176,7 +181,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserRespDto.changePasswordRespDto changePassword(Long userId, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
+    public UserRespDto.ChangePasswordRespDto changePassword(Long userId, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
         // 1. 사용자 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
@@ -190,11 +195,11 @@ public class UserService {
         // 4. 변경된 사용자 정보 저장
         userRepository.save(user);
 
-        return new UserRespDto.changePasswordRespDto(user);
+        return new UserRespDto.ChangePasswordRespDto(user);
     }
 
     @Transactional
-    public UserRespDto.changePasswordRespDto changePasswordWithToken(String emailCheckToken, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
+    public UserRespDto.ChangePasswordRespDto changePasswordWithToken(String emailCheckToken, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
         // 1. 토큰 유효성 검증 및 사용자 찾기
         User user = userRepository.findByEmailCheckToken(emailCheckToken)
                 .orElseThrow(() -> new CustomApiException("유효하지 않은 토큰입니다."));
@@ -208,7 +213,7 @@ public class UserService {
         // 4. 변경된 사용자 정보 저장
         userRepository.save(user);
 
-        return new UserRespDto.changePasswordRespDto(user);
+        return new UserRespDto.ChangePasswordRespDto(user);
     }
 
 }

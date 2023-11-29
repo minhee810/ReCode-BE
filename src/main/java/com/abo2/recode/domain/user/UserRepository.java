@@ -21,12 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmailCheckToken(String emailCheckToken);
 
-
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE StudyRoom sr SET sr.master = null WHERE sr.master.id = :userId", nativeQuery = true)
-    void dissociateStudyRooms(@Param("userId") Long userId);
-
     void deleteById(Long userId);
 
     @Transactional

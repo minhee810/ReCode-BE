@@ -118,4 +118,18 @@ public class QuizService {
 
         return new QuizRespDto.QuizDetailRespDto(quiz);
     }
+
+    @Transactional
+    public List<QuizRespDto.QuizListRespDto> searchList(Long study_room_id, String keyword){
+
+        List<Quiz> quizzes = quizRepository.findQuizByKeyword(study_room_id, keyword);
+
+        if(quizzes.isEmpty()) {
+            throw new CustomApiException("해당 퀴즈가 존재하지 않습니다.");
+        }
+
+        return quizzes.stream()
+                .map((QuizRespDto.QuizListRespDto::new))
+                .collect(Collectors.toList());
+    }
 }

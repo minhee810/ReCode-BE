@@ -96,7 +96,7 @@ public class UserController {
 
     @GetMapping(value = "/v1/users/{id}/getuser")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal LoginUser loginUser) {
-        UserRespDto.getUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
+        UserRespDto.GetUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "개인 정보 조회에 성공하였습니다", getUserInfoDto), HttpStatus.OK);
     }
 
@@ -130,7 +130,7 @@ public class UserController {
         logger.info("emailCheckToken 수신: " + emailCheckToken);
 
         try {
-            UserRespDto.changePasswordRespDto changePasswordRespDto;
+            UserRespDto.ChangePasswordRespDto changePasswordRespDto;
 
             if (loginUser != null) {
                 changePasswordRespDto = userService.changePassword(loginUser.getUser().getId(), changePasswordReqDto);
