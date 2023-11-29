@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.Qna;
+package com.abo2.recode.domain.qna;
 
 import lombok.Getter;
 
@@ -23,9 +23,5 @@ public class QnaReply {
     @ManyToOne
     @JoinColumn(name = "qna_id", nullable = false)
     private Qna qna_id;
-
-
-
-
 
 }

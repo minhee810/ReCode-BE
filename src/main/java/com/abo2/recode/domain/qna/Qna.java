@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.Qna;
+package com.abo2.recode.domain.qna;
 
 import com.abo2.recode.domain.user.User;
 import lombok.Builder;

@@ -19,32 +19,23 @@ import java.time.LocalDateTime;
 @Entity
 public class Post {
 
-//    id integer [primary key]
-//    title varchar
-//    content varchar
-//    study_id integer
-//    user_id integer
-//    category integer // 글 종류(출석, 회고)
-//    createdAt timestamp
-//    updatedAt timestamp
-
     @Id
-    @Column(name="post_id")
+    @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id; // Post 일련번호 - PK
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private String title;
 
-    @Column(nullable = false,length = 300)
+    @Column(nullable = false, length = 300)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="studyRoom_id")
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
     @ManyToOne
-    @JoinColumn(name ="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
@@ -59,8 +50,7 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Post(String title, String content, StudyRoom studyRoom,
-                User user, Integer category) {
+    public Post(String title, String content, StudyRoom studyRoom, User user, Integer category) {
         this.title = title;
         this.content = content;
         this.studyRoom = studyRoom;
