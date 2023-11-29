@@ -1,7 +1,7 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.Qna.Qna;
-import com.abo2.recode.domain.Qna.QnaRepository;
+import com.abo2.recode.domain.qna.Qna;
+import com.abo2.recode.domain.qna.QnaRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.qna.QnaReqDTO;

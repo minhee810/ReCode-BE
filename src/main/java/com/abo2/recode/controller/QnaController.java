@@ -1,8 +1,8 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
-import com.abo2.recode.domain.Qna.Qna;
-import com.abo2.recode.domain.Qna.QnaRepository;
+import com.abo2.recode.domain.qna.Qna;
+import com.abo2.recode.domain.qna.QnaRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.domain.user.UserRepository;
