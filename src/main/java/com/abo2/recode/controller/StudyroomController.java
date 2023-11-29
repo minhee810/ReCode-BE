@@ -111,8 +111,9 @@ public class StudyroomController {
     }
 
     // 스터디룸 멤버 인원 조회
-    @GetMapping(value = "/v1/아직안정함")
-    public ResponseEntity<List<Study_Member>> getsStudyMembers(@PathVariable Long studyRoomId) {
+    @Transactional
+    @GetMapping(value = "/v1/study/{study_room_id}/memberlist")
+    public ResponseEntity<List<Study_Member>> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
         List<Study_Member> studyMembers = studyService.getStudyMembersByRoomId(studyRoomId);
 
         if(studyMembers.isEmpty()) {
