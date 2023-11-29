@@ -39,8 +39,5 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
     @Modifying
     @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :study_room_id",nativeQuery = true)
     void memberRoleDemote(@Param("study_room_id") Long study_room_id);
-<<<<<<< HEAD
 
-=======
->>>>>>> aaf33a327c3581e0ede8e08320553dd83a2d2477
 }
