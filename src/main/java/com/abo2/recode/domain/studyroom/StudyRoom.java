@@ -54,10 +54,10 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalTime endTime; //스터디 출석 인정 끝 시간
 
-    @ElementCollection
-    @CollectionTable(name = "study_room_allowed_days", joinColumns = @JoinColumn(name = "study_room_id"))
-    @Column(name = "day")
-    private List<String> allowedDays;
+//    @ElementCollection
+//    @CollectionTable(name = "study_room_allowed_days", joinColumns = @JoinColumn(name = "study_room_id"))
+//    @Column(name = "day")
+//    private List<String> allowedDays;
 
     @Column(nullable = false)
     private Integer currentNum = 1; // 필드 선언 시 기본값 지정,스터디 그룹 현재 인원
@@ -118,7 +118,7 @@ public class StudyRoom {
         this.currentNum = currentNum;
         this.maxNum = maxNum;
         this.master = master;
-        this.allowedDays = allowedDays;
+//        this.allowedDays = allowedDays;
     }
 
 }

@@ -61,10 +61,12 @@ public class QuizRespDto {
         private String title;
         private String quiz_link;
         private String nickname;
+        private Integer difficulty;
 
         public QuizDetailRespDto(Quiz quiz) {
             this.id = quiz.getId();
             this.title = quiz.getTitle();
+            this.difficulty = quiz.getDifficulty();
             this.quiz_link = quiz.getQuiz_link();
             this.nickname = quiz.getUser().getNickname();
         }
