@@ -3,14 +3,12 @@ package com.abo2.recode.dto.study;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.lang.Nullable;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 
 public class StudyReqDto {
@@ -39,7 +37,7 @@ public class StudyReqDto {
         private String endTime; //스터디 출석 인정 끝 시간 "monday 12:10"
 
         @NotEmpty
-        private List<String> allowedDays; // 출석 인정 요일 - minhee 추가
+        private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
         @NotEmpty
         private LocalDate startDate;
