@@ -129,5 +129,4 @@ public class AdminController {
             return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
         }
 
-
     }//AdminController
