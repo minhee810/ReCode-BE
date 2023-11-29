@@ -136,6 +136,7 @@ public class StudyResDto {
             }
         }
 
+
         private String getStatusString(Integer status) {
             switch (status) {
                 case 0:
@@ -209,9 +210,24 @@ public class StudyResDto {
         }
     }
 
+//    @Getter
+//    @Setter
+//    public static class StudyRoomCreateResDto{
+//
+//        private Long id;
+//        private String study_name;
+//        private String title;
+//        private List<String> skillNames;
+//        private Integer current_num;
+//        private Integer max_num;
+//        private String masterEmail;
+//        private String masterNickname;
+//
+//    }
+
     @Getter
     @Setter
-    public static class StudyCreateRespDto{
+    public static class StudyCreateRespDto {
 
         // Study_Room
         @NotEmpty
@@ -378,7 +394,6 @@ public class StudyResDto {
         @NotEmpty
         private String essay;
     }//class ApplicationEssayResDto
-
 
 }
 
