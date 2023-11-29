@@ -40,6 +40,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    // for sending gmail from changing password
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // dependency for google oauth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     // dependency for sending Email to change password
     implementation 'org.springframework.boot:spring-boot-starter-mail'

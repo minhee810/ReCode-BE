@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.admin;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +12,6 @@ public class AdminResDto {
     @Getter
     @Setter
     public static class StudyDeleteResponseDto{
-//        {
-//            "code": 1
-//            "msg": "스터디 모집글이 성공적으로 삭제되었습니다.",
-//                "data": {
-//            "id": "12345"
-//        }
-//        }
 
         @NotEmpty
         private Long study_id;
@@ -50,6 +44,12 @@ public class AdminResDto {
         @NotEmpty
         private LocalDateTime updatedAt;
 
+        @Builder
+        public MemberRoleResDto(Long userId, String newRole, LocalDateTime updatedAt) {
+            this.userId = userId;
+            this.newRole = newRole;
+            this.updatedAt = updatedAt;
+        }
     }//MemberRoleResDto
 
 }//AdminResDto

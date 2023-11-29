@@ -7,6 +7,11 @@
 #### 🕰️ 개발 기간
 - 2023.10.10 ~ 2023.12.00
 
+#### ERD
+
+![Copy of Untitled Diagram (1)](https://github.com/HeoJungBaekKang/ReCode-BE/assets/87232032/9f6ebd8e-9324-4e41-b73c-f029c2ef02ca)
+
+
 #### 👨‍💻 멤버 구성 
 - 팀장_백승주 :
 - 팀원_강민희 :

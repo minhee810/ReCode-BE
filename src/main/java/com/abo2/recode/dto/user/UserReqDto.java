@@ -60,6 +60,7 @@ public class UserReqDto {
         @Size(min = 4, max = 20)
         private String password;
 
+
         @NotEmpty
         @Pattern(regexp = "^[a-zA-Z0-9]{2,10}@[a-zA-Z0-9]{2,6}\\.[a-zA-Z]{2,3}$", message = "이메일 형식으로 작성해주세요")
         private String email;
@@ -113,6 +114,7 @@ public class UserReqDto {
     public static class ChangePasswordReqDto{
         @NotEmpty
         private String password;
+        private String emailCheckToken;
     }
 
 }

@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final StudyRoomRepository studyRoomRepository;

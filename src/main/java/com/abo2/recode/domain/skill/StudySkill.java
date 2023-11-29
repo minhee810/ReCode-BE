@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Study_skill {
+public class StudySkill {
 
     @Id
     @Column(name = "study_skill_id")
@@ -28,17 +28,8 @@ public class Study_skill {
     private Skill skill;
 
     @Builder
-    public Study_skill(StudyRoom studyRoom, Skill skill) {
+    public StudySkill(StudyRoom studyRoom, Skill skill) {
         this.studyRoom = studyRoom;
         this.skill = skill;
     }
 }
-
-
-  /*  Table Study_skill {
-        id integer [primary key]
-        study_id integer
-        skill_id integer
-        }
-
-        }*/

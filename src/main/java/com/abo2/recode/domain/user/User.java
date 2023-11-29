@@ -7,6 +7,7 @@ import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@ToString
 @Table(name = "users")
 public class User {
 
@@ -30,6 +32,7 @@ public class User {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(unique = true, nullable = false, length = 20)
     private String username;
@@ -78,8 +81,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+<<<<<<< HEAD
 
     public void updateUser(String nickname, String email) {
+=======
+    public void updateUser(String nickname, String email){
+>>>>>>> 0f5ee41165fbf6993b08aecf59ea674e534b498c
         this.email = email;
         this.nickname = nickname;
     }
@@ -101,5 +108,10 @@ public class User {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeProfile(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
     }
 }

@@ -12,9 +12,17 @@ public class AdminReqDto {
     @Setter
     public static class MemberRoleReqDto{
 
-  /*      {
-            "role": "group_leader"
+    /* {
+            "user_id" : 1,
+            "role": "group_leader" //or "group_member",
+            "study_id" : 1
         }*/
+
+        @NotEmpty
+        private Long user_id;
+
+        @NotEmpty
+        private Long study_id;
 
         @NotEmpty
         private String role;

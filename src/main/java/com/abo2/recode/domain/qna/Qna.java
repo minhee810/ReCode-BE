@@ -6,13 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Qna {
 
     @Id
@@ -22,30 +25,30 @@ public class Qna {
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String category;
+
     @Column(nullable = false)
     private String content;
 
     @CreatedDate
-    @Column(nullable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-//    @OneToOne
-//    @JoinColumn(name = "user_id", nullable = false)
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User user_id;
 
     @Builder
-    public Qna(Long id,Long user_id, String title, String category, String content, LocalDateTime createdAt,LocalDateTime updatedAt) {
+    public Qna(Long id, User user_id, String title, String category, String content) {
         this.id = id;
         this.user_id = user_id;
         this.title = title;
         this.category = category;
         this.content = content;
-        this.createdAt=createdAt;
-        this.updatedAt = updatedAt;
     }
 }
