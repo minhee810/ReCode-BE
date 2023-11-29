@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,8 +43,8 @@ public class QuizService {
         quiz.setQuiz_link(quizWriteReqDto.getQuiz_link());
         quiz.setUser(user);
         quiz.setStudyRoom(studyRoom);
-        quiz.setCreatedAt(LocalDateTime.now());
-        quiz.setUpdatedAt(LocalDateTime.now());
+        quiz.setCreatedAt(LocalDate.now());
+        quiz.setUpdatedAt(LocalDate.now());
 
         Quiz saveQuiz = quizRepository.save(quiz);
 
@@ -65,7 +66,7 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizRespDto.QuizWriteRespDto quizModify(Long userId, Long study_room_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
+    public QuizRespDto.QuizListRespDto quizModify(Long userId, Long study_room_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
         StudyRoom studyRoom = studyRoomRepository.findById(study_room_id).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
@@ -80,10 +81,10 @@ public class QuizService {
         quiz.setTitle(quizWriteReqDto.getTitle());
         quiz.setDifficulty(quizWriteReqDto.getDifficulty());
         quiz.setQuiz_link(quizWriteReqDto.getQuiz_link());
-        quiz.setUpdatedAt(LocalDateTime.now());
+        quiz.setUpdatedAt(LocalDate.now());
 
         Quiz saveQuiz = quizRepository.save(quiz);
-        return new QuizRespDto.QuizWriteRespDto(saveQuiz);
+        return new QuizRespDto.QuizListRespDto(saveQuiz);
     }
 
     @Transactional
@@ -104,5 +105,17 @@ public class QuizService {
         } else {
             throw new CustomApiException("해당 퀴즈의 작성자와 스터디의 장만이 퀴즈를 삭제할 수 있습니다.");
         }
+    }
+
+    @Transactional
+    public QuizRespDto.QuizDetailRespDto quizDetail(Long userId, Long study_room_id, Long quizId){
+        // 유저, 스터디 룸 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
+        StudyRoom studyRoom = studyRoomRepository.findById(study_room_id).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
+
+        // 퀴즈 조회
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new CustomApiException("해당 퀴즈를 찾을 수 없습니다."));
+
+        return new QuizRespDto.QuizDetailRespDto(quiz);
     }
 }

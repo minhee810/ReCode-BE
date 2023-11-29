@@ -1,12 +1,9 @@
 package com.abo2.recode.dto.notice;
 
-import com.abo2.recode.domain.user.User;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
