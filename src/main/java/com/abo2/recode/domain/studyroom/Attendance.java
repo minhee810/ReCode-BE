@@ -1,11 +1,13 @@
 package com.abo2.recode.domain.studyroom;
 
 import com.abo2.recode.domain.user.User;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.mapping.ToOne;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,33 +16,26 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Attendance {
-
-//    Table Attendance {
-//        attendance_id integer [primary key]
-//        study_room_id integer
-//        user_id integer
-//        attendance_date timestamp
-//        status integer //0 : 결석 1: 출석
-//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attendance_id")
     private Long id;
 
-    // @JoinColumn(name = "parent_id", referencedColumnName = "id", onDelete = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name = "study_room_id")
-    private StudyRoom studyRoom;
+    private StudyRoom studyRoom;  // 스터디룸 아이디
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    private User user; // 사용자의 아이디
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime attendance_date; //출석일
+    private LocalDateTime attendanceDate; //출석일 : localDatetime 과 비교 해야함.
+
 
     @Column(nullable = false)
     private Integer status; //0 : 결석 1: 출석

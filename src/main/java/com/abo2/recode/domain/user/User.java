@@ -104,4 +104,9 @@ public class User {
     public void changePassword(String password) {
         this.password = password;
     }
+
+    public void changeProfile(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
+    }
 }
