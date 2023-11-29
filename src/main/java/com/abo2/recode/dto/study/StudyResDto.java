@@ -18,11 +18,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-<<<<<<< HEAD
 import java.time.LocalTime;
-=======
-import java.util.ArrayList;
->>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -195,7 +191,6 @@ public class StudyResDto {
         }
     }
 
-<<<<<<< HEAD
 
 //    @Getter
 //    @Setter
@@ -214,7 +209,7 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyCreateRespDto{
+    public static class StudyCreateRespDto {
 
         // Study_Room
         @NotEmpty
@@ -279,7 +274,7 @@ public class StudyResDto {
             this.skills = skills;
         }
     }
-=======
+
     @Getter
     @Setter
     public static class StudyMembershipResDto{
@@ -381,7 +376,5 @@ public class StudyResDto {
         @NotEmpty
         private String essay;
     }//class ApplicationEssayResDto
->>>>>>> 56341de84ae0310103060b69505743a8892c6fcd
-
 }
 

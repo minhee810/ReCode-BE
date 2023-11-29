@@ -11,7 +11,7 @@ public class QnaReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "qna_reply_id")
+    @Column(name = "qna_reply")
     private Long id;
 
     @Column(nullable = false)
@@ -23,9 +23,5 @@ public class QnaReply {
     @ManyToOne
     @JoinColumn(name = "qna_id", nullable = false)
     private Qna qna_id;
-
-
-
-
 
 }
