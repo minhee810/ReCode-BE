@@ -40,7 +40,7 @@ jobs:
           echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com" >> deploy-be.sh
           echo "docker stop $(docker ps -a -q)"  >> deploy-be.sh
           echo "docker pull 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com:"${{ env.DATE_TIME }} >> deploy-be.sh
-          echo "docker run -d -p 8080:8080 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com/recode-be:"${{ env.DATE_TIME }} >> deploy-be.sh
+          echo "docker run -d -v properties:/recode-be -p 8080:8080 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com/recode-be:"${{ env.DATE_TIME }} >> deploy-be.sh
           zip archive-${{ env.DATE_TIME }}.zip deploy-be.sh appspec.yml
           aws s3 cp archive-${{ env.DATE_TIME }}.zip s3://abo2-recode/recode-be/ --region ap-northeast-2  
           
