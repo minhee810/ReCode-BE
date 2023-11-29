@@ -90,12 +90,12 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class getUserInfoDto{
+    public static class GetUserInfoDto{
         private String username;
         private String nickname;
         private String email;
 
-        public getUserInfoDto(User user){
+        public GetUserInfoDto(User user){
             this.username = user.getUsername();
             this.nickname = user.getNickname();
             this.email = user.getEmail();
@@ -104,10 +104,10 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class changePasswordRespDto{
+    public static class ChangePasswordRespDto{
         private String password;
 
-        public changePasswordRespDto(User user){
+        public ChangePasswordRespDto(User user){
             this.password = user.getPassword();
         }
     }
