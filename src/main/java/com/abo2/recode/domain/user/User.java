@@ -1,10 +1,14 @@
 package com.abo2.recode.domain.user;
 
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.studyroom.Attendance;
+import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,11 +17,14 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@ToString
 @Table(name = "users")
 public class User {
 
@@ -25,6 +32,7 @@ public class User {
     @Column(name ="user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(unique = true, nullable = false, length = 20)
     private String username;
@@ -38,7 +46,7 @@ public class User {
     @Column(length = 100)
     private String essay;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 30)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -53,6 +61,13 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // 이메일 관련
+    @Column(name = "email_check_token", nullable = true)
+    private String emailCheckToken;
+
+    @Column(name = "email_token_expiry", nullable = true)
+    private LocalDateTime emailTokenExpiry;
+
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
@@ -66,8 +81,6 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-
-
     public void updateUser(String nickname, String email){
         this.email = email;
         this.nickname = nickname;
@@ -77,4 +90,23 @@ public class User {
         this.essay = essay;
     }
 
+
+    public void completeSignUp() {
+        this.email = email;
+        this.createdAt = createdAt;
+    }
+
+    public void generateEmailCheckToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailTokenExpiry = LocalDateTime.now().plusHours(1);
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeProfile(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
+    }
 }

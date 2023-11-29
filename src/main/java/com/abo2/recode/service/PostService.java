@@ -20,7 +20,6 @@ public class PostService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final PostRepository postRepository;
 
-
     // 게시글 불러오기
     @Transactional
     public List<PostRespDto.PostListRespDto> postList(Long studyId){

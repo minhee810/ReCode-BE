@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserRespDto {
 
     @Setter
@@ -14,12 +16,16 @@ public class UserRespDto {
     public static class LoginRespDto {
         private Long id;
         private String username;
+        private String role; // minhee - 권한 추가
+        private String nickname;
         private String createdAt;
 
         public LoginRespDto(User user) {
             this.id = user.getId();
+            this.role = String.valueOf(user.getRole());
             this.username = user.getUsername();
             this.createdAt = CustomDateUtil.toStringFormat(user.getCreatedAt());
+            this.nickname = user.getNickname();
         }
     }
 
@@ -30,9 +36,11 @@ public class UserRespDto {
         private Long id;
         private String username;
         private String nickname;
+        private String role;
 
         public JoinRespDto(User user) {
             this.id = user.getId();
+            this.role = String.valueOf(user.getRole());
             this.username = user.getUsername();
             this.nickname = user.getNickname();
         }
@@ -82,15 +90,25 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class getUserInfoDto{
+    public static class GetUserInfoDto{
         private String username;
         private String nickname;
         private String email;
 
-        public getUserInfoDto(User user){
+        public GetUserInfoDto(User user){
             this.username = user.getUsername();
             this.nickname = user.getNickname();
             this.email = user.getEmail();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class ChangePasswordRespDto{
+        private String password;
+
+        public ChangePasswordRespDto(User user){
+            this.password = user.getPassword();
         }
     }
 }
