@@ -20,10 +20,9 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-<<<<<<< HEAD
-=======
+
 import java.util.ArrayList;
->>>>>>> aaf33a327c3581e0ede8e08320553dd83a2d2477
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -211,8 +210,6 @@ public class StudyResDto {
         }
     }
 
-<<<<<<< HEAD
-
 //    @Getter
 //    @Setter
 //    public static class StudyRoomCreateResDto{
@@ -228,8 +225,6 @@ public class StudyResDto {
 //
 //    }
 
-=======
->>>>>>> aaf33a327c3581e0ede8e08320553dd83a2d2477
     @Getter
     @Setter
     public static class StudyCreateRespDto {
@@ -399,10 +394,6 @@ public class StudyResDto {
         @NotEmpty
         private String essay;
     }//class ApplicationEssayResDto
-<<<<<<< HEAD
-=======
 
-
->>>>>>> aaf33a327c3581e0ede8e08320553dd83a2d2477
 }
 
