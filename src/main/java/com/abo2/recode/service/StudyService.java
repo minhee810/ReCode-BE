@@ -147,7 +147,7 @@ public class StudyService {
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
                 .studyName(studyRoom.getStudyName())
                 .createdAt(studyRoom.getCreatedAt())
-                .allowedDays(studyRoom.getAllowedDays())
+//                .allowedDays(studyRoom.getAllowedDays())
                 .description(studyRoom.getDescription())
                 .endDate(studyRoom.getEndDate())
                 .endTime(studyRoom.getEndTime())
