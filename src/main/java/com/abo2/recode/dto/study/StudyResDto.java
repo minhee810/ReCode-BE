@@ -20,7 +20,9 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -208,9 +210,24 @@ public class StudyResDto {
         }
     }
 
+//    @Getter
+//    @Setter
+//    public static class StudyRoomCreateResDto{
+//
+//        private Long id;
+//        private String study_name;
+//        private String title;
+//        private List<String> skillNames;
+//        private Integer current_num;
+//        private Integer max_num;
+//        private String masterEmail;
+//        private String masterNickname;
+//
+//    }
+
     @Getter
     @Setter
-    public static class StudyCreateRespDto{
+    public static class StudyCreateRespDto {
 
         // Study_Room
         @NotEmpty
@@ -377,7 +394,6 @@ public class StudyResDto {
         @NotEmpty
         private String essay;
     }//class ApplicationEssayResDto
-
 
 }
 

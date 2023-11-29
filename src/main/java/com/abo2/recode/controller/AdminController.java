@@ -35,8 +35,8 @@ public class AdminController {
     @Secured(value = "ROLE_ADMIN")
     @PostMapping(value = "/admin/v1/addskill")
     public ResponseEntity<ResponseDto> adminSkillAdd(
-        @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto,
-        @AuthenticationPrincipal LoginUser loginUser
+            @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto,
+            @AuthenticationPrincipal LoginUser loginUser
             ){
 
             //유저가 관리자가 맞는지 검증
@@ -119,7 +119,6 @@ public class AdminController {
                     HttpStatus.OK);
         }//memberRoleChange()
 
-
         // 관리자 권한으로 글 삭제
 
 
@@ -129,5 +128,6 @@ public class AdminController {
             SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
             return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
         }
+
 
     }//AdminController
