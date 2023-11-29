@@ -22,16 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,13 +67,13 @@ public class StudyService {
     @Transactional
     public void membershipUpdate(String status, Long studyId, Long userId) {
 
-        if(status.equals("Approved")){
+        if (status.equals("Approved")) {
             //StudyMember 테이블 업데이트(상태값 0 -> 1)
-            studyMemberRepository.membershipUpdate(1,studyId,userId);
+            studyMemberRepository.membershipUpdate(1, studyId, userId);
 
         } else if (status.equals("Rejected")) {
             //StudyMember 테이블 업데이트(상태값 0 -> 2)
-            studyMemberRepository.membershipUpdate(2,studyId,userId);
+            studyMemberRepository.membershipUpdate(2, studyId, userId);
         }
     }
 
@@ -90,7 +88,6 @@ public class StudyService {
             throw new IllegalArgumentException("유효하지 않은 요일 값: " + dayOfWeekString);
         }
     }
-
 
 
     // 민희 수정
@@ -115,7 +112,7 @@ public class StudyService {
 
         System.out.println("master = " + master);
         System.out.println("studyCreateReqDto.getAttendanceDay() = " + studyCreateReqDto.getAttendanceDay());
-        
+
         // 문자열로 받은 시간 localTime 타입으로 파싱
         LocalTime startTime = parseTime(studyCreateReqDto.getStartTime());
         LocalTime endTime = parseTime(studyCreateReqDto.getEndTime());
@@ -137,7 +134,7 @@ public class StudyService {
         studyRoomRepository.save(studyRoom);
 
         // 연관관계 AttendanceDay 저장
-        for(String day : studyCreateReqDto.getAttendanceDay()){
+        for (String day : studyCreateReqDto.getAttendanceDay()) {
             AttendanceDay attendanceDay = AttendanceDay.builder()
                     .attendanceDay(day)
                     .studyRoom(studyRoom)
@@ -170,12 +167,12 @@ public class StudyService {
                 .collect(Collectors.toSet());
 
 
-         String[] skillNames = studyCreateReqDto.getSkills();
+        String[] skillNames = studyCreateReqDto.getSkills();
 
         // ResponseDto 생성
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
                 .studyName(studyRoom.getStudyName())
-                .createdAt(studyRoom.getCreatedAt())      
+                .createdAt(studyRoom.getCreatedAt())
                 .description(studyRoom.getDescription())
                 .endDate(studyRoom.getEndDate())
                 .endTime(studyRoom.getEndTime())
@@ -190,7 +187,7 @@ public class StudyService {
                 .build();
 
         System.out.println("studyCreateRespDto.getAttendanceDay() = " + studyCreateRespDto.getAttendanceDay());
-        
+
         //4. Study_member에 만든 사람(조장) 추가 하기
         StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
@@ -245,10 +242,10 @@ public class StudyService {
 
         User user = optionalUser.orElse(null); // Provide a default value (null in this case)
 
-        if(     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
+        if (     // -1. user_id,study_id를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
                 checkReturnType(studyRoomRepository.findIdByuser_idAndStudy_id(studyApplyReqDto.getStudy_id(),
                         studyApplyReqDto.getUser_id()))
-        ){
+        ) {
             throw new CustomForbiddenException("이미 가입한 유저입니다.");
         } else if (!(optionalUser.isPresent())) {         //User가 NUll인 경우
             throw new CustomForbiddenException("존재하지 않는 유저입니다.");
@@ -296,14 +293,14 @@ public class StudyService {
 
     // 스터디 탈퇴
     @Transactional
-    public void withdrawStudy(Long userId, Long study_room_id){
+    public void withdrawStudy(Long userId, Long study_room_id) {
         // 1. 해당 스터디룸 정보 가져오기
         Optional<StudyRoom> studyRoom = studyRoomRepository.findById(study_room_id);
 
-        if(studyRoom.isPresent()) {
+        if (studyRoom.isPresent()) {
             StudyRoom room = studyRoom.get();
 
-            if(!room.getMaster().equals(userId)){
+            if (!room.getMaster().equals(userId)) {
                 studyMemberRepository.deleteByUserIdAndStudyRoomId(userId, study_room_id);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
@@ -315,7 +312,7 @@ public class StudyService {
 
     // 스터디 목록 불러오기
     @Transactional
-    public List<StudyResDto.StudyListRespDto> mainList(){
+    public List<StudyResDto.StudyListRespDto> mainList() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
         return studyRooms.stream()
                 .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
@@ -326,7 +323,6 @@ public class StudyService {
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
         return studySkillRepository.findByStudyRoomId(studyRoom.getId());
     }//getStudySkills()
-
 
 
     //관리자 스터디 그룹 관리 페이지에서 스터디 멤버 목록 조회
@@ -368,7 +364,7 @@ public class StudyService {
 
     public StudyResDto.ApplicationEssayResDto applicationsEssay(Long groupId, Long userId) {
 
-        return studyMemberRepository.applicationsEssay(groupId,userId);
+        return studyMemberRepository.applicationsEssay(groupId, userId);
     }
 
     public StudyRoom findStudyRoomById(Long studyRoomId) {
@@ -381,4 +377,28 @@ public class StudyService {
         return studyMember.isPresent();
     }
 
-}//class StudyService
+
+    // 스터디룸 참가 인원 리스트 조회
+    public List<StudyMember> getStudyMembersByRoomId(Long studyRoomId) {
+        Optional<StudyRoom> optionalStudyRoom = studyRoomRepository.findById(studyRoomId);
+
+        if (optionalStudyRoom.isPresent()) {
+            StudyRoom studyRoom = optionalStudyRoom.get();
+            return studyRoom.getStudyMembers();
+
+        } else {
+            throw new NoSuchElementException("ID " + studyRoomId + "에 해당하는 스터디 룸을 찾을 수 없습니다");
+
+        }
+    }
+
+
+    // 스터디룸 멤버 강제 퇴출
+    public void deleteMember(Long id, Long studyRoomId, Long memberId) {
+        StudyMember studyMember = studyMemberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
+
+        studyMemberRepository.delete(studyMember);
+    }
+}
+

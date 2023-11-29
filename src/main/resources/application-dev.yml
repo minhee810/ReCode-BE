@@ -1,0 +1,31 @@
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/test
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: 1234
+  h2:
+    console:
+      enabled: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      '[hibernate.default_batch_fetch_size]': 100
+      '[hibernate.format_sql]': true
+    show-sql: true
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    '[com.abo2.recode]': DEBUG

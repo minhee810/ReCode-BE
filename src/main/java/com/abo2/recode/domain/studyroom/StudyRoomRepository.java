@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
 
-    Optional<StudyRoom> findById(Long Id);
+    Optional<StudyRoom> findById(Long study_room_id);
 
     // user_id,study_id를 기반으로 먼저 유저가 이미 가입했거나 가입한 상태인지 체크
     @Query(value = "SELECT study_member_id " +

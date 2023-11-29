@@ -30,17 +30,17 @@ import java.util.Set;
 public class StudyRoom {
 
     @Id
-    @Column(name="study_room_id")
+    @Column(name = "study_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 일련번호
 
-    @Column(unique = true,nullable = false,length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String studyName; //스터디 그룹 네임
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private String title; //스터디 주제
 
-    @Column(nullable = false,length = 300)
+    @Column(nullable = false, length = 300)
     private String description; //스터디 그룹 소개글
 
     @Column(nullable = false)
@@ -118,6 +118,10 @@ public class StudyRoom {
         this.maxNum = maxNum;
         this.master = master;
     }
+<<<<<<< HEAD
+}
+=======
 
 }
 
+>>>>>>> 0f5ee41165fbf6993b08aecf59ea674e534b498c
