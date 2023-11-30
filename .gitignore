@@ -40,5 +40,6 @@ out/
 /.run/
 
 ### application files
+application.properties
 application-dev.yml
 email.properites
