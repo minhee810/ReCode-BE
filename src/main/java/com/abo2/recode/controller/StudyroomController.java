@@ -42,7 +42,6 @@ public class StudyroomController {
                                         @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
 
         // 스터디 이름이 중복되지 않는지 확인 필요
-
         studyCreateReqDto.setUserId(loginUser.getUser().getId());
 
         //1. studyReqDto를 DB에 넣기 Service에서 처리
@@ -53,6 +52,24 @@ public class StudyroomController {
         return new ResponseEntity<>(new ResponseDto<>(1, "Success", studyCreateRespDto), HttpStatus.OK);
 
     }//createRoom()
+
+    //StudyRoom 모집 글 수정 = 스터디 그룹 정보 수정
+    @PutMapping(value = "/v1/study/{study_id}/modify")
+    public ResponseEntity<?> modifyRoom(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable(name = "study_id") Long study_id,
+            @RequestBody StudyReqDto.StudyModifyReqDto studyModifyReqDto
+    ){
+        // 수정할 스터디 룸 정보,조장 아이디 정보 입력
+        studyModifyReqDto.setStudy_id(study_id);
+        studyModifyReqDto.setCreated_by(loginUser.getUser().getId());
+
+        //1. studyModifyReqDto를 DB에 넣기 Service에서 처리
+        StudyResDto.StudyCreateRespDto studyCreateRespDto = studyService.modifyRoom(studyModifyReqDto);
+
+        //2. 성공 return
+        return new ResponseEntity<>(new ResponseDto<>(1, "스터디 수정에 성공하였습니다.", studyCreateRespDto), HttpStatus.OK);
+    }//modifyRoom()
 
     //study 가입 신청
     @PostMapping(value = "/v1/study/{study_id}/apply")
@@ -83,15 +100,6 @@ public class StudyroomController {
         //2. 성공 return
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto), HttpStatus.OK);
     } //studyRoomDetailBrowse()
-
-    // LocalDateTime 객체를 "Day Hour:Minute" 형식의 문자열로 변환
-    private static String convertToString(LocalDateTime dateTime) {
-        String dayOfWeek = dateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-        int hour = dateTime.getHour();
-        int minute = dateTime.getMinute();
-
-        return dayOfWeek + " " + String.format("%02d:%02d", hour, minute);
-    }//convertToString()
 
     // 스터디 룸 탈퇴
     @PostMapping(value = "/v1/study/{study_id}/withdraw/{user_id}")
@@ -135,7 +143,7 @@ public class StudyroomController {
     }
 
 
-    // 스터디룸 멤버 인원 조회
+    // 스터디룸 멤버 인원 조회 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
     @Transactional
     @GetMapping(value = "/v1/study/{study_room_id}/memberlist")
     public ResponseEntity<List<StudyMember>> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
@@ -150,7 +158,7 @@ public class StudyroomController {
     }
 
 
-    // 스터디룸 멤버 강제 퇴출
+    // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
     @DeleteMapping(value = "/v1/{study_room_id}/member/{member_id}")
     public ResponseEntity<?> deleteMember(@AuthenticationPrincipal LoginUser loginUser,
                                           @PathVariable("study_room_id") Long studyRoomId,

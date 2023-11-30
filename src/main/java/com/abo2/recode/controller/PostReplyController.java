@@ -21,8 +21,12 @@ public class PostReplyController {
 
     // 게시글 댓글 작성
     @PostMapping("/v1/study/{post_id}/postReply")
-    public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
-        PostRespDto.PostReplyRespDto createdPostReply = postReplyService.createPostReply(loginUser.getUser().getId(), postId, postReplyReqDto);
+    public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser,
+                                             @PathVariable("post_id") Long postId,
+                                             @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
+
+        PostRespDto.PostReplyRespDto createdPostReply =
+                postReplyService.createPostReply(loginUser.getUser().getId(), postId, postReplyReqDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 완료", createdPostReply), HttpStatus.OK);
     }
@@ -37,7 +41,9 @@ public class PostReplyController {
 
     // 게시글 댓글 삭제
     @DeleteMapping("/v1/study/{post_id}/postReply/{postReply_id}")
-    public ResponseEntity<?> deletePostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId) {
+    public ResponseEntity<?> deletePostReply(@AuthenticationPrincipal LoginUser loginUser,
+                                             @PathVariable("post_id") Long postId,
+                                             @PathVariable("postReply_id") Long postReplyId) {
         postReplyService.deletePostReply(loginUser.getUser().getId(), postId, postReplyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 완료", null), HttpStatus.OK);
