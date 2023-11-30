@@ -41,11 +41,12 @@ public class QuizController {
     }
 
     // 퀴즈 수정
-    @PostMapping(value = "/v1/study/{study_room_id}/quiz-modify")
+    @PostMapping(value = "/v1/study/{study_room_id}/quiz/{quiz_id}/quiz-modify")
     public ResponseEntity<?> quizModify(@AuthenticationPrincipal LoginUser loginUser,
                                         @PathVariable Long study_room_id,
+                                        @PathVariable Long quiz_id,
                                         @RequestBody @Valid QuizReqDto.QuizWriteReqDto quizWriteReqDto){
-        QuizRespDto.QuizListRespDto quizzedModify = quizService.quizModify(loginUser.getUser().getId(), study_room_id, quizWriteReqDto);
+        QuizRespDto.QuizListRespDto quizzedModify = quizService.quizModify(loginUser.getUser().getId(), study_room_id, quiz_id, quizWriteReqDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 수정 완료", quizzedModify), HttpStatus.OK);
     }

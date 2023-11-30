@@ -66,13 +66,13 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizRespDto.QuizListRespDto quizModify(Long userId, Long study_room_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
+    public QuizRespDto.QuizListRespDto quizModify(Long userId, Long study_room_id, Long quiz_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
         StudyRoom studyRoom = studyRoomRepository.findById(study_room_id).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
 
         // 퀴즈 조회 및 작성자 확인
-        Quiz quiz = quizRepository.findById(quizWriteReqDto.getQuizId()).orElseThrow(() -> new CustomApiException("퀴즈가 존재하지 않습니다."));
+        Quiz quiz = quizRepository.findById(quiz_id).orElseThrow(() -> new CustomApiException("퀴즈가 존재하지 않습니다."));
         if (!quiz.getUser().getId().equals(userId)) {
             throw new CustomApiException("작성자만 수정이 가능합니다.");
         }
