@@ -15,22 +15,13 @@ public class PostReqDto {
     @Setter
     public static class PostWriteReqDto {
 
-        @NotEmpty
+
+        private Long postId;
         private String title;
-
-        @NotEmpty
         private String content;
-
-        @NotEmpty
         private Long studyRoomId;
-
-        @NotEmpty
         private Long userId;
-
-        @NotEmpty
         private Integer category;
-
-        @NotEmpty
         private User nickname;
 
     }

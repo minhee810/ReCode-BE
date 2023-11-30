@@ -50,7 +50,7 @@ public class PostController {
     public ResponseEntity<?> writePost(@AuthenticationPrincipal LoginUser loginUser,
                                        @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto, @PathVariable("study_room_id") Long studyRoomId) {
 
-        PostRespDto.PostWriteRespDto postWriteRespDto = postService.writePost(loginUser.getUser().getId(), postWriteReqDto, studyRoomId);
+        PostRespDto.PostWriteRespDto postWriteRespDto = postService.writePost(postWriteReqDto.getUserId(), postWriteReqDto, studyRoomId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", postWriteRespDto), HttpStatus.OK);
     }
