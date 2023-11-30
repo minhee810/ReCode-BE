@@ -102,6 +102,76 @@ public class StudyService {
         }
     }
 
+    //스터디 모집 글 수정 = 스터디룸 정보 수정
+    @Transactional
+    public StudyResDto.StudyCreateRespDto modifyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto) {
+
+        // study_id로 Studyroom 조회
+        StudyRoom studyRoom = studyRoomRepository.findById(studyModifyReqDto.getStudy_id()).orElseThrow(
+                () -> new CustomApiException("존재하지 않는 스터디 그룹입니다.")
+        );
+
+        // 현재 수정하는 사람이 스터디 조장인지 체크
+        if(
+                studyModifyReqDto.getCreated_by() != studyRoom.getMaster().getId()
+        ){
+            throw new CustomForbiddenException("조장만 스터디 그룹 정보를 수정 할 수 있습니다.");
+        }
+
+        // update()로 객체에 변경 사항 반영
+        studyRoom.updateStudyRoom(studyModifyReqDto,parseTime(studyModifyReqDto.getStartTime())
+                ,parseTime(studyModifyReqDto.getEndTime()));
+
+        //스터디룸과 연계된 출석일,기술 스택들 studyRoom 삽입
+        for (String day : studyModifyReqDto.getAttendanceDay()) {
+            AttendanceDay attendanceDay = AttendanceDay.builder()
+                    .attendanceDay(day)
+                    .studyRoom(studyRoom)
+                    .build();
+
+            studyRoom.getAttendanceDay().add(attendanceDay);
+        }
+
+        for (String skillName : studyModifyReqDto.getSkills()) {
+            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
+
+            StudySkill studySkill = StudySkill.builder()
+                    .studyRoom(studyRoom)
+                    .skill(skill)
+                    .build();
+
+            studyRoom.getStudySkills().add(studySkill);
+        }
+
+        // StudyRoom의 AttendanceDay 정보를 String Set으로 변환
+        Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .map(AttendanceDay::getAttendanceDay)
+                .collect(Collectors.toSet());
+
+        String[] skillNames = studyModifyReqDto.getSkills();
+
+        // studyRoom 기반으로 studyCreateRespDto 채우기
+        StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
+                .studyName(studyRoom.getStudyName())
+                .createdAt(studyRoom.getCreatedAt())
+                .description(studyRoom.getDescription())
+                .endDate(studyRoom.getEndDate())
+                .endTime(studyRoom.getEndTime())
+                .startTime(studyRoom.getStartTime())
+                .maxNum(studyRoom.getMaxNum())
+                .startDate(studyRoom.getStartDate())
+                .title(studyRoom.getTitle())
+                .updatedAt(studyRoom.getUpdatedAt())
+                .attendanceDay(attendanceDays) // Set<String>으로 변환한 정보를 저장
+                .skills(skillNames)
+                .userId(studyRoom.getMaster().getId())
+                .build();
+
+        return studyCreateRespDto;
+    }//modifyRoom()
+
     // 민희 수정
     @Transactional
     public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
@@ -200,19 +270,6 @@ public class StudyService {
         return studyCreateRespDto;
     }
 
-
-    // 문자열을 LocalDateTime 객체로 변환
-    private LocalDateTime convertToDateTime(String dateTimeStr) {
-        String[] parts = dateTimeStr.split(" ");
-        DayOfWeek dayOfWeek = DayOfWeek.valueOf(parts[0].toUpperCase());
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime sameWeekDay = now.with(TemporalAdjusters.nextOrSame(dayOfWeek));
-        LocalDateTime time = LocalDateTime
-                .parse(sameWeekDay.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                        + "T" + parts[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
-        return time;
-    }//convertToDateTime()
 
     // 반환 타입이 Long인지 확인하는 메소드
     public boolean checkReturnType(Object returnValue) {
@@ -382,25 +439,26 @@ public class StudyService {
 
     // 스터디룸 참가 인원 리스트 조회
     public List<StudyMember> getStudyMembersByRoomId(Long studyRoomId) {
-        Optional<StudyRoom> optionalStudyRoom = studyRoomRepository.findById(studyRoomId);
 
-        if (optionalStudyRoom.isPresent()) {
-            StudyRoom studyRoom = optionalStudyRoom.get();
-            return studyRoom.getStudyMembers();
+        // 찬 : Study_Member Table에서 studyRoomId = ? And status = 1인 조건을 충족하는 List<StudyMember>를 Return하도록 수정
+        return studyMemberRepository.findByStudyRoomId(studyRoomId);
 
-        } else {
-            throw new NoSuchElementException("ID " + studyRoomId + "에 해당하는 스터디 룸을 찾을 수 없습니다");
-
-        }
     }
 
 
-    // 스터디룸 멤버 강제 퇴출
-    public void deleteMember(Long id, Long studyRoomId, Long memberId) {
-        StudyMember studyMember = studyMemberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
+    // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
+    public void deleteMember(Long user_id, Long studyRoomId, Long memberId) {
 
-        studyMemberRepository.delete(studyMember);
+        //강제 퇴출하는 사람이 조장이 맞는지 체크
+        if(user_id == studyRoomRepository.findCreated_byBystudy_id(studyRoomId)){
+            throw new CustomForbiddenException("조장만 스터디 원을 퇴출 할 수 있습니다.");
+        }
+        else{
+            StudyMember studyMember = studyMemberRepository.findById(memberId)
+                    .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
+
+            studyMemberRepository.delete(studyMember);
+        }
     }
 }
 

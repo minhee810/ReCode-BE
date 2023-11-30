@@ -41,6 +41,12 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
     )
      Optional<StudyMember> findByUserAndStudyRoom(@Param(value = "user_id") Long user_id,
                                                   @Param(value = "study_id") Long study_id);
+    // 스터디룸 참가 인원 리스트 조회
+    @Query(
+            value = "SELECT * FROM Study_Member as sm WHERE sm.status = 1 AND sm.study_room_id=:study_id",
+            nativeQuery = true
+    )
+    List<StudyMember> findByStudyRoomId(@Param(value = "study_id") Long studyRoomId);
 
     @Modifying
     @Query(value = "UPDATE study_member as sm SET sm.status =:status WHERE sm.study_room_id=:studyId" +
@@ -66,4 +72,5 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
     )
     StudyResDto.ApplicationEssayResDto applicationsEssay(@Param("study_room_id") Long study_room_id,
                                                          @Param("user_id") Long user_id);
+
 }
