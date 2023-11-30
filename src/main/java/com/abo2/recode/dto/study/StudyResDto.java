@@ -11,10 +11,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -187,6 +184,27 @@ public class StudyResDto {
                 this.masterNickname = studyRoom.getMaster().getNickname();
                 this.masterEmail = studyRoom.getMaster().getEmail();
             }
+        }
+    } //class StudyListRespDto
+
+    @Getter
+    @Setter
+    public static class StudyMemberListRespDto{
+
+        private Long Id; //스터디 룸 member 일련번호
+
+        private Long study_room_id;
+
+        private Long user_id;
+
+        private Integer status;
+
+        @Builder
+        public StudyMemberListRespDto(Long id, Long study_room_id, Long user_id, Integer status) {
+            Id = id;
+            this.study_room_id = study_room_id;
+            this.user_id = user_id;
+            this.status = status;
         }
     }
 

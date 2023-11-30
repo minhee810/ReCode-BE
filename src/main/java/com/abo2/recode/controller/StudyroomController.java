@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -146,16 +147,39 @@ public class StudyroomController {
     // 스터디룸 멤버 인원 조회 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
     @Transactional
     @GetMapping(value = "/v1/study/{study_room_id}/memberlist")
-    public ResponseEntity<List<StudyMember>> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
+    public ResponseEntity<?> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
         List<StudyMember> studyMembers = studyService.getStudyMembersByRoomId(studyRoomId);
+
+        logger.info(studyMembers.toString());
+
+        List<StudyResDto.StudyMemberListRespDto> studyMemberListRespDtoList = getStudyMemberListRespDtos(studyMembers);
 
         if (studyMembers.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.ok(studyMembers);
+            return new ResponseEntity<>(new ResponseDto<>
+                    (1, "스터디 그룹 멤버 목록입니다.", studyMemberListRespDtoList), HttpStatus.OK);
         }
 
-    }
+    } //getsStudyMembers()
+
+    private List<StudyResDto.StudyMemberListRespDto> getStudyMemberListRespDtos(List<StudyMember> studyMembers) {
+        List<StudyResDto.StudyMemberListRespDto> studyMemberListRespDtoList = new ArrayList<>();
+
+        for(StudyMember studyMember : studyMembers){
+            StudyResDto.StudyMemberListRespDto studyMemberListRespDto
+                    = StudyResDto.StudyMemberListRespDto.builder()
+                    .id(studyMember.getId())
+                    .study_room_id(studyMember.getStudyRoom().getId())
+                    .user_id(studyMember.getUser().getId())
+                    .status(studyMember.getStatus())
+                    .build();
+
+          studyMemberListRespDtoList.add(studyMemberListRespDto);
+
+        }
+        return studyMemberListRespDtoList;
+    }//getStudyMemberListRespDtos()
 
 
     // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
@@ -164,8 +188,18 @@ public class StudyroomController {
                                           @PathVariable("study_room_id") Long studyRoomId,
                                           @PathVariable("member_id") Long memberId) {
 
-        studyService.deleteMember(loginUser.getUser().getId(), studyRoomId, memberId);
-        return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", null), HttpStatus.OK);
+        StudyMember studyMember
+                = studyService.deleteMember(loginUser.getUser().getId(), studyRoomId, memberId);
+
+        StudyResDto.StudyMemberListRespDto studyMemberListRespDto
+                = StudyResDto.StudyMemberListRespDto.builder()
+                .id(studyMember.getId())
+                .study_room_id(studyMember.getStudyRoom().getId())
+                .user_id(studyMember.getUser().getId())
+                .status(studyMember.getStatus())
+                .build();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", studyMemberListRespDto), HttpStatus.OK);
     }
 
 }

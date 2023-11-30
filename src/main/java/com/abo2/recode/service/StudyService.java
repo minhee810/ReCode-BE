@@ -447,10 +447,12 @@ public class StudyService {
 
 
     // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
-    public void deleteMember(Long user_id, Long studyRoomId, Long memberId) {
+    public StudyMember deleteMember(Long user_id, Long studyRoomId, Long memberId) {
+
+
 
         //강제 퇴출하는 사람이 조장이 맞는지 체크
-        if(user_id == studyRoomRepository.findCreated_byBystudy_id(studyRoomId)){
+        if(user_id != studyRoomRepository.findCreated_byBystudy_id(studyRoomId)){
             throw new CustomForbiddenException("조장만 스터디 원을 퇴출 할 수 있습니다.");
         }
         else{
@@ -458,6 +460,8 @@ public class StudyService {
                     .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
 
             studyMemberRepository.delete(studyMember);
+
+            return studyMember;
         }
     }
 }
