@@ -50,6 +50,7 @@ public class QnaReplyService {
         qnaReplyRepository.save(qnaReply);
     }
 
+    //Qna 댓글 삭제
     @Transactional
     public void qnaReplyDelete(Long id) {
         qnaReplyRepository.deleteById(id);
