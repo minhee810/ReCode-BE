@@ -88,7 +88,7 @@ public class QnaController {
     }
 
 
-    //Qna 식제(관리자 권한)
+    //Qna 삭제 (관리자 권한)
     @DeleteMapping("/qna/{id}")
     public ResponseEntity<?> qnaDelete(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaReqDTO qnaReqDTO) {
         qnaReqDTO.setUser_id(loginUser.getUser().getId());
