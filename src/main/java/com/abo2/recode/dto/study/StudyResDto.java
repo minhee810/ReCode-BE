@@ -11,18 +11,13 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StudyResDto {
@@ -75,7 +70,10 @@ public class StudyResDto {
         @Column(nullable = false)
         private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
-        public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills) {
+        @NotEmpty
+        private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
+
+        public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills, Set<String> attendanceDays) {
             this.study_room_id = studyRoom.getId();
             this.study_name = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
@@ -99,6 +97,7 @@ public class StudyResDto {
             }
             this.createdAt = studyRoom.getCreatedAt();
             this.updatedAt = studyRoom.getUpdatedAt();
+            this.attendanceDay = attendanceDays;
         }
 
     }
@@ -186,6 +185,27 @@ public class StudyResDto {
                 this.masterEmail = studyRoom.getMaster().getEmail();
             }
         }
+    } //class StudyListRespDto
+
+    @Getter
+    @Setter
+    public static class StudyMemberListRespDto{
+
+        private Long Id; //스터디 룸 member 일련번호
+
+        private Long study_room_id;
+
+        private String nickname;
+
+        private Integer status;
+
+        @Builder
+        public StudyMemberListRespDto(Long id, Long study_room_id, String nickname, Integer status) {
+            Id = id;
+            this.study_room_id = study_room_id;
+            this.nickname = nickname;
+            this.status = status;
+        }
     }
 
     @Getter
@@ -208,9 +228,24 @@ public class StudyResDto {
         }
     }
 
+//    @Getter
+//    @Setter
+//    public static class StudyRoomCreateResDto{
+//
+//        private Long id;
+//        private String study_name;
+//        private String title;
+//        private List<String> skillNames;
+//        private Integer current_num;
+//        private Integer max_num;
+//        private String masterEmail;
+//        private String masterNickname;
+//
+//    }
+
     @Getter
     @Setter
-    public static class StudyCreateRespDto{
+    public static class StudyCreateRespDto {
 
         // Study_Room
         @NotEmpty
@@ -232,7 +267,7 @@ public class StudyResDto {
         private LocalTime endTime; //스터디 출석 인정 끝 시간 " 12:10"
 
         @NotEmpty
-        private List<String> allowedDays; // 출석 인정 요일 - minhee 추가
+        private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
         @NotEmpty
         private LocalDate startDate;
@@ -257,7 +292,7 @@ public class StudyResDto {
 
         @Builder
         public StudyCreateRespDto(String studyName, String title, String description,
-                                  LocalTime startTime, LocalTime endTime, List<String> allowedDays,
+                                  LocalTime startTime, LocalTime endTime, Set<String> attendanceDay,
                                   LocalDate startDate, LocalDate endDate, Integer maxNum, Long userId,
                                   LocalDateTime createdAt, LocalDateTime updatedAt, String[] skills) {
             this.studyName = studyName;
@@ -265,7 +300,7 @@ public class StudyResDto {
             this.description = description;
             this.startTime = startTime;
             this.endTime = endTime;
-            this.allowedDays = allowedDays;
+            this.attendanceDay = attendanceDay;
             this.startDate = startDate;
             this.endDate = endDate;
             this.maxNum = maxNum;
@@ -377,7 +412,6 @@ public class StudyResDto {
         @NotEmpty
         private String essay;
     }//class ApplicationEssayResDto
-
 
 }
 

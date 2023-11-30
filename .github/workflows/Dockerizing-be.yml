@@ -1,4 +1,4 @@
-name: Build and Dockerfile
+name: recode-be build and push Docker Image to ECR
 
 on:
   push:
@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       
       - name: Login to AWS ECR
         run: |
@@ -19,9 +20,11 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
           
       - name: Set Date Time
         run: echo "DATE_TIME=$(TZ=Asia/Seoul date '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
         
       - name: Build and Push to ECR
         uses: docker/build-push-action@v5
@@ -30,3 +33,21 @@ jobs:
           file: .github/workflows/Dockerfile
           push: true
           tags: 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com/recode-be:${{ env.DATE_TIME }}
+
+      - name: Upload to S3
+        run: |
+          touch deploy-be.sh
+          echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com" >> deploy-be.sh
+          echo "docker pull 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com:"${{ env.DATE_TIME }} >> deploy-be.sh
+          echo "docker run -d -p 8080:8080 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com/recode-be:"${{ env.DATE_TIME }} >> deploy-be.sh
+          zip archive-${{ env.DATE_TIME }}.zip deploy-be.sh appspec.yml
+          aws s3 cp archive-${{ env.DATE_TIME }}.zip s3://abo2-recode/recode-be/ --region ap-northeast-2  
+          
+                                                                                                                                                                                   
+      - name: Deploy to EC2 using CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name recode \
+            --deployment-group-name recode-be \
+            --region ap-northeast-2 \
+            --s3-location bucket=abo2-recode,key=recode-be/archive-${{ env.DATE_TIME }}.zip,bundleType=zip

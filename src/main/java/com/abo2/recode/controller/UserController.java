@@ -96,7 +96,7 @@ public class UserController {
 
     @GetMapping(value = "/v1/users/{id}/getuser")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal LoginUser loginUser) {
-        UserRespDto.getUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
+        UserRespDto.GetUserInfoDto getUserInfoDto = userService.getUserInfo(loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "개인 정보 조회에 성공하였습니다", getUserInfoDto), HttpStatus.OK);
     }
 
@@ -110,9 +110,15 @@ public class UserController {
     @GetMapping("/v1/users/{userId}/studyrooms/{studyRoomId}/isInStudyRoom")
     public ResponseEntity<Boolean> isInStudyRoom(@PathVariable Long userId, @PathVariable Long studyRoomId) {
         User user = userService.findUserById(userId);
+        logger.info(user.toString());
         StudyRoom studyRoom = studyService.findStudyRoomById(studyRoomId);
+        logger.info(studyRoom.toString());
 
-        boolean isInStudyRoom = studyService.isUserInStudyRoom(user, studyRoom);
+        boolean isInStudyRoom = studyService.isUserInStudyRoom(user.getId(), studyRoom.getId());
+
+        String myString = String.valueOf(isInStudyRoom);
+        logger.info("isInStudyRoom : "+myString);
+
         return ResponseEntity.ok(isInStudyRoom);
     }
 
@@ -124,7 +130,7 @@ public class UserController {
         logger.info("emailCheckToken 수신: " + emailCheckToken);
 
         try {
-            UserRespDto.changePasswordRespDto changePasswordRespDto;
+            UserRespDto.ChangePasswordRespDto changePasswordRespDto;
 
             if (loginUser != null) {
                 changePasswordRespDto = userService.changePassword(loginUser.getUser().getId(), changePasswordReqDto);

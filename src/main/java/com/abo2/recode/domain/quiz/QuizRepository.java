@@ -16,4 +16,7 @@ public interface QuizRepository extends JpaRepository<Quiz,Long> {
 
     @Query("SELECT q FROM Quiz q WHERE q.studyRoom.id = :studyRoomId")
     List<Quiz> findQuizByStudyRoomId(@Param("studyRoomId") Long studyRoomId);
+
+    @Query("SELECT q FROM Quiz q WHERE q.studyRoom.id = :studyRoomId AND (CAST(q.id AS string) LIKE %:keyword% OR q.title LIKE %:keyword% OR CAST(q.difficulty AS string) LIKE %:keyword% OR q.user.nickname LIKE %:keyword% )")
+    List<Quiz> findQuizByKeyword(@Param("studyRoomId") Long studyRoomId, @Param("keyword") String keyword);
 }

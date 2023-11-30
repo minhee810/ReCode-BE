@@ -1,15 +1,16 @@
 package com.abo2.recode.domain.studyroom;
 
 
+import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
+import com.abo2.recode.dto.study.StudyReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,17 +31,17 @@ import java.util.Set;
 public class StudyRoom {
 
     @Id
-    @Column(name="study_room_id")
+    @Column(name = "study_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 일련번호
 
-    @Column(unique = true,nullable = false,length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String studyName; //스터디 그룹 네임
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private String title; //스터디 주제
 
-    @Column(nullable = false,length = 300)
+    @Column(nullable = false, length = 300)
     private String description; //스터디 그룹 소개글
 
     @Column(nullable = false)
@@ -54,10 +56,8 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalTime endTime; //스터디 출석 인정 끝 시간
 
-    @ElementCollection
-    @CollectionTable(name = "study_room_allowed_days", joinColumns = @JoinColumn(name = "study_room_id"))
-    @Column(name = "day")
-    private List<String> allowedDays;
+    @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
+    private Set<AttendanceDay> attendanceDay = new HashSet<>();  // 출석 요일
 
     @Column(nullable = false)
     private Integer currentNum = 1; // 필드 선언 시 기본값 지정,스터디 그룹 현재 인원
@@ -68,7 +68,6 @@ public class StudyRoom {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by")
     private User master;
-
 
     @CreatedDate
     @Column(nullable = false)
@@ -105,7 +104,7 @@ public class StudyRoom {
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
                      LocalDate endDate, LocalTime startTime, LocalTime endTime,
-                     Integer currentNum, Integer maxNum, User master, List<String> allowedDays ) {
+                     Integer currentNum, Integer maxNum, User master) {
 
         this.id = id;
         this.studyName = studyName;
@@ -118,8 +117,21 @@ public class StudyRoom {
         this.currentNum = currentNum;
         this.maxNum = maxNum;
         this.master = master;
-        this.allowedDays = allowedDays;
-    }
+    } //StudyRoom()
 
+
+    public void updateStudyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto,
+                                LocalTime startTime, LocalTime endTime) {
+
+        this.studyName = studyModifyReqDto.getStudyName();
+        this.title = studyModifyReqDto.getTitle();
+        this.description = studyModifyReqDto.getDescription();
+        this.startDate = studyModifyReqDto.getStartDate();
+        this.endDate = studyModifyReqDto.getEndDate();
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.maxNum = studyModifyReqDto.getMaxNum();
+        this.updatedAt = LocalDateTime.now();
+    }
 }
 

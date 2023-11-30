@@ -29,7 +29,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(name ="user_id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -81,12 +81,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public void updateUser(String nickname, String email){
+    public void updateUser(String nickname, String email) {
         this.email = email;
         this.nickname = nickname;
     }
 
-    public void writeEssay(String essay){
+    public void writeEssay(String essay) {
         this.essay = essay;
     }
 
@@ -103,5 +103,10 @@ public class User {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeProfile(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
     }
 }

@@ -1,7 +1,9 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.qna.QnaRepository;
 import com.abo2.recode.domain.qna.Qna;
+import com.abo2.recode.domain.qna.QnaRepository;
+import com.abo2.recode.domain.user.User;
+import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.qna.QnaReqDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,36 +17,40 @@ import java.util.List;
 public class QnaService {
 
     private final QnaRepository qnaRepository;
+    private final UserRepository userRepository;
 
+    //Qna 생성
     @Transactional
     public void postQna(QnaReqDTO qnaReqDTO) {
 
+        User user = userRepository.findById(qnaReqDTO.getUser_id()).orElseThrow();
+
         Qna qna = Qna.builder()
-                .user_id(qnaReqDTO.getUser_id())
+                .user_id(user)
                 .title(qnaReqDTO.getTitle())
                 .category(qnaReqDTO.getCategory())
                 .content(qnaReqDTO.getContent())
-                .createdAt(qnaReqDTO.getCreatedAt())
-                .updatedAt(qnaReqDTO.getUpdatedAt())
                 .build();
 
         qnaRepository.save(qna);
     }
 
+    //Qna 목록 조회
     @Transactional
     public List<Qna> qnaList() {
         return qnaRepository.findAll();
     }
 
+    //Qna 단일 조회
     @Transactional
     public Qna qna(Long qnaId) {
-        return qnaRepository.findById(qnaId).orElseThrow();
 
+        return qnaRepository.findById(qnaId).orElseThrow();
     }
 
+    //Qna 수정
     @Transactional
-    public Qna qnaModify(Long id, QnaReqDTO qnaReqDTO) {
-        qnaRepository.findById(id).orElseThrow();
+    public void qnaModify(Long id, QnaReqDTO qnaReqDTO) {
 
         Qna qna = Qna.builder()
                 .id(id)
@@ -54,14 +60,11 @@ public class QnaService {
                 .build();
 
         qnaRepository.save(qna);
-
-        return qna;
     }
 
+    //Qna 삭제
     @Transactional
     public void qnaDelete(Long id) {
         qnaRepository.deleteById(id);
     }
-
-
 }

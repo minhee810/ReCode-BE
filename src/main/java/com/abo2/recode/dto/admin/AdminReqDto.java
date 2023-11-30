@@ -22,7 +22,7 @@ public class AdminReqDto {
         private Long user_id;
 
         @NotEmpty
-        private Long study_id;
+        private Long study_room_id;
 
         @NotEmpty
         private String role;
