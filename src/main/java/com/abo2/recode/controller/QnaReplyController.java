@@ -71,18 +71,19 @@ public class QnaReplyController {
     }
 
     //Qna 댓글 수정
-    @PutMapping("/v1/qna-reply/{id}/{qna_id}")
+    @PutMapping("/v1/qna-reply/{qna_id}/{reply_id}")
     public ResponseEntity<?> qnaReplyModify(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(value = "qna_id") Long qna_id,
-            @PathVariable Long reply_id,
+            @PathVariable(value = "reply_id") Long reply_id,
             @RequestBody QnaReplyDTO qnaReplyDTO) {
+
         qnaReplyDTO.setUser_id(loginUser.getUser().getId());
 
         User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
                 () -> new CustomApiException("User가 존재하지 않습니다!")
         );
-        Qna qna = qnaRepository.findById(reply_id).orElseThrow(
+        Qna qna = qnaRepository.findById(qna_id).orElseThrow(
                 () -> new CustomApiException("Qna가 존재하지 않습니다!")
         );
 

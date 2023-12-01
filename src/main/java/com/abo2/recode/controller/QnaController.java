@@ -100,14 +100,8 @@ public class QnaController {
     @Secured(value = "ROLE_ADMIN")
     @DeleteMapping("/admin/v1/qna/{qna_id}")
     public ResponseEntity<?> qnaDelete(
-            @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(value = "qna_id") Long qna_id
     ) {
-
-        //Admin
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
-                () -> new CustomApiException("User가 존재하지 않습니다!")
-        );
 
         Qna qnaInfo = qnaRepository.findById(qna_id).orElseThrow(
                 () -> new CustomApiException("Qna가 존재하지 않습니다!")
