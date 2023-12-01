@@ -54,6 +54,29 @@ import javax.persistence.*;
         )
 )
 
+@NamedNativeQuery(
+        name = "StudyMemberAndStatusListRespDto",
+        query = "SELECT sm.study_room_id,sm.user_id,u.username,sr.created_by " +
+                "FROM Study_Member as sm " +
+                "INNER JOIN Users as u ON sm.user_id = u.user_id " +
+                "INNER JOIN Study_Room as sr ON sm.study_room_id = sr.study_room_id "+
+                "WHERE sm.study_room_id=:study_room_id AND sm.status = 1",
+        resultSetMapping = "StudyMemberAndStatusListRespDtoMapping"
+)
+
+@SqlResultSetMapping(
+        name = "StudyMemberAndStatusListRespDtoMapping",
+        classes = @ConstructorResult(
+                targetClass = StudyResDto.StudyMemberAndStatusListRespDto.class,
+                columns = {
+                        @ColumnResult(name = "user_id", type = Long.class),
+                        @ColumnResult(name = "study_room_id", type = Long.class),
+                        @ColumnResult(name = "username", type = String.class),
+                        @ColumnResult(name = "created_by", type = Integer.class)
+                }
+        )
+)
+
 @Entity
 @Getter
 @Setter

@@ -144,7 +144,6 @@ public class StudyroomController {
 
 
     // 스터디 그룹에서 멤버 목록 불러오기 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
-    @Transactional
     @GetMapping(value = "/v1/study/{study_room_id}/memberlist")
     public ResponseEntity<?> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
         List<StudyMember> studyMembers = studyService.getStudyMembersByRoomId(studyRoomId);

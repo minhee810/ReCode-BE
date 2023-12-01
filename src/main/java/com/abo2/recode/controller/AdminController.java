@@ -1,14 +1,17 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
+import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.skill.SkillResDto;
+import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.CustomExceptionHandler;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
 import com.abo2.recode.service.AdminService;
+import com.abo2.recode.service.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api")
 public class AdminController {
@@ -26,9 +31,12 @@ public class AdminController {
 
     private AdminService adminService;
 
+    private StudyService studyService;
+
     @Autowired
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService,StudyService studyService) {
         this.adminService = adminService;
+        this.studyService = studyService;
     }
 
     //관리자가 기술 스택 추가
@@ -119,8 +127,20 @@ public class AdminController {
                 HttpStatus.OK);
     }//memberRoleChange()
 
-    // 관리자 권한으로 글 삭제
+    // 스터디 그룹에서 멤버 목록 불러오기 (study_member의 역할까지 불러와야함.
+    @GetMapping(value = "/v1/study/{study_room_id}/memberlistandstatus")
+    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("study_room_id") Long studyRoomId){
 
+        List<StudyResDto.StudyMemberAndStatusListRespDto> studyMembers = studyService.getStudyMembersByRoomIdAsAdmin(studyRoomId);
+
+        if (studyMembers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(new ResponseDto<>
+                    (1, "스터디 그룹 멤버 목록입니다.", studyMembers), HttpStatus.OK);
+        }
+
+    }// getsStudyMembersandStatus()
 
     // 관리자 기술 스택 불러오기 성공
     @GetMapping(value = "/get-skills")

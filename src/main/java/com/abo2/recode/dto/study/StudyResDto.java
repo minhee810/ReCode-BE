@@ -206,7 +206,28 @@ public class StudyResDto {
             this.nickname = nickname;
             this.status = status;
         }
-    }
+    }//StudyMemberListRespDto
+
+    @Getter
+    @Setter
+    public static class StudyMemberAndStatusListRespDto{
+
+        private Long user_id;
+
+        private Long study_room_id;
+
+        private String username;
+
+        private Integer created_by;
+
+        @Builder
+        public StudyMemberAndStatusListRespDto(Long user_id, Long study_room_id, String username, Integer created_by) {
+            this.user_id = user_id;
+            this.study_room_id = study_room_id;
+            this.username = username;
+            this.created_by = created_by;
+        }
+    }//StudyMemberAndStatusListRespDto
 
     @Getter
     @Setter
