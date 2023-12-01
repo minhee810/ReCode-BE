@@ -359,7 +359,7 @@ public class StudyService {
         if (studyRoom.isPresent()) {
             StudyRoom room = studyRoom.get();
 
-            if (!room.getMaster().equals(userId)) {
+            if (! (room.getMaster().getId() == userId) ) {
                 studyMemberRepository.deleteByUserIdAndStudyRoomId(userId, study_room_id);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
