@@ -20,13 +20,20 @@ public class Skill {
     private Long id; //skill 일련번호
 
 
-    @Column(unique = true, nullable = false, length = 50)
-    private String skillName; // skill 네임
+    @Column(unique = true, nullable = false, length = 50)  //
+    private String skillNames; // skill 네임
+
+
+    @Column(nullable = false, length = 50)
+    private String position;
 
     @Builder
-    public Skill(Long id, String skillName) {
+    public Skill(Long id, String skillNames, String position) {
         this.id = id;
-        this.skillName = skillName;
+        this.skillNames = skillNames;
+        this.position = position;
     }
+
+
 }
 

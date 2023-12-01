@@ -18,6 +18,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api")
 public class AdminController {
@@ -46,18 +48,22 @@ public class AdminController {
                         .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
             }
 
-            // 1. 쉼표로 분할하여 배열에 저장
-            String[] addskills = adminSkillAddReqDto.getSkills().split(",");
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto =
+                adminService.adminSkillAdd(adminSkillAddReqDto);
 
-            // 2. DB에 skill 테이블에 insert
-            SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.adminSkillAdd(addskills);
+//            // 1. 쉼표로 분할하여 배열에 저장
+//            String[] addskills = adminSkillAddReqDto.getSkills().split(",");
+//
+//            // 2. position 정보 받기
+//            String position = adminSkillAddReqDto.getPosition(); // 새로운 필드 추가
+//
+//            // 2. DB에 skill 테이블에 insert
+//            SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.adminSkillAdd(addskills, position);
 
-            ResponseDto<SkillResDto.AdminSkillAddResDto> responseDto =
-                    new ResponseDto<>(1,"스킬 추가 성공",adminSkillAddResDto);
-
-            return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-
+            return new ResponseEntity<>(new ResponseDto<>(1, "스킬 추가 성공", adminSkillAddResDto), HttpStatus.OK);
         } //adminSkillAdd()
+
+
 
         // 관리자의 스터디 모임 삭제 /api/v1/study/{study_id}
         @Secured(value = "ROLE_ADMIN")
@@ -125,8 +131,9 @@ public class AdminController {
         // 관리자 기술 스택 불러오기 성공
         @GetMapping(value = "/get-skills")
         public ResponseEntity<?> getSkills(){
-            SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
-            return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
+            SkillResDto.AdminGetSkillResDto adminGetSkillResDto = adminService.getSkills();
+
+            return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminGetSkillResDto), HttpStatus.OK);
         }
 
     }//AdminController

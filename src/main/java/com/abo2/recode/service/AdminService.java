@@ -10,6 +10,7 @@ import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
+import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,22 +53,37 @@ public class AdminService {
     }
 
     // 관리자가 기술 스택 관리
-    public SkillResDto.AdminSkillAddResDto adminSkillAdd(String[] addskills){
+    public SkillResDto.AdminSkillAddResDto adminSkillAdd(SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto){
 
-        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = new SkillResDto.AdminSkillAddResDto();
-        ArrayList<String> skills = new ArrayList<>();
+        Skill skill = Skill.builder()
+                .skillNames(adminSkillAddReqDto.getSkills())
+                .position(adminSkillAddReqDto.getPosition())
+                .build();
 
-        for(String addskill : addskills){
-            Skill skill = Skill.builder()
-                    .skillName(addskill)
-                    .build();
-            skillRepository.save(skill);
-            skills.add(addskill);
-        }
+        skillRepository.save(skill);
 
-        adminSkillAddResDto.setSkills(skills);
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = SkillResDto.AdminSkillAddResDto.builder()
+                .position(skill.getPosition())
+                .skills(skill.getSkillNames())
+                .build();
 
         return adminSkillAddResDto;
+
+//        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = new SkillResDto.AdminSkillAddResDto();
+//        ArrayList<String> skills = new ArrayList<>();
+//
+//        for(String addskill : addskills){
+//            Skill skill = Skill.builder()
+//                    .skillName(addskill)
+//                    .position(position)
+//                    .build();
+//
+//            skillRepository.save(skill);
+//            skills.add(addskill);
+//        }
+//
+//        adminSkillAddResDto.setSkills(skills);
+//        return adminSkillAddResDto;
 
     }//adminSkillAdd()
 
@@ -136,15 +152,33 @@ public class AdminService {
 //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
 
     // 스킬 목록 조회
-    public SkillResDto.AdminSkillAddResDto getSkills() {
-        List<Skill> skillList = skillRepository.findAll();
-        ArrayList<String> skillNames = skillList.stream()
-                .map(Skill::getSkillName)
-                .collect(Collectors.toCollection(ArrayList::new));
+    // 스킬 목록 조회
+//    public SkillResDto.AdminSkillAddResDto getSkills() {
+//        List<Skill> skillList = skillRepository.findAll();
+//        ArrayList<String> skillNames = skillList.stream()
+//                .map(Skill::getSkillName)
+//                .collect(Collectors.toCollection(ArrayList::new));
+//
+//        SkillResDto.AdminSkillAddResDto response = new SkillResDto.AdminSkillAddResDto();
+//        response.setSkills(skillNames);
+//        return response;
+//    }//getSkills()
 
-        SkillResDto.AdminSkillAddResDto response = new SkillResDto.AdminSkillAddResDto();
-        response.setSkills(skillNames);
+
+        public SkillResDto.AdminGetSkillResDto getSkills() {
+        List<Skill> skillList = skillRepository.findAll();
+
+        ArrayList<String> skillNames = skillList.stream()
+                .map(Skill::getSkillNames)
+                .collect(Collectors.toCollection(ArrayList::new));
+        //SkillResDto.AdminGetSkillResDto response = new SkillResDto.AdminGetSkillResDto(skillNames);
+
+            SkillResDto.AdminGetSkillResDto response = SkillResDto.AdminGetSkillResDto.builder()
+                    .skills(skillNames)
+                    .build();
+
         return response;
     }//getSkills()
+
 
 }//AdminService class

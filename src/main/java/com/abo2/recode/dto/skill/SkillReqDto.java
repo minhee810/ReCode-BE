@@ -17,5 +17,8 @@ public class SkillReqDto {
         @NotEmpty
         private String skills; //입력한 스킬들
 
+        @NotEmpty
+        private String position;
+
     }
 }

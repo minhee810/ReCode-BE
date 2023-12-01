@@ -151,7 +151,7 @@ public class StudyService {
         // 3-1. Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
         // expertise
         for (String skillName : studyCreateReqDto.getSkills()) {
-            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
+            Skill skill = skillRepository.findBySkillNames(skillName); // 스킬 이름으로 Skill 엔티티 검색
 
             StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)

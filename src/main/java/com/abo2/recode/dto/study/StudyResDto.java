@@ -93,7 +93,7 @@ public class StudyResDto {
                         .filter(Objects::nonNull) // 리스트 내 null 객체 필터링
                         .map(StudySkill::getSkill)
                         .filter(Objects::nonNull) // getSkill() 결과가 null이 아닌 것만 필터링
-                        .map(Skill::getSkillName)
+                        .map(Skill::getSkillNames)
                         .collect(Collectors.toList());
             } else {
                 this.skillNames = new ArrayList<>();
@@ -127,7 +127,7 @@ public class StudyResDto {
                         .filter(Objects::nonNull) // Check if each studySkill object is not null
                         .map(studySkill -> {
                             Skill skill = studySkill.getSkill();
-                            return (skill != null) ? skill.getSkillName() : null; // Check if getSkill() is not null
+                            return (skill != null) ? skill.getSkillNames() : null; // Check if getSkill() is not null
                         })
                         .filter(Objects::nonNull) // Filter out null skill names
                         .collect(Collectors.toList());
@@ -173,7 +173,7 @@ public class StudyResDto {
                         .filter(Objects::nonNull) // Check if studySkill is not null
                         .map(studySkill -> {
                             Skill skill = studySkill.getSkill();
-                            return (skill != null) ? skill.getSkillName() : null; // Check if getSkill() is not null
+                            return (skill != null) ? skill.getSkillNames() : null; // Check if getSkill() is not null
                         })
                         .filter(Objects::nonNull) // Filter out null skill names
                         .collect(Collectors.toList());
