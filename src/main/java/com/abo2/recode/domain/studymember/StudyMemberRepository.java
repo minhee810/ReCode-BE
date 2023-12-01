@@ -26,7 +26,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
     // 스터디 탈퇴
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM Study_Member sm WHERE sm.user.id = :userId AND sm.studyRoom.id = :studyId", nativeQuery = true)
+    @Query(value = "DELETE FROM Study_Member sm WHERE sm.user_id = :userId AND sm.study_room_id = :studyId", nativeQuery = true)
     void deleteByUserIdAndStudyRoomId(@Param("userId") Long userId, @Param("studyId") Long studyId);
 
      @Transactional

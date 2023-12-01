@@ -2,8 +2,6 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.studymember.StudyMember;
-import com.abo2.recode.domain.studyroom.StudyRoom;
-import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
@@ -17,11 +15,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.TextStyle;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -103,11 +99,14 @@ public class StudyroomController {
     } //studyRoomDetailBrowse()
 
     // 스터디 룸 탈퇴
-    @PostMapping(value = "/v1/study/{study_id}/withdraw/{user_id}")
-    public ResponseEntity<?> withdrawStudy(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long study_room_id) {
+    @PostMapping(value = "/v1/study/{study_id}/withdraw")
+    public ResponseEntity<?> withdrawStudy(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable(value = "study_id") Long study_room_id
+    ) {
         studyService.withdrawStudy(loginUser.getUser().getId(), study_room_id);
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
-    }
+    } //withdrawStudy()
 
     // 스터디 목록 조회
     @GetMapping(value = "/main/list")
@@ -128,7 +127,7 @@ public class StudyroomController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "신청 인원 목록을 성공적으로 조회했습니다.", applicationResDtoList)
                 , HttpStatus.OK);
-    }
+    } //applications()
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
     @GetMapping(value = "/study-groups/{groupId}/applications/{user_id}")
@@ -141,10 +140,10 @@ public class StudyroomController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "신청 인원의 자기소개서를 성공적으로 조회했습니다.", applicationEssayResDto)
                 , HttpStatus.OK);
-    }
+    } //applicationsEssay()
 
 
-    // 스터디룸 멤버 인원 조회 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
+    // 스터디 그룹에서 멤버 목록 불러오기 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
     @Transactional
     @GetMapping(value = "/v1/study/{study_room_id}/memberlist")
     public ResponseEntity<?> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
@@ -182,7 +181,7 @@ public class StudyroomController {
     }//getStudyMemberListRespDtos()
 
 
-    // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
+    //스터디 그룹에서 멤버 강퇴 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
     @DeleteMapping(value = "/v1/{study_room_id}/member/{member_id}")
     public ResponseEntity<?> deleteMember(@AuthenticationPrincipal LoginUser loginUser,
                                           @PathVariable("study_room_id") Long studyRoomId,
@@ -200,6 +199,6 @@ public class StudyroomController {
                 .build();
 
         return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", studyMemberListRespDto), HttpStatus.OK);
-    }
+    } //deleteMember()
 
 }
