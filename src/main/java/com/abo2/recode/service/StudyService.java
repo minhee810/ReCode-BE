@@ -445,6 +445,13 @@ public class StudyService {
 
     }
 
+    // 관리자 - 스터디룸 참가 인원 리스트 조회
+    public List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(Long studyRoomId) {
+
+        return studyMemberRepository.getStudyMembersByRoomIdAsAdmin(studyRoomId);
+
+    } //getStudyMembersByRoomIdAsAdmin()
+
 
     // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
     public StudyMember deleteMember(Long user_id, Long studyRoomId, Long memberId) {

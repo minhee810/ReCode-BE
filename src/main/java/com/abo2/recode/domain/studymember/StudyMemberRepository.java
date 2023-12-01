@@ -73,4 +73,9 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
     StudyResDto.ApplicationEssayResDto applicationsEssay(@Param("study_room_id") Long study_room_id,
                                                          @Param("user_id") Long user_id);
 
+    @Query(
+            name = "StudyMemberAndStatusListRespDto",
+            nativeQuery = true
+    )
+    List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(@Param("study_room_id") Long study_room_id);
 }
