@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 public class QnaReplyDTO {
 
-    private Long id;
+    //private Long id;
     private Long qna_id;
     private String comment;
     private Long user_id;

@@ -30,18 +30,21 @@ public class UserController {
     private final StudyService studyService;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    //회원가입
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserReqDto.JoinReqDto joinReqDto, BindingResult bindingResult) {
         UserRespDto.JoinRespDto joinRespDto = userService.회원가입(joinReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 성공", joinRespDto), HttpStatus.CREATED);
     }
 
+    //관리자 회원 가입
     @PostMapping("/admin-join")
     public ResponseEntity<?> admin_join(@RequestBody @Valid UserReqDto.JoinAdminReqDto joinAdminReqDto, BindingResult bindingResult) {
         UserRespDto.JoinRespDto joinRespDto = userService.admin_join(joinAdminReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "관리자 회원가입 성공", joinRespDto), HttpStatus.CREATED);
     }
 
+    //아이디 찾기
     @PostMapping("/find-username")
     public ResponseEntity<?> findUsername(@RequestBody @Valid UserReqDto.FindUsernameReqDto findUsernameReqDto, BindingResult bindingResult) {
         UserRespDto.FindUsernameRespDto findUsernameRespDto = userService.findUsername(findUsernameReqDto);
@@ -70,6 +73,7 @@ public class UserController {
         }
     }
 
+    // 회원정보 수정
     @PutMapping("/v1/users/{id}")
     public ResponseEntity<?> modifyUserInfo(@AuthenticationPrincipal LoginUser loginUser, @RequestBody @Valid UserReqDto.UpdateUserReqDto updateUserReqDto, BindingResult bindingResult) {
         UserRespDto.UpdateUserRespDto updateUserRespDto = userService.updateUser(loginUser.getUser().getId(), updateUserReqDto);

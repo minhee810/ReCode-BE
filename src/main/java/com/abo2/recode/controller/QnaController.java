@@ -9,10 +9,12 @@ import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReqDTO;
 import com.abo2.recode.dto.qna.QnaResDTO;
+import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class QnaController {
 
     private final QnaService qnaService;
@@ -29,7 +31,7 @@ public class QnaController {
     private final UserRepository userRepository;
 
     //Qna 생성
-    @PostMapping("/qna")
+    @PostMapping("/v1/qna")
     public ResponseEntity<?> postQna(@AuthenticationPrincipal LoginUser loginUser, @RequestBody QnaReqDTO qnaReqDTO) {
 
         try {
@@ -37,10 +39,10 @@ public class QnaController {
 
             qnaService.postQna(qnaReqDTO);
 
-            //슬랙봇 호출
-            String triggerUrl = "https://c1r67w97gd.execute-api.ap-northeast-2.amazonaws.com/default/post-qna";
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.postForEntity(triggerUrl, null, String.class);
+//            //슬랙봇 호출
+//            String triggerUrl = "https://c1r67w97gd.execute-api.ap-northeast-2.amazonaws.com/default/post-qna";
+//            RestTemplate restTemplate = new RestTemplate();
+//            restTemplate.postForEntity(triggerUrl, null, String.class);
 
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 생성 성공", qnaReqDTO), HttpStatus.OK);
 
@@ -50,7 +52,7 @@ public class QnaController {
     }
 
     //Qna 목록 조회
-    @GetMapping("/qna")
+    @GetMapping("/v1/qna")
     public ResponseEntity<?> qnaList(@AuthenticationPrincipal LoginUser loginUser, QnaResDTO qnaResDTO) {
         qnaResDTO.setUser_id(loginUser.getUser().getId());
 
@@ -60,7 +62,7 @@ public class QnaController {
     }
 
     //Qna 단일 조회
-    @GetMapping("/qna/{id}")
+    @GetMapping("/v1/qna/{id}")
     public ResponseEntity<?> qna(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaResDTO qnaResDTO) {
         qnaResDTO.setUser_id(loginUser.getUser().getId());
 
@@ -70,37 +72,50 @@ public class QnaController {
     }
 
     //Qna 수정
-    @PutMapping("/qna/{id}")
+    @PutMapping("/v1/qna/{id}")
     public ResponseEntity<?> qnaModify(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, @RequestBody QnaReqDTO qnaReqDTO) {
+
         qnaReqDTO.setUser_id(loginUser.getUser().getId());
 
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow();
-        Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
+                () -> new CustomApiException("User가 존재하지 않습니다!")
+        );
+        Qna qnaInfo = qnaRepository.findById(id).orElseThrow(
+                () -> new CustomApiException("Qna가 존재하지 않습니다!")
+        );
 
 
-        if (qnaInfo.getUser_id() != user) {
+        if (qnaInfo.getUser_id().getId() != user.getId()) {
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
         }
+        else {
+            qnaService.qnaModify(id, qnaReqDTO);
 
-        qnaService.qnaModify(id, qnaReqDTO);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 수정 성공", qnaReqDTO), HttpStatus.OK);
-    }
+            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 수정 성공", qnaReqDTO), HttpStatus.OK);
+        }
+    } //qnaModify()
 
 
     //Qna 삭제 (관리자 권한)
-    @DeleteMapping("/qna/{id}")
-    public ResponseEntity<?> qnaDelete(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaReqDTO qnaReqDTO) {
-        qnaReqDTO.setUser_id(loginUser.getUser().getId());
+    @Secured(value = "ROLE_ADMIN")
+    @DeleteMapping("/admin/v1/qna/{qna_id}")
+    public ResponseEntity<?> qnaDelete(
+            @PathVariable(value = "qna_id") Long qna_id
+    ) {
 
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow();
-        Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
+        Qna qnaInfo = qnaRepository.findById(qna_id).orElseThrow(
+                () -> new CustomApiException("Qna가 존재하지 않습니다!")
+        );
 
-        if (qnaInfo.getUser_id() == user || user.getRole() == UserEnum.ADMIN) {
-            qnaService.qnaDelete(id);
+        qnaService.qnaDelete(qna_id);
 
-            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", id), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.FORBIDDEN);
+        QnaResDTO qnaResDTO = QnaResDTO.builder()
+                .user_id(qnaInfo.getUser_id().getId())
+                .title(qnaInfo.getTitle())
+                .category(qnaInfo.getCategory())
+                .content(qnaInfo.getContent())
+                .build();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", qnaResDTO), HttpStatus.OK);
     }
 }
