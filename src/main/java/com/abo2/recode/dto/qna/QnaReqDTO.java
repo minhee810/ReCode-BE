@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class QnaReqDTO {
 
-    private Long id;
+    //private Long id;
     private Long user_id;
     private String title;
     private String category;
