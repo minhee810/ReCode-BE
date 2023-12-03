@@ -71,19 +71,22 @@ public class PostService {
 
 
     // 게시글 상세보기
-    public PostRespDto.PostDetailRespDto getPostById(Long post_id) {
+    public PostRespDto.PostDetailRespDto getPostById(Long post_id, Long studyRoomId) {
         Post post = postRepository.findById(post_id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
-
+        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId를 찾을 수 없습니다." + studyRoomId));
 
         return new PostRespDto.PostDetailRespDto(post);
     }
 
 
     //게시글 수정
-    public PostRespDto.PostUpdateRespDto updatePost(Long userId, Long postId, PostReqDto.PostUpdateReqDto postUpdateReqDto) {
+    public PostRespDto.PostUpdateRespDto updatePost(Long userId, Long postId, Long studyRoomId, PostReqDto.PostUpdateReqDto postUpdateReqDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다: " + postId));
+        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId가 존재하지 않습니다." + studyRoomId));
 
         // 게시글 작성자와 현재 사용자가 동일한지 확인
         if (!post.getUser().getId().equals(userId)) {
@@ -101,10 +104,13 @@ public class PostService {
 
 
     // 게시글 삭제
-    public void deletePost(Long userId, Long postId) {
+    public void deletePost(Long userId, Long postId, Long studyRoomId) {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다. " + postId));
+
+        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId가 존재하지 않습니다." + studyRoomId));
 
         // 게시글 작성자와 현재 사용자가 동일한지 확인
         if (!post.getUser().getId().equals(userId)) {

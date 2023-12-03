@@ -20,12 +20,21 @@ public class PostReplyController {
 
 
     // 게시글 댓글 작성
-    @PostMapping("/v1/study/{post_id}/postReply")
-    public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
-        PostRespDto.PostReplyRespDto createdPostReply = postReplyService.createPostReply(loginUser.getUser().getId(), postId, postReplyReqDto);
+    @PostMapping("/v1/study/{study_room_id}/post/{post_id}/postReply")
+    public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("study_room_id") Long studyRoomId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
+        PostRespDto.PostReplyRespDto createdPostReply = postReplyService.createPostReply(loginUser.getUser().getId(), postId, studyRoomId, postReplyReqDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성 완료", createdPostReply), HttpStatus.OK);
     }
+
+    // 게시글 댓글 상세보기
+    @GetMapping("/v1/study/{study_room_id}/post/{post_id}/{postReply_id}")
+    public ResponseEntity<?> DetailPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("study_room_id") Long studyRoomId, @PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId) {
+        PostRespDto.PostReplyRespDto DetailPostReply = postReplyService.getPostReply(loginUser.getUser().getId(), studyRoomId, postId, postReplyId);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 조회 완료", DetailPostReply), HttpStatus.OK);
+    }
+
 
     // 게시글 댓글 수정
     @PutMapping("/v1/study/{post_id}/postReply/{postReply_id}")

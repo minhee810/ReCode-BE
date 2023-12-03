@@ -83,7 +83,7 @@ public class PostRespDto {
         private String content;
         private Integer category;
         private LocalDateTime createdAt;
-        private String nickname;
+        private String nickName;
 
         public PostDetailRespDto(Post post) {
             this.id = post.getId();
@@ -91,7 +91,7 @@ public class PostRespDto {
             this.content = post.getContent();
             this.category = post.getCategory();
             this.createdAt = post.getCreatedAt();
-            this.nickname = post.getUser().getNickname();
+            this.nickName = post.getUser().getNickname();
         }
     }
 

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,29 +57,29 @@ public class PostController {
     }
 
     // 게시글 상세보기
-    @GetMapping("/v1/study/posts/{post_id}")
-    public ResponseEntity<?> getPostById(@PathVariable Long post_id) {
-        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id);
+    @GetMapping("/v1/study/{study_room_id}/post/{post_id}")
+    public ResponseEntity<?> getPostById(@PathVariable Long post_id, @PathVariable("study_room_id") Long studyRoomId) {
+        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id, studyRoomId);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세보기 완료", postDetailRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 수정
-    @PutMapping("/v1/study/posts/{post_id}")
+    @PutMapping("/v1/study/{study_room_id}/post/edit/{post_id}")
     public ResponseEntity<?> updatePost(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long post_id,
+            @PathVariable Long post_id, @PathVariable("study_room_id") Long studyRoomId,
             @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
     ) {
-        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), post_id, postUpdateReqDto);
+        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), post_id, studyRoomId, postUpdateReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 수정되었습니다.", postUpdateRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 삭제
-    @DeleteMapping("/v1/study/posts/{post_id}")
-    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId) {
-        postService.deletePost(loginUser.getUser().getId(), postId);
+    @DeleteMapping("/v1/study/{study_room_id}/post/{post_id}")
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("study_room_id") Long studyRoomId) {
+        postService.deletePost(loginUser.getUser().getId(), postId, studyRoomId);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 삭제되었습니다.", null), HttpStatus.OK);
     }
 

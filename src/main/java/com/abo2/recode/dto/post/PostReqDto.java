@@ -46,7 +46,7 @@ public class PostReqDto {
         @NotEmpty
         private Integer category;
 
-        private User nickname;
+        private User nickName;
 
     }
 
