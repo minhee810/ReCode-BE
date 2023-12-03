@@ -99,21 +99,13 @@ public class AdminController {
     @PutMapping(value="/admin/v1/study-member/{study_room_id}/{user_id}")
     public ResponseEntity<ResponseDto> memberRoleChange(
             @RequestBody AdminReqDto.MemberRoleReqDto memberRoleReqDto,
-            @AuthenticationPrincipal LoginUser loginUser
+            @PathVariable(name = "study_room_id") Long study_room_id,
+            @PathVariable(name = "user_id") Long user_id
     ){
-
-        //유저가 관리자가 맞는지 검증
-        if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {
-            logger.error("관리자가 아님!!!!");
-            return (ResponseEntity<ResponseDto>) new CustomExceptionHandler()
-                    .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
-        }
 
             /* MemberRoleReqDto
             {
-            "user_id" : 1,
-            "role": "group_leader" //or "group_member",
-            "study_id" : 1
+            "role": "group_leader" //or "group_member"
         }*/
 
 
@@ -121,7 +113,8 @@ public class AdminController {
         //-> 알람 기능 완성 시 고민하기
 
         //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
-        AdminResDto.MemberRoleResDto memberRoleResDto = adminService.memberRoleChange(memberRoleReqDto);
+        AdminResDto.MemberRoleResDto memberRoleResDto
+                = adminService.memberRoleChange(memberRoleReqDto,study_room_id,user_id);
 
         return new ResponseEntity<>(new ResponseDto<>(1,"사용자 권한이 성공적으로 변경되었습니다.",memberRoleResDto),
                 HttpStatus.OK);
