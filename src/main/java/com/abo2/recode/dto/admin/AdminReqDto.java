@@ -19,12 +19,6 @@ public class AdminReqDto {
         }*/
 
         @NotEmpty
-        private Long user_id;
-
-        @NotEmpty
-        private Long study_room_id;
-
-        @NotEmpty
         private String role;
 
     }
