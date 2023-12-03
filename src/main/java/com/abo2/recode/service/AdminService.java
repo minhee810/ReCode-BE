@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,9 +94,7 @@ public class AdminService {
 
     /*    MemberRoleReqDto
             {
-            "user_id" : 1,
-            "role": "group_leader", //or "group_member"
-            "study_id" : 1
+            "role": "group_leader" //or "group_member"
         }
     }*/
 
@@ -104,26 +103,31 @@ public class AdminService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        Long created_by = studyRoomRepository.findCreated_byBystudy_id(study_room_id);
+        try{
+            Long created_by = studyRoomRepository.findCreated_byBystudy_id(study_room_id);
+            logger.info(created_by.toString());
 
-        logger.info(created_by.toString());
+            if((memberRoleReqDto.getRole().equals("group_leader"))
+                    && !(user_id == created_by)){
+                //조원을 조장으로 승격. studyRoom의 created_by를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
 
-        if((memberRoleReqDto.getRole().equals("group_leader"))
-                && !(user_id == created_by)){
-            //조원을 조장으로 승격. studyRoom의 created_by를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
+                //StudyRoom의 created_by를 업데이트 해야함.
+                studyRoomRepository.memberRolePromote(study_room_id,user_id);
 
-            //StudyRoom의 created_by를 업데이트 해야함.
+                memberRoleResDto.setNewRole("group_leader");
+            }
+            else if (memberRoleReqDto.getRole().equals("group_member")) { //조장을 조원으로 강등
+                //StudyRoom의 created_by를 null로 업데이트 해야함.
+                studyRoomRepository.memberRoleDemote(study_room_id);
+
+                memberRoleResDto.setNewRole("group_member");
+            }
+
+
+        }catch (NullPointerException e){
+            //조장이 공석인 상황 -> 무조건 해당 유저를 조장으로 승격
             studyRoomRepository.memberRolePromote(study_room_id,user_id);
-
-            memberRoleResDto.setNewRole("group_leader");
         }
-        else if (memberRoleReqDto.getRole().equals("group_member")) { //조장을 조원으로 강등
-            //StudyRoom의 created_by를 null로 업데이트 해야함.
-            studyRoomRepository.memberRoleDemote(study_room_id);
-
-            memberRoleResDto.setNewRole("group_member");
-        }
-
 
         //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
 
