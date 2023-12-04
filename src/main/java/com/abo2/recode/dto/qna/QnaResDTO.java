@@ -9,14 +9,14 @@ import lombok.Setter;
 public class QnaResDTO {
 
     //private Long id;
-    private Long user_id;
+    private Long userId;
     private String title;
     private String category;
     private String content;
 
     @Builder
-    public QnaResDTO(Long user_id, String title, String category, String content) {
-        this.user_id = user_id;
+    public QnaResDTO(Long userId, String title, String category, String content) {
+        this.userId = userId;
         this.title = title;
         this.category = category;
         this.content = content;

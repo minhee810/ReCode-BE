@@ -88,7 +88,7 @@ public class AdminService {
     @Transactional
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급
     public AdminResDto.MemberRoleResDto memberRoleChange(AdminReqDto.MemberRoleReqDto memberRoleReqDto,
-                                                         Long study_room_id,Long user_id) {
+                                                         Long studyId,Long userId) {
         //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
         //-> 알람 기능까지 구현해야 고려 가능한 기능이므로 일단 제외하고 구현
 
@@ -99,26 +99,26 @@ public class AdminService {
     }*/
 
         AdminResDto.MemberRoleResDto memberRoleResDto = AdminResDto.MemberRoleResDto.builder()
-                .userId(user_id)
+                .userId(userId)
                 .updatedAt(LocalDateTime.now())
                 .build();
 
         try{
-            Long created_by = studyRoomRepository.findCreated_byBystudy_id(study_room_id);
-            logger.info(created_by.toString());
+            Long createdBy = studyRoomRepository.findcreatedByBystudyId(studyId);
+            logger.info(createdBy.toString());
 
             if((memberRoleReqDto.getRole().equals("group_leader"))
-                    && !(user_id == created_by)){
-                //조원을 조장으로 승격. studyRoom의 created_by를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
+                    && !(userId == createdBy)){
+                //조원을 조장으로 승격. studyRoom의 createdBy를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
 
-                //StudyRoom의 created_by를 업데이트 해야함.
-                studyRoomRepository.memberRolePromote(study_room_id,user_id);
+                //StudyRoom의 createdBy를 업데이트 해야함.
+                studyRoomRepository.memberRolePromote(studyId,userId);
 
                 memberRoleResDto.setNewRole("group_leader");
             }
             else if (memberRoleReqDto.getRole().equals("group_member")) { //조장을 조원으로 강등
-                //StudyRoom의 created_by를 null로 업데이트 해야함.
-                studyRoomRepository.memberRoleDemote(study_room_id);
+                //StudyRoom의 createdBy를 null로 업데이트 해야함.
+                studyRoomRepository.memberRoleDemote(studyId);
 
                 memberRoleResDto.setNewRole("group_member");
             }
@@ -126,7 +126,8 @@ public class AdminService {
 
         }catch (NullPointerException e){
             //조장이 공석인 상황 -> 무조건 해당 유저를 조장으로 승격
-            studyRoomRepository.memberRolePromote(study_room_id,user_id);
+            studyRoomRepository.memberRolePromote(studyId,userId);
+            memberRoleResDto.setNewRole("group_leader");
         }
 
         //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.

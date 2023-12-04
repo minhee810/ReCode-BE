@@ -19,14 +19,14 @@ import java.util.Set;
 public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
 
 
-    // user_id,study_id를 기반으로 먼저 유저가 이미 가입했거나 가입한 상태인지 체크
+    // userId,studyId를 기반으로 먼저 유저가 이미 가입했거나 가입한 상태인지 체크
     @Query(value = "SELECT study_member_id " +
-            "FROM Study_Member WHERE study_room_id=:study_room_id AND user_id=:user_id",nativeQuery = true)
-    Long findIdByuser_idAndStudy_id(@Param(value = "study_room_id")Long study_room_id,
-                                    @Param(value = "user_id")Long user_id);
+            "FROM Study_Member WHERE study_room_id=:studyId AND user_id=:userId",nativeQuery = true)
+    Long findIdByuserIdAndstudyId(@Param(value = "studyId")Long studyId,
+                                    @Param(value = "userId")Long userId);
 
-    @Query(value = "SELECT created_by FROM Study_Room s WHERE s.study_room_id=:study_room_id",nativeQuery = true)
-    Long findCreated_byBystudy_id(@Param("study_room_id") Long study_room_id);
+    @Query(value = "SELECT created_by FROM Study_Room s WHERE s.study_room_id=:studyId",nativeQuery = true)
+    Long findcreatedByBystudyId(@Param("studyId") Long studyId);
 
     @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master LEFT JOIN FETCH sr.studySkills WHERE sr.id = :id")
     Optional<StudyRoom> findWithMasterAndSkillsById(@Param("id") Long id);
@@ -39,12 +39,12 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
     boolean existsByMaster(@Param("master") User master);
 
     @Modifying
-    @Query(value = "UPDATE Study_Room s SET s.created_by = :user_id WHERE s.study_room_id = :study_room_id",nativeQuery = true)
-    void memberRolePromote(@Param("study_room_id") Long study_room_id, @Param("user_id") Long user_id);
+    @Query(value = "UPDATE Study_Room s SET s.created_by = :userId WHERE s.study_room_id = :studyId",nativeQuery = true)
+    void memberRolePromote(@Param("studyId") Long studyId, @Param("userId") Long userId);
 
     @Modifying
-    @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :study_room_id",nativeQuery = true)
-    void memberRoleDemote(@Param("study_room_id") Long study_room_id);
+    @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :studyId",nativeQuery = true)
+    void memberRoleDemote(@Param("studyId") Long studyId);
 
  /*   @Modifying
     @Query(value = "UPDATE Study_Room s " +
@@ -58,7 +58,7 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom,Long> {
             "s.maxNum=:#{#dto.maxNum}," +
             "s.createdAt=:#{#dto.createdAt}," +
             "s.updatedAt=:#{#dto.updatedAt} " +
-            "WHERE s.study_room_id=:#{#dto.study_id} AND s.created_by=:#{#dto.userId};",
+            "WHERE s.studyId=:#{#dto.studyId} AND s.created_by=:#{#dto.userId};",
             nativeQuery = true)
     void modifyRoom(@Param("dto") StudyReqDto.StudyModifyReqDto dto
             ,@Param("start_time") LocalTime start_time

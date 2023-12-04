@@ -29,7 +29,7 @@ public class QuizService {
     private final StudyRoomRepository studyRoomRepository;
 
     @Transactional
-    public QuizRespDto.QuizWriteRespDto writeQuiz(Long study_room_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto){
+    public QuizRespDto.QuizWriteRespDto writeQuiz(Long studyId, QuizReqDto.QuizWriteReqDto quizWriteReqDto){
         // 1. user 아이디 조회
         User user = userRepository.findById(quizWriteReqDto.getUserId()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -52,9 +52,9 @@ public class QuizService {
     }
 
     @Transactional
-    public List<QuizRespDto.QuizListRespDto> quizList(Long study_room_id) {
+    public List<QuizRespDto.QuizListRespDto> quizList(Long studyId) {
 
-        List<Quiz> quizList = quizRepository.findQuizByStudyRoomId(study_room_id);
+        List<Quiz> quizList = quizRepository.findQuizByStudyRoomId(studyId);
 
         if (quizList.isEmpty()) {
             throw new CustomApiException("스터디에 등록된 퀴즈가 없습니다. 등록해주세요!");
@@ -66,10 +66,10 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizRespDto.QuizListRespDto quizModify(Long userId, Long study_room_id, Long quiz_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
+    public QuizRespDto.QuizListRespDto quizModify(Long userId, Long studyId, Long quiz_id, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
-        StudyRoom studyRoom = studyRoomRepository.findById(study_room_id).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
 
         // 퀴즈 조회 및 작성자 확인
         Quiz quiz = quizRepository.findById(quiz_id).orElseThrow(() -> new CustomApiException("퀴즈가 존재하지 않습니다."));
@@ -88,10 +88,10 @@ public class QuizService {
     }
 
     @Transactional
-    public void quizDelete(Long userId, Long study_room_id, Long quizId){
+    public void quizDelete(Long userId, Long studyId, Long quizId){
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
-        StudyRoom studyRoom = studyRoomRepository.findById(study_room_id).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
 
         // 퀴즈 조회
         Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new CustomApiException("해당 퀴즈를 찾을 수 없습니다."));
@@ -108,10 +108,10 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizRespDto.QuizDetailRespDto quizDetail(Long userId, Long study_room_id, Long quizId){
+    public QuizRespDto.QuizDetailRespDto quizDetail(Long userId, Long studyId, Long quizId){
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
-        StudyRoom studyRoom = studyRoomRepository.findById(study_room_id).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
 
         // 퀴즈 조회
         Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new CustomApiException("해당 퀴즈를 찾을 수 없습니다."));
@@ -120,9 +120,9 @@ public class QuizService {
     }
 
     @Transactional
-    public List<QuizRespDto.QuizListRespDto> searchList(Long study_room_id, String keyword){
+    public List<QuizRespDto.QuizListRespDto> searchList(Long studyId, String keyword){
 
-        List<Quiz> quizzes = quizRepository.findQuizByKeyword(study_room_id, keyword);
+        List<Quiz> quizzes = quizRepository.findQuizByKeyword(studyId, keyword);
 
         if(quizzes.isEmpty()) {
             throw new CustomApiException("해당 퀴즈가 존재하지 않습니다.");

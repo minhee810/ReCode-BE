@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Set;
 
 public interface AttendanceDayRepository extends JpaRepository<AttendanceDay,Long> {
-    Set<AttendanceDay> findByStudyRoomId(Long study_room_id);
+    Set<AttendanceDay> findByStudyRoomId(Long studyId);
 }

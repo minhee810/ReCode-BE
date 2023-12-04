@@ -23,8 +23,8 @@ public class PostReply {
 //    Table Post_reply {
 //        id integer [primary key]
 //        content varchar
-//        post_id integer
-//        user_id integer
+//        postId integer
+//        userId integer
 //        createdAt timestamp
 //        updatedAt timestamp
 //    }

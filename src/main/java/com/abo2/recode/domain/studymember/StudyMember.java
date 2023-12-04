@@ -17,7 +17,7 @@ import javax.persistence.*;
                 "FROM Study_Member as sm " +
                 "INNER JOIN Users as u " +
                 "ON u.user_id = sm.user_id " +
-                "WHERE sm.status = 0 AND sm.study_room_id = :study_room_id AND u.user_id = :user_id",
+                "WHERE sm.status = 0 AND sm.study_room_id = :studyId AND u.user_id = :userId",
         resultSetMapping = "ApplicationEssayResDtoMapping"
 )
 @SqlResultSetMapping(
@@ -34,10 +34,10 @@ import javax.persistence.*;
 
 @NamedNativeQuery(
         name = "getApplicationResDto",
-        query = "SELECT sm.user_id,u.username,sm.status,u.email " +
+        query = "SELECT sm.user_id as userId,u.username,sm.status,u.email " +
                 "FROM Study_Member as sm " +
                 "LEFT OUTER JOIN Users as u ON sm.user_id = u.user_id " +
-                "WHERE sm.study_room_id=:study_room_id AND sm.status = 0",
+                "WHERE sm.study_room_id=:studyId AND sm.status = 0",
         resultSetMapping = "ApplicationResDtoMapping"
 )
 
@@ -46,7 +46,7 @@ import javax.persistence.*;
         classes = @ConstructorResult(
                 targetClass = StudyResDto.ApplicationResDto.class,
                 columns = {
-                        @ColumnResult(name = "user_id", type = Long.class),
+                        @ColumnResult(name = "userId", type = Long.class),
                         @ColumnResult(name = "username", type = String.class),
                         @ColumnResult(name = "status", type = Integer.class),
                         @ColumnResult(name = "email", type = String.class)
@@ -56,11 +56,11 @@ import javax.persistence.*;
 
 @NamedNativeQuery(
         name = "StudyMemberAndStatusListRespDto",
-        query = "SELECT sm.study_room_id,sm.user_id,u.username,sr.created_by " +
+        query = "SELECT sm.study_room_id as studyId,sm.user_id as userId,u.username,sr.created_by as createdBy " +
                 "FROM Study_Member as sm " +
                 "INNER JOIN Users as u ON sm.user_id = u.user_id " +
                 "INNER JOIN Study_Room as sr ON sm.study_room_id = sr.study_room_id "+
-                "WHERE sm.study_room_id=:study_room_id AND sm.status = 1",
+                "WHERE sm.study_room_id=:studyId AND sm.status = 1",
         resultSetMapping = "StudyMemberAndStatusListRespDtoMapping"
 )
 
@@ -69,10 +69,10 @@ import javax.persistence.*;
         classes = @ConstructorResult(
                 targetClass = StudyResDto.StudyMemberAndStatusListRespDto.class,
                 columns = {
-                        @ColumnResult(name = "user_id", type = Long.class),
-                        @ColumnResult(name = "study_room_id", type = Long.class),
+                        @ColumnResult(name = "userId", type = Long.class),
+                        @ColumnResult(name = "studyId", type = Long.class),
                         @ColumnResult(name = "username", type = String.class),
-                        @ColumnResult(name = "created_by", type = Integer.class)
+                        @ColumnResult(name = "createdBy", type = Integer.class)
                 }
         )
 )

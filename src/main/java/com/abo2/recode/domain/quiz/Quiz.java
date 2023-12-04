@@ -21,8 +21,8 @@ public class Quiz {
 
 //    Table Quiz{
 //        quiz_id integer [primary key]
-//        user_id integer
-//        study_id integer
+//        userId integer
+//        studyId integer
 //        title varchar
 //        quiz_link varchar
 //        difficulty integer

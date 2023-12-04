@@ -51,15 +51,15 @@ public class StudyroomController {
     }//createRoom()
 
     //StudyRoom 모집 글 수정 = 스터디 그룹 정보 수정
-    @PutMapping(value = "/v1/study/{study_id}/modify")
+    @PutMapping(value = "/v1/study/{studyId}/modify")
     public ResponseEntity<?> modifyRoom(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable(name = "study_id") Long study_id,
+            @PathVariable(name = "studyId") Long studyId,
             @RequestBody StudyReqDto.StudyModifyReqDto studyModifyReqDto
     ){
         // 수정할 스터디 룸 정보,조장 아이디 정보 입력
-        studyModifyReqDto.setStudy_id(study_id);
-        studyModifyReqDto.setCreated_by(loginUser.getUser().getId());
+        studyModifyReqDto.setStudyId(studyId);
+        studyModifyReqDto.setCreatedBy(loginUser.getUser().getId());
 
         //1. studyModifyReqDto를 DB에 넣기 Service에서 처리
         StudyResDto.StudyCreateRespDto studyCreateRespDto = studyService.modifyRoom(studyModifyReqDto);
@@ -69,17 +69,17 @@ public class StudyroomController {
     }//modifyRoom()
 
     //study 가입 신청
-    @PostMapping(value = "/v1/study/{study_id}/apply")
+    @PostMapping(value = "/v1/study/{studyId}/apply")
     public ResponseEntity<ResponseDto> studyApply(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long study_id
+            @PathVariable Long studyId
     ) {
-        //"study_id": 1, // 사용자가 신청하고자 하는 스터디의 ID
-        // "user_id": 42  // 신청하는 사용자의 ID
+        //"studyId": 1, // 사용자가 신청하고자 하는 스터디의 ID
+        // "userId": 42  // 신청하는 사용자의 ID
 
         //1. study_member에 status = 0으로 insert한다
         StudyReqDto.StudyApplyReqDto studyApplyReqDto =
-                new StudyReqDto.StudyApplyReqDto(study_id, loginUser.getUser().getId());
+                new StudyReqDto.StudyApplyReqDto(studyId, loginUser.getUser().getId());
 
         StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto = studyService.studyApply(studyApplyReqDto);
 
@@ -88,23 +88,23 @@ public class StudyroomController {
     }//studyApply()
 
     //study 소개 글 조회
-    @GetMapping(value = "/study/{study_room_id}")
-    public ResponseEntity<?> studyRoomDetailBrowse(@PathVariable Long study_room_id) {
+    @GetMapping(value = "/study/{studyId}")
+    public ResponseEntity<?> studyRoomDetailBrowse(@PathVariable Long studyId) {
         // 1. 요청에 대한 Entity 리턴
         StudyResDto.StudyRoomDetailResDto studyRoomDetailResDto =
-                studyService.studyRoomDetailBrowse(study_room_id);
+                studyService.studyRoomDetailBrowse(studyId);
 
         //2. 성공 return
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 상세 정보입니다.", studyRoomDetailResDto), HttpStatus.OK);
     } //studyRoomDetailBrowse()
 
     // 스터디 룸 탈퇴
-    @PostMapping(value = "/v1/study/{study_id}/withdraw")
+    @PostMapping(value = "/v1/study/{studyId}/withdraw")
     public ResponseEntity<?> withdrawStudy(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable(value = "study_id") Long study_room_id
+            @PathVariable(value = "studyId") Long studyId
     ) {
-        studyService.withdrawStudy(loginUser.getUser().getId(), study_room_id);
+        studyService.withdrawStudy(loginUser.getUser().getId(), studyId);
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 탈퇴를 성공하였습니다.", null), HttpStatus.OK);
     } //withdrawStudy()
 
@@ -130,13 +130,13 @@ public class StudyroomController {
     } //applications()
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
-    @GetMapping(value = "/study-groups/{groupId}/applications/{user_id}")
+    @GetMapping(value = "/study-groups/{groupId}/applications/{userId}")
     public ResponseEntity<?> applicationsEssay(
             @PathVariable(name = "groupId") Long groupId,
-            @PathVariable(name = "user_id") Long user_Id
+            @PathVariable(name = "userId") Long userId
     ) {
         StudyResDto.ApplicationEssayResDto applicationEssayResDto =
-                studyService.applicationsEssay(groupId, user_Id);
+                studyService.applicationsEssay(groupId, userId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "신청 인원의 자기소개서를 성공적으로 조회했습니다.", applicationEssayResDto)
                 , HttpStatus.OK);
@@ -144,8 +144,8 @@ public class StudyroomController {
 
 
     // 스터디 그룹에서 멤버 목록 불러오기 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
-    @GetMapping(value = "/v1/study/{study_room_id}/memberlist")
-    public ResponseEntity<?> getsStudyMembers(@PathVariable("study_room_id") Long studyRoomId) {
+    @GetMapping(value = "/v1/study/{studyId}/memberlist")
+    public ResponseEntity<?> getsStudyMembers(@PathVariable("studyId") Long studyRoomId) {
         List<StudyMember> studyMembers = studyService.getStudyMembersByRoomId(studyRoomId);
 
         logger.info(studyMembers.toString());
@@ -168,7 +168,7 @@ public class StudyroomController {
             StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                     = StudyResDto.StudyMemberListRespDto.builder()
                     .id(studyMember.getId())
-                    .study_room_id(studyMember.getStudyRoom().getId())
+                    .studyRoomId(studyMember.getStudyRoom().getId())
                     .nickname(studyMember.getUser().getNickname())
                     .status(studyMember.getStatus())
                     .build();
@@ -181,9 +181,9 @@ public class StudyroomController {
 
 
     //스터디 그룹에서 멤버 강퇴 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
-    @DeleteMapping(value = "/v1/{study_room_id}/member/{member_id}")
+    @DeleteMapping(value = "/v1/{studyId}/member/{member_id}")
     public ResponseEntity<?> deleteMember(@AuthenticationPrincipal LoginUser loginUser,
-                                          @PathVariable("study_room_id") Long studyRoomId,
+                                          @PathVariable("studyId") Long studyRoomId,
                                           @PathVariable("member_id") Long memberId) {
 
         StudyMember studyMember
@@ -192,7 +192,7 @@ public class StudyroomController {
         StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                 = StudyResDto.StudyMemberListRespDto.builder()
                 .id(studyMember.getId())
-                .study_room_id(studyMember.getStudyRoom().getId())
+                .studyRoomId(studyMember.getStudyRoom().getId())
                 .nickname(studyMember.getUser().getNickname())
                 .status(studyMember.getStatus())
                 .build();

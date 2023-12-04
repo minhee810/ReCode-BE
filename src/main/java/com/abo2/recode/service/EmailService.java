@@ -45,7 +45,7 @@ public class EmailService {
         javaMailSender.send(mimeMessage);
     }
 
-    public void sendApprovedEmail(Long study_id, Long user_id, User user) throws MessagingException {
+    public void sendApprovedEmail(Long studyId, Long userId, User user) throws MessagingException {
         String url = "http://localhost:3000/login";
 
         String msgg = "<div style='margin:20px;'>";
@@ -72,7 +72,7 @@ public class EmailService {
         javaMailSender.send(mimeMessage);
     }
 
-    public void sendRejectedEmail(Long study_id, Long user_id, User user) throws MessagingException {
+    public void sendRejectedEmail(Long studyId, Long userId, User user) throws MessagingException {
         String url = "http://localhost:3000/login";
 
         String msgg = "<div style='margin:20px;'>";

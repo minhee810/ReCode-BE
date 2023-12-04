@@ -143,11 +143,11 @@ public class PostRespDto {
 //        private Long Id; //스터디 룸 member 일련번호
 //
 //        @ManyToOne
-//        @JoinColumn(name = "study_room_id")
+//        @JoinColumn(name = "studyId")
 //        private StudyRoom studyRoom;
 //
 //        @ManyToOne
-//        @JoinColumn(name = "user_id")
+//        @JoinColumn(name = "userId")
 //        private User user;
 //
 //        @Column(nullable = false,length = 50)

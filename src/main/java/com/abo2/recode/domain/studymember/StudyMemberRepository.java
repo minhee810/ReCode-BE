@@ -36,17 +36,17 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
 
      // 사용자가 스터디 룸에 참여 중인지 여부 확인
     @Query(
-            value = "SELECT * FROM Study_Member as sm WHERE sm.user_id=:user_id AND sm.study_room_id=:study_id",
+            value = "SELECT * FROM Study_Member as sm WHERE sm.user_id=:userId AND sm.study_room_id=:studyId",
             nativeQuery = true
     )
-     Optional<StudyMember> findByUserAndStudyRoom(@Param(value = "user_id") Long user_id,
-                                                  @Param(value = "study_id") Long study_id);
+     Optional<StudyMember> findByUserAndStudyRoom(@Param(value = "userId") Long userId,
+                                                  @Param(value = "studyId") Long studyId);
     // 스터디룸 참가 인원 리스트 조회
     @Query(
-            value = "SELECT * FROM Study_Member as sm WHERE sm.status = 1 AND sm.study_room_id=:study_id",
+            value = "SELECT * FROM Study_Member as sm WHERE sm.status = 1 AND sm.study_room_id=:studyId",
             nativeQuery = true
     )
-    List<StudyMember> findByStudyRoomId(@Param(value = "study_id") Long studyRoomId);
+    List<StudyMember> findByStudyRoomId(@Param(value = "studyId") Long studyRoomId);
 
     @Modifying
     @Query(value = "UPDATE study_member as sm SET sm.status =:status WHERE sm.study_room_id=:studyId" +
@@ -63,19 +63,19 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember,Long> {
            name="getApplicationResDto",
            nativeQuery = true
    )
-    List<StudyResDto.ApplicationResDto> applications(@Param("study_room_id") Long study_room_id);
+    List<StudyResDto.ApplicationResDto> applications(@Param("studyId") Long studyId);
 
 
     @Query(
             name = "getApplicationEssayResDto",
             nativeQuery = true
     )
-    StudyResDto.ApplicationEssayResDto applicationsEssay(@Param("study_room_id") Long study_room_id,
-                                                         @Param("user_id") Long user_id);
+    StudyResDto.ApplicationEssayResDto applicationsEssay(@Param("studyId") Long studyId,
+                                                         @Param("userId") Long userId);
 
     @Query(
             name = "StudyMemberAndStatusListRespDto",
             nativeQuery = true
     )
-    List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(@Param("study_room_id") Long study_room_id);
+    List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(@Param("studyId") Long studyId);
 }

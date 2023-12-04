@@ -14,10 +14,10 @@ public class AdminResDto {
     public static class StudyDeleteResponseDto{
 
         @NotEmpty
-        private Long study_id;
+        private Long studyId;
 
-        public StudyDeleteResponseDto(Long study_id) {
-            this.study_id = study_id;
+        public StudyDeleteResponseDto(Long studyId) {
+            this.studyId = studyId;
         }
     }//class StudyDeleteResponseDto
 

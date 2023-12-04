@@ -71,9 +71,9 @@ public class PostService {
 
 
     // 게시글 상세보기
-    public PostRespDto.PostDetailRespDto getPostById(Long post_id) {
-        Post post = postRepository.findById(post_id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + post_id));
+    public PostRespDto.PostDetailRespDto getPostById(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + postId));
 
 
         return new PostRespDto.PostDetailRespDto(post);
