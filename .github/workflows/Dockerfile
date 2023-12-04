@@ -8,4 +8,4 @@ WORKDIR /recode-be
 COPY --from=builder /build/build/libs/*.jar .
 
 EXPOSE 8080
-CMD ["java", "-jar", "recode-0.0.1-SNAPSHOT.jar",  "--spring.config.location=file:/recode-be/src/main/resources/application.properties,file:/recode-be/src/main/resources/email.properties"] 
+CMD ["java", "-jar", "recode-0.0.1-SNAPSHOT.jar",  "--spring.config.location=file:./recode-be/src/main/resources"] 
