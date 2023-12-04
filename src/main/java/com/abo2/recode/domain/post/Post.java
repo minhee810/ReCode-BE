@@ -3,18 +3,18 @@ package com.abo2.recode.domain.post;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Post {
@@ -38,7 +38,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @Column
     private Integer category;
 
     @CreatedDate
@@ -49,6 +49,10 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostReply> postReplies;
+
+
     @Builder
     public Post(String title, String content, StudyRoom studyRoom, User user, Integer category) {
         this.title = title;
@@ -57,4 +61,14 @@ public class Post {
         this.user = user;
         this.category = category;
     }
+
+    public void PostWrite(String title, String content, StudyRoom studyRoom, User user, Integer category) {
+        this.title = title;
+        this.content = content;
+        this.studyRoom = studyRoom;
+        this.user = user;
+        this.category = category;
+    }
+
+
 }

@@ -15,7 +15,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
-    public static class StudyCreateReqDto{
+    public static class StudyCreateReqDto {
 
         // Study_Room
         @NotEmpty
@@ -31,10 +31,10 @@ public class StudyReqDto {
         private String description;
 
         @NotEmpty
-        private String startTime; //스터디 출석 인정 시작 시간 "monday 12:00"
+        private String startTime; //스터디 출석 인정 시작 시간 "12:00"
 
         @NotEmpty
-        private String endTime; //스터디 출석 인정 끝 시간 "monday 12:10"
+        private String endTime; //스터디 출석 인정 끝 시간 "12:10"
 
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
@@ -63,30 +63,75 @@ public class StudyReqDto {
 
     @Getter
     @Setter
-    public static class StudyApplyReqDto{
-        //"study_id": 1, // 사용자가 신청하고자 하는 스터디의 ID
-        // "user_id": 42  // 신청하는 사용자의 ID
+    public static class StudyModifyReqDto {
 
         @NotEmpty
-        Long study_id;
+        private Long createdBy;
 
         @NotEmpty
-        Long user_id;
+        private Long studyId;
+
+        // Study_Room
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String studyName;
+
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String title;
+
+        @NotEmpty
+        @Size(min = 1, max = 300)
+        private String description;
+
+        @NotEmpty
+        private String startTime; //스터디 출석 인정 시작 시간 "12:00"
+
+        @NotEmpty
+        private String endTime; //스터디 출석 인정 끝 시간 "12:10"
+
+        @NotEmpty
+        private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
+
+        @NotEmpty
+        private LocalDate startDate;
+
+        @NotEmpty
+        private LocalDate endDate;
+
+        @NotEmpty
+        private Integer maxNum;
+
+        @NotEmpty
+        private LocalDateTime updatedAt;
+        //======================================
+        // skill 테이블의 스킬들,모집분야
+        private String[] skills;
+    }
+
+    @Getter
+    @Setter
+    public static class StudyApplyReqDto {
+        //"studyId": 1, // 사용자가 신청하고자 하는 스터디의 ID
+        // "userId": 42  // 신청하는 사용자의 ID
+
+        @NotEmpty
+        Long studyId;
+
+        @NotEmpty
+        Long userId;
 
         @Builder
-        public StudyApplyReqDto(Long study_id, Long user_id) {
-            this.study_id = study_id;
-            this.user_id = user_id;
+        public StudyApplyReqDto(Long studyId, Long userId) {
+            this.studyId = studyId;
+            this.userId = userId;
         }
     }
 
 
     @Getter
     @Setter
-    public static class StudyMembershipReqDto{
-     /*   {
-            "status" : "approved" //"Rejected"
-        }*/
+    public static class StudyMembershipReqDto {
 
         @NotEmpty
         @Size(min = 1, max = 50)
@@ -97,6 +142,7 @@ public class StudyReqDto {
             this.status = status;
         }
 
-        public StudyMembershipReqDto() {}
+        public StudyMembershipReqDto() {
+        }
     }
 }

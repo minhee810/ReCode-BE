@@ -24,6 +24,7 @@ public class UserRespDto {
             this.id = user.getId();
             this.role = String.valueOf(user.getRole());
             this.username = user.getUsername();
+            this.nickname = user.getNickname();
             this.createdAt = CustomDateUtil.toStringFormat(user.getCreatedAt());
             this.nickname = user.getNickname();
         }

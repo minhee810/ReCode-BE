@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class QuizRespDto {
 
@@ -17,8 +16,8 @@ public class QuizRespDto {
         private Integer difficulty;
         private String quiz_link;
         private String nickname;
-        private LocalDate created_At;
-        private LocalDate updated_At;
+        private LocalDate createdAt;
+        private LocalDate updatedAt;
 
 
         public QuizWriteRespDto(Quiz quiz) {
@@ -27,8 +26,8 @@ public class QuizRespDto {
             this.difficulty = quiz.getDifficulty();
             this.quiz_link = quiz.getQuiz_link();
             this.nickname = quiz.getUser().getNickname();
-            this.created_At = quiz.getCreatedAt();
-            this.updated_At = quiz.getUpdatedAt();
+            this.createdAt = quiz.getCreatedAt();
+            this.updatedAt = quiz.getUpdatedAt();
         }
     }
 
@@ -40,8 +39,8 @@ public class QuizRespDto {
         private Integer difficulty;
         private String quiz_link;
         private String nickname;
-        private Long study_room_id;
-        private LocalDate updated_At;
+        private Long studyId;
+        private LocalDate updatedAt;
 
         public QuizListRespDto(Quiz quiz) {
             this.id = quiz.getId();
@@ -49,8 +48,8 @@ public class QuizRespDto {
             this.difficulty = quiz.getDifficulty();
             this.quiz_link = quiz.getQuiz_link();
             this.nickname = quiz.getUser().getNickname();
-            this.study_room_id = quiz.getStudyRoom().getId();
-            this.updated_At = quiz.getUpdatedAt();
+            this.studyId = quiz.getStudyRoom().getId();
+            this.updatedAt = quiz.getUpdatedAt();
         }
     }
 

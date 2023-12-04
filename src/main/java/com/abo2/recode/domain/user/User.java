@@ -1,9 +1,5 @@
 package com.abo2.recode.domain.user;
 
-import com.abo2.recode.domain.post.Post;
-import com.abo2.recode.domain.quiz.Quiz;
-import com.abo2.recode.domain.studyroom.Attendance;
-import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -29,7 +23,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(name ="user_id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -81,12 +75,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public void updateUser(String nickname, String email){
+    public void updateUser(String nickname, String email) {
         this.email = email;
         this.nickname = nickname;
     }
 
-    public void writeEssay(String essay){
+    public void writeEssay(String essay) {
         this.essay = essay;
     }
 

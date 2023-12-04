@@ -11,10 +11,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -27,38 +24,38 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyRoomDetailResDto{
+    public static class StudyRoomDetailResDto {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long study_room_id; //스터디 그룹 일련번호
+        private Long studyRoomId; //스터디 그룹 일련번호
 
-        @Column(unique = true,nullable = false,length = 50)
-        private String study_name; //스터디 그룹 네임
+        @Column(unique = true, nullable = false, length = 50)
+        private String studyName; //스터디 그룹 네임
 
-        @Column(nullable = false,length = 50)
+        @Column(nullable = false, length = 50)
         private String title; //스터디 주제
 
-        @Column(nullable = false,length = 300)
+        @Column(nullable = false, length = 300)
         private String description; //스터디 그룹 소개글
 
         @Column(nullable = false)
-        private LocalDate start_date; //스터디 시작 기간
+        private LocalDate startDate; //스터디 시작 기간
 
         @Column(nullable = false)
-        private LocalDate end_date; //스터디 마무리 기간
+        private LocalDate endDate; //스터디 마무리 기간
 
         @Column(nullable = false)
-        private String start_time; //스터디 출석 인정 시작 시간
+        private String startTime; //스터디 출석 인정 시작 시간
 
         @Column(nullable = false)
-        private String end_time; //스터디 출석 인정 끝 시간
+        private String endTime; //스터디 출석 인정 끝 시간
 
         @Column(nullable = false)
-        private Integer current_num = 1; // 필드 선언 시 기본값 지정,스터디 그룹 현재 인원
+        private Integer currentNum = 1; // 필드 선언 시 기본값 지정,스터디 그룹 현재 인원
 
         @Column(nullable = false)
-        private Integer max_num; //스터디 그룹 전체 티오
+        private Integer maxNum; //스터디 그룹 전체 티오
 
         @Column(nullable = false)
         private String master; // 스터디 장
@@ -77,16 +74,16 @@ public class StudyResDto {
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
         public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills, Set<String> attendanceDays) {
-            this.study_room_id = studyRoom.getId();
-            this.study_name = studyRoom.getStudyName();
+            this.studyRoomId = studyRoom.getId();
+            this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
             this.description = studyRoom.getDescription();
-            this.start_date = studyRoom.getStartDate();
-            this.end_date = studyRoom.getEndDate();
-            this.start_time = String.valueOf(studyRoom.getStartTime());
-            this.end_time = String.valueOf(studyRoom.getEndTime());
-            this.current_num = studyRoom.getCurrentNum();
-            this.max_num = studyRoom.getMaxNum();
+            this.startDate = studyRoom.getStartDate();
+            this.endDate = studyRoom.getEndDate();
+            this.startTime = String.valueOf(studyRoom.getStartTime());
+            this.endTime = String.valueOf(studyRoom.getEndTime());
+            this.currentNum = studyRoom.getCurrentNum();
+            this.maxNum = studyRoom.getMaxNum();
             this.master = studyRoom.getMaster().getNickname();
             if (studySkills != null) {
                 this.skillNames = studySkills.stream()
@@ -109,7 +106,7 @@ public class StudyResDto {
     @Setter
     public static class MyStudyRespDto {
         private Long id;
-        private String study_name;
+        private String studyName;
         private String title;
         private String status;
         private List<String> skillNames;
@@ -118,7 +115,7 @@ public class StudyResDto {
             StudyRoom studyRoom = studyMember.getStudyRoom();
 
             this.id = studyRoom.getId();
-            this.study_name = studyRoom.getStudyName();
+            this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
             this.status = getStatusString(studyMember.getStatus());
 
@@ -155,17 +152,17 @@ public class StudyResDto {
     @Setter
     public static class StudyListRespDto {
         private Long id;
-        private String study_name;
+        private String studyName;
         private String title;
         private List<String> skillNames;
-        private Integer current_num;
-        private Integer max_num;
+        private Integer currentNum;
+        private Integer maxNum;
         private String masterEmail;
         private String masterNickname;
 
         public StudyListRespDto(StudyRoom studyRoom, List<StudySkill> studySkills) {
             this.id = studyRoom.getId();
-            this.study_name = studyRoom.getStudyName();
+            this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
 
             if (studySkills != null) {
@@ -181,8 +178,8 @@ public class StudyResDto {
                 this.skillNames = new ArrayList<>(); // Initialize as an empty list if studySkills is null
             }
 
-            this.current_num = studyRoom.getCurrentNum();
-            this.max_num = studyRoom.getMaxNum();
+            this.currentNum = studyRoom.getCurrentNum();
+            this.maxNum = studyRoom.getMaxNum();
             if (studyRoom.getMaster() != null) {
                 this.masterNickname = studyRoom.getMaster().getNickname();
                 this.masterEmail = studyRoom.getMaster().getEmail();
@@ -192,38 +189,58 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyRoomApplyResDto{
-     /*   {
-            "code": 1,
-                "msg": "스터디 신청에 성공하였습니다.",
-                "data": {
-            "study_id": 1
-        }
-        }*/
+    public static class StudyMemberListRespDto {
 
-        @NotEmpty
-        private Long study_id;
+        private Long Id; //스터디 룸 member 일련번호
+
+        private Long studyRoomId;
+
+        private String nickname;
+
+        private Integer status;
 
         @Builder
-        public StudyRoomApplyResDto(Long study_id) {
-            this.study_id = study_id;
+        public StudyMemberListRespDto(Long id, Long studyRoomId, String nickname, Integer status) {
+            Id = id;
+            this.studyRoomId = studyRoomId;
+            this.nickname = nickname;
+            this.status = status;
         }
     }
 
-//    @Getter
-//    @Setter
-//    public static class StudyRoomCreateResDto{
-//
-//        private Long id;
-//        private String study_name;
-//        private String title;
-//        private List<String> skillNames;
-//        private Integer current_num;
-//        private Integer max_num;
-//        private String masterEmail;
-//        private String masterNickname;
-//
-//    }
+    @Getter
+    @Setter
+    public static class StudyMemberAndStatusListRespDto {
+
+        private Long userId;
+
+        private Long studyRoomId;
+
+        private String username;
+
+        private Integer createdBy;
+
+        @Builder
+        public StudyMemberAndStatusListRespDto(Long userId, Long studyRoomId, String username, Integer createdBy) {
+            this.userId = userId;
+            this.studyRoomId = studyRoomId;
+            this.username = username;
+            this.createdBy = createdBy;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class StudyRoomApplyResDto {
+
+        @NotEmpty
+        private Long studyId;
+
+        @Builder
+        public StudyRoomApplyResDto(Long studyId) {
+            this.studyId = studyId;
+        }
+    }
 
     @Getter
     @Setter
@@ -295,68 +312,37 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyMembershipResDto{
-      /*  {
-            "code":1
-            "msg": "가입 신청이 승인되었습니다."   // or "가입 신청이 거부되었습니다."
-            "data": {
-            "id": 2
-            "study_id": 1
-            "user_id": 2
-            "status": "approved" // or "rejected"
-        }
-        }*/
+    public static class StudyMembershipResDto {
 
         @NotEmpty
         private Long id; //나(승인하는 스터디 조장)
 
         @NotEmpty
-        private Long user_id;
+        private Long userId;
 
         @NotEmpty
-        private Long study_id;
+        private Long studyId;
 
         @NotEmpty
         private String status;
 
         @Builder
-        public StudyMembershipResDto(Long id, Long user_id, Long study_id, String status) {
+        public StudyMembershipResDto(Long id, Long userId, Long studyId, String status) {
             this.id = id;
-            this.user_id = user_id;
-            this.study_id = study_id;
+            this.userId = userId;
+            this.studyId = studyId;
             this.status = status;
         }
-    }//StudyMembershipResDto
+    }
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplicationResDto{
-/*        ApplicationResponse
-        HTTP/1.1 200 OK
-        Content-Type: application/json
-
-        {
-            "code": 1,
-                "message": "신청 인원 목록을 성공적으로 조회했습니다.",
-                "data": [
-            {
-                "user_id": 100,
-                    "username": "applicant_username1",
-                    "status": "pending" // 또는 'accepted', 'rejected'
-            },
-            {
-                "userId": 101,
-                    "username": "applicant_username2",
-                    "status": "pending"
-            }
-            // 추가 신청자 데이터...
-            ]
-        }*/
+    public static class ApplicationResDto {
 
         @NotEmpty
-        private Long user_id;
+        private Long userId;
 
         @NotEmpty
         private String username;
@@ -367,23 +353,13 @@ public class StudyResDto {
         @NotEmpty
         private String email;
 
-    }//ApplicationResDto
+    }
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplicationEssayResDto{
-
-    /*    {
-            "code": 1,
-                "message": "신청 인원의 자기소개서를 성공적으로 조회했습니다.",
-                "data": {
-            "username" : "user2",
-                    "email" : "user1234@google.com",
-                    "essay" : "asjskdfljfeifh",
-        }
-        }*/
+    public static class ApplicationEssayResDto {
 
         @NotEmpty
         private String username;
@@ -393,7 +369,7 @@ public class StudyResDto {
 
         @NotEmpty
         private String essay;
-    }//class ApplicationEssayResDto
+    }
 
 }
 

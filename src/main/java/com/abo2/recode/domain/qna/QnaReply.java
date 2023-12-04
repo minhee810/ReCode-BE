@@ -4,13 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
+
 @Entity
+@Getter
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class QnaReply {
 
     @Id
@@ -18,27 +22,25 @@ public class QnaReply {
     @Column(name = "qna_reply_id")
     Long id;
 
-
     @Column(nullable = false)
     private String comment;
 
     @CreatedDate
-    @Column(nullable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "qna_id", nullable = false)
-    private Qna qna_id;
-
-
+    @JoinColumn(name = "qna_id", nullable = false, updatable = false)
+    private Qna qnaId;
 
     @Builder
-    public QnaReply(Long id, String comment, LocalDateTime createdAt, Qna qna_id) {
+    public QnaReply(Long id, String comment, Qna qnaId) {
         this.id = id;
         this.comment = comment;
-        this.createdAt = createdAt;
-        this.qna_id = qna_id;
+        this.qnaId = qnaId;
 
     }
 }

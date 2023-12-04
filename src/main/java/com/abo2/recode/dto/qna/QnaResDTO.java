@@ -6,13 +6,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 public class QnaResDTO {
 
-    private Long id;
-    private Long user_id;
+    private Long userId;
     private String title;
     private String category;
     private String content;
 
+    @Builder
+    public QnaResDTO(Long userId, String title, String category, String content) {
+        this.userId = userId;
+        this.title = title;
+        this.category = category;
+        this.content = content;
+    }
 }

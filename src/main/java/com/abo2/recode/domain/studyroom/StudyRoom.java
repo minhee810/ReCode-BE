@@ -7,6 +7,7 @@ import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
+import com.abo2.recode.dto.study.StudyReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,17 +31,17 @@ import java.util.Set;
 public class StudyRoom {
 
     @Id
-    @Column(name="study_room_id")
+    @Column(name = "study_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 일련번호
 
-    @Column(unique = true,nullable = false,length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String studyName; //스터디 그룹 네임
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private String title; //스터디 주제
 
-    @Column(nullable = false,length = 300)
+    @Column(nullable = false, length = 300)
     private String description; //스터디 그룹 소개글
 
     @Column(nullable = false)
@@ -67,7 +68,6 @@ public class StudyRoom {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by")
     private User master;
-
 
     @CreatedDate
     @Column(nullable = false)
@@ -117,7 +117,21 @@ public class StudyRoom {
         this.currentNum = currentNum;
         this.maxNum = maxNum;
         this.master = master;
-    }
+    } //StudyRoom()
 
+
+    public void updateStudyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto,
+                                LocalTime startTime, LocalTime endTime) {
+
+        this.studyName = studyModifyReqDto.getStudyName();
+        this.title = studyModifyReqDto.getTitle();
+        this.description = studyModifyReqDto.getDescription();
+        this.startDate = studyModifyReqDto.getStartDate();
+        this.endDate = studyModifyReqDto.getEndDate();
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.maxNum = studyModifyReqDto.getMaxNum();
+        this.updatedAt = LocalDateTime.now();
+    }
 }
 
