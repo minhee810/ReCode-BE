@@ -1,6 +1,5 @@
 package com.abo2.recode.domain.post;
 
-import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,15 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class PostReply {
-
-//    Table Post_reply {
-//        id integer [primary key]
-//        content varchar
-//        postId integer
-//        userId integer
-//        createdAt timestamp
-//        updatedAt timestamp
-//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

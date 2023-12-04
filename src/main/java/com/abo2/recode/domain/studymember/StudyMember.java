@@ -59,7 +59,7 @@ import javax.persistence.*;
         query = "SELECT sm.study_room_id as studyId,sm.user_id as userId,u.username,sr.created_by as createdBy " +
                 "FROM Study_Member as sm " +
                 "INNER JOIN Users as u ON sm.user_id = u.user_id " +
-                "INNER JOIN Study_Room as sr ON sm.study_room_id = sr.study_room_id "+
+                "INNER JOIN Study_Room as sr ON sm.study_room_id = sr.study_room_id " +
                 "WHERE sm.study_room_id=:studyId AND sm.status = 1",
         resultSetMapping = "StudyMemberAndStatusListRespDtoMapping"
 )
@@ -85,7 +85,7 @@ import javax.persistence.*;
 public class StudyMember {
 
     @Id
-    @Column(name="study_member_id")
+    @Column(name = "study_member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id; //스터디 룸 member 일련번호
 
@@ -97,7 +97,7 @@ public class StudyMember {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private Integer status;
 
     @Builder

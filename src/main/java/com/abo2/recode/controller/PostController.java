@@ -7,7 +7,6 @@ import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.service.PostService;
 import com.abo2.recode.service.StudyService;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -97,7 +96,7 @@ public class PostController {
 
         return new ResponseEntity<>(new ResponseDto<>(1,
                 "게시글 목록 불러오기 성공", studyMemberListDtos), HttpStatus.OK);
-    }//postStudyMemberListInAdminPage()
+    }
 
 
 }

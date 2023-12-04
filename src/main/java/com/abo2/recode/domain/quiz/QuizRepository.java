@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface QuizRepository extends JpaRepository<Quiz,Long> {
+public interface QuizRepository extends JpaRepository<Quiz, Long> {
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM study_skill WHERE study_room_id = ?1", nativeQuery = true)

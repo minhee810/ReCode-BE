@@ -1,7 +1,6 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
-import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
@@ -34,7 +33,7 @@ public class AdminController {
     private StudyService studyService;
 
     @Autowired
-    public AdminController(AdminService adminService,StudyService studyService) {
+    public AdminController(AdminService adminService, StudyService studyService) {
         this.adminService = adminService;
         this.studyService = studyService;
     }
@@ -45,10 +44,10 @@ public class AdminController {
     public ResponseEntity<ResponseDto> adminSkillAdd(
             @RequestBody SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto,
             @AuthenticationPrincipal LoginUser loginUser
-    ){
+    ) {
 
         //유저가 관리자가 맞는지 검증
-        if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {
+        if (!(loginUser.getUser().getRole().getValue().equals("관리자"))) {
             logger.error("관리자가 아님!!!!");
             return (ResponseEntity<ResponseDto>) new CustomExceptionHandler()
                     .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
@@ -61,24 +60,23 @@ public class AdminController {
         SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.adminSkillAdd(addskills);
 
         ResponseDto<SkillResDto.AdminSkillAddResDto> responseDto =
-                new ResponseDto<>(1,"스킬 추가 성공",adminSkillAddResDto);
+                new ResponseDto<>(1, "스킬 추가 성공", adminSkillAddResDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 
-    } //adminSkillAdd()
+    }
 
-    // 관리자의 스터디 모임 삭제 /api/v1/study/{studyId}
     @Secured(value = "ROLE_ADMIN")
     @DeleteMapping(value = "/admin/v1/study/{studyId}")
     public ResponseEntity<ResponseDto> adminStudyRoomDelete(
             @PathVariable Long studyId,
             @AuthenticationPrincipal LoginUser loginUser
-    ){
+    ) {
         // Debugging: Log the user information
         logger.info("Logged-in user: {}", loginUser);
 
         //유저가 관리자가 맞는지 검증
-        if( !( loginUser.getUser().getRole().getValue().equals("관리자") )) {
+        if (!(loginUser.getUser().getRole().getValue().equals("관리자"))) {
             logger.error("관리자가 아님!!!!");
             return (ResponseEntity<ResponseDto>) new CustomExceptionHandler()
                     .forbiddenException(new CustomForbiddenException("관리자 아님!!"));
@@ -89,40 +87,31 @@ public class AdminController {
                 = adminService.adminStudyRoomDelete(studyId);
 
         ResponseDto<AdminResDto.StudyDeleteResponseDto> responseDto
-                = new ResponseDto<>(1,"스터디 모집 글이 성공적으로 삭제되었습니다",studyDeleteResponseDto);
+                = new ResponseDto<>(1, "스터디 모집 글이 성공적으로 삭제되었습니다", studyDeleteResponseDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }//adminStudyRoomDelete()
+    }
 
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급/강등
     @Secured(value = "ROLE_ADMIN")
-    @PutMapping(value="/admin/v1/study-member/{studyId}/{userId}")
+    @PutMapping(value = "/admin/v1/study-member/{studyId}/{userId}")
     public ResponseEntity<ResponseDto> memberRoleChange(
             @RequestBody AdminReqDto.MemberRoleReqDto memberRoleReqDto,
             @PathVariable(name = "studyId") Long studyId,
             @PathVariable(name = "userId") Long userId
-    ){
-
-            /* MemberRoleReqDto
-            {
-            "role": "group_leader" //or "group_member"
-        }*/
-
-
-        //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
-        //-> 알람 기능 완성 시 고민하기
+    ) {
 
         //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
         AdminResDto.MemberRoleResDto memberRoleResDto
-                = adminService.memberRoleChange(memberRoleReqDto,studyId,userId);
+                = adminService.memberRoleChange(memberRoleReqDto, studyId, userId);
 
-        return new ResponseEntity<>(new ResponseDto<>(1,"사용자 권한이 성공적으로 변경되었습니다.",memberRoleResDto),
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자 권한이 성공적으로 변경되었습니다.", memberRoleResDto),
                 HttpStatus.OK);
-    }//memberRoleChange()
+    }
 
     // 스터디 그룹에서 멤버 목록 불러오기 (study_member의 역할까지 불러와야함.
     @GetMapping(value = "/v1/study/{studyId}/memberlistandstatus")
-    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("studyId") Long studyRoomId){
+    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("studyId") Long studyRoomId) {
 
         List<StudyResDto.StudyMemberAndStatusListRespDto> studyMembers = studyService.getStudyMembersByRoomIdAsAdmin(studyRoomId);
 
@@ -133,13 +122,13 @@ public class AdminController {
                     (1, "스터디 그룹 멤버 목록입니다.", studyMembers), HttpStatus.OK);
         }
 
-    }// getsStudyMembersandStatus()
+    }
 
     // 관리자 기술 스택 불러오기 성공
     @GetMapping(value = "/get-skills")
-    public ResponseEntity<?> getSkills(){
+    public ResponseEntity<?> getSkills() {
         SkillResDto.AdminSkillAddResDto adminSkillAddResDto = adminService.getSkills();
         return new ResponseEntity<>(new ResponseDto<>(1, "스택 목록 불러오기 성공", adminSkillAddResDto), HttpStatus.OK);
     }
 
-}//AdminController
+}

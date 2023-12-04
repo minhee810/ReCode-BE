@@ -15,7 +15,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
-    public static class StudyCreateReqDto{
+    public static class StudyCreateReqDto {
 
         // Study_Room
         @NotEmpty
@@ -63,7 +63,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
-    public static class StudyModifyReqDto{
+    public static class StudyModifyReqDto {
 
         @NotEmpty
         private Long createdBy;
@@ -111,7 +111,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
-    public static class StudyApplyReqDto{
+    public static class StudyApplyReqDto {
         //"studyId": 1, // 사용자가 신청하고자 하는 스터디의 ID
         // "userId": 42  // 신청하는 사용자의 ID
 
@@ -131,10 +131,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
-    public static class StudyMembershipReqDto{
-     /*   {
-            "status" : "approved" //"Rejected"
-        }*/
+    public static class StudyMembershipReqDto {
 
         @NotEmpty
         @Size(min = 1, max = 50)
@@ -145,6 +142,7 @@ public class StudyReqDto {
             this.status = status;
         }
 
-        public StudyMembershipReqDto() {}
+        public StudyMembershipReqDto() {
+        }
     }
 }

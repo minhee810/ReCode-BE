@@ -10,14 +10,7 @@ public class SkillResDto {
 
     @Getter
     @Setter
-    public static class AdminSkillAddResDto{
-//        {
-//            "code": 1,
-//                "msg": "스킬 추가 성공",
-//                "data": {
-//            "skills": ["devops","flask","django","frontEnd","react","java"] //skill 테이블 전부 호출
-//        }
-//        }
+    public static class AdminSkillAddResDto {
 
         @NotEmpty
         private ArrayList<String> skills; //skill 테이블 전부 호출

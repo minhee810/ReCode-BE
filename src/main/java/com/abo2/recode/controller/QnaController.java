@@ -4,7 +4,6 @@ import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.qna.Qna;
 import com.abo2.recode.domain.qna.QnaRepository;
 import com.abo2.recode.domain.user.User;
-import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReqDTO;
@@ -39,10 +38,10 @@ public class QnaController {
 
             qnaService.postQna(qnaReqDTO);
 
-//            //슬랙봇 호출
-//            String triggerUrl = "https://c1r67w97gd.execute-api.ap-northeast-2.amazonaws.com/default/post-qna";
-//            RestTemplate restTemplate = new RestTemplate();
-//            restTemplate.postForEntity(triggerUrl, null, String.class);
+            //슬랙봇 호출
+            String triggerUrl = "https://c1r67w97gd.execute-api.ap-northeast-2.amazonaws.com/default/post-qna";
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.postForEntity(triggerUrl, null, String.class);
 
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 생성 성공", qnaReqDTO), HttpStatus.OK);
 
@@ -93,7 +92,7 @@ public class QnaController {
 
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 수정 성공", qnaReqDTO), HttpStatus.OK);
         }
-    } //qnaModify()
+    }
 
 
     //Qna 삭제 (관리자 권한)

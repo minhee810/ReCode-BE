@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class QnaResDTO {
 
-    //private Long id;
     private Long userId;
     private String title;
     private String category;

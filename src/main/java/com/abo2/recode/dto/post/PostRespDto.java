@@ -139,20 +139,6 @@ public class PostRespDto {
 
     public static class StudyMemberListDto {
 
-//
-//        private Long Id; //스터디 룸 member 일련번호
-//
-//        @ManyToOne
-//        @JoinColumn(name = "studyId")
-//        private StudyRoom studyRoom;
-//
-//        @ManyToOne
-//        @JoinColumn(name = "userId")
-//        private User user;
-//
-//        @Column(nullable = false,length = 50)
-//        private Integer status;
-
         private Long Id;
         private Long studyRoomId;
         private Long userId;
@@ -164,6 +150,5 @@ public class PostRespDto {
             this.userId = studyMember.getUser().getId();
             this.status = studyMember.getStatus();
         }
-    }//StudyMemberListDto
-
+    }
 }

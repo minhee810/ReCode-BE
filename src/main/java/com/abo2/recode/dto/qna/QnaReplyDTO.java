@@ -14,7 +14,6 @@ public class QnaReplyDTO {
     private Long qnaId;
     private String comment;
     private Long userId;
-    
-    
+
 
 }

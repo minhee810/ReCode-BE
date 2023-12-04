@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Post p SET p.user = null WHERE p.user.id = :userId" , nativeQuery = true)
+    @Query(value = "UPDATE Post p SET p.user = null WHERE p.user.id = :userId", nativeQuery = true)
     void dissociatePosts(@Param("userId") Long userId);
 
     @Transactional

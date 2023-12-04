@@ -110,15 +110,15 @@ public class StudyService {
         );
 
         // 현재 수정하는 사람이 스터디 조장인지 체크
-        if(
+        if (
                 studyModifyReqDto.getCreatedBy() != studyRoom.getMaster().getId()
-        ){
+        ) {
             throw new CustomForbiddenException("조장만 스터디 그룹 정보를 수정 할 수 있습니다.");
         }
 
         // update()로 객체에 변경 사항 반영
-        studyRoom.updateStudyRoom(studyModifyReqDto,parseTime(studyModifyReqDto.getStartTime())
-                ,parseTime(studyModifyReqDto.getEndTime()));
+        studyRoom.updateStudyRoom(studyModifyReqDto, parseTime(studyModifyReqDto.getStartTime())
+                , parseTime(studyModifyReqDto.getEndTime()));
 
         //스터디룸과 연계된 출석일,기술 스택들 studyRoom 삽입
         for (String day : studyModifyReqDto.getAttendanceDay()) {
@@ -177,9 +177,6 @@ public class StudyService {
         // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        System.out.println("master = " + master);
-        System.out.println("studyCreateReqDto.getAttendanceDay() = " + studyCreateReqDto.getAttendanceDay());
 
         // 문자열로 받은 시간 localTime 타입으로 파싱
         LocalTime startTime = parseTime(studyCreateReqDto.getStartTime());
@@ -254,8 +251,6 @@ public class StudyService {
                 .userId(master.getId())
                 .build();
 
-        System.out.println("studyCreateRespDto.getAttendanceDay() = " + studyCreateRespDto.getAttendanceDay());
-
         //4. Study_member에 만든 사람(조장) 추가 하기
         StudyMember studyMember = StudyMember.builder()
                 .studyRoom(studyRoom)
@@ -277,17 +272,10 @@ public class StudyService {
     //study 가입 신청
     public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
-        //  studyApplyReqDto
-//        @NotEmpty
-//        Long studyId;
-//
-//        @NotEmpty
-//        Long userId;
-
-        if(     // -1. userId,studyId를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
+        if (     // -1. userId,studyId를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
                 checkReturnType(studyRoomRepository.findIdByuserIdAndstudyId(studyApplyReqDto.getStudyId(),
                         studyApplyReqDto.getUserId()))
-        ){
+        ) {
             throw new CustomForbiddenException("이미 가입한 유저입니다.");
         }
 
@@ -321,7 +309,7 @@ public class StudyService {
 
         return new StudyResDto.StudyRoomApplyResDto(studyRoom.getId());
 
-    }//studyApply()
+    }
 
     //스터디 모임 상세 조회 + 민희 수정 (출석요일 추가)
     @Transactional
@@ -346,7 +334,7 @@ public class StudyService {
         log.info("attendanceDays: {}", attendanceDays);
 
         return new StudyResDto.StudyRoomDetailResDto(studyRoom, studySkills, attendanceDays);
-    }// studyRoomDetailBrowse()
+    }
 
     // 스터디 탈퇴
     @Transactional
@@ -357,7 +345,7 @@ public class StudyService {
         if (studyRoom.isPresent()) {
             StudyRoom room = studyRoom.get();
 
-            if (! (room.getMaster().getId() == userId) ) {
+            if (!(room.getMaster().getId() == userId)) {
                 studyMemberRepository.deleteByUserIdAndStudyRoomId(userId, studyId);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
@@ -374,22 +362,18 @@ public class StudyService {
         return studyRooms.stream()
                 .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
                 .collect(Collectors.toList());
-    }//mainList()
+    }
 
     // Study_skill 불러오기
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
         return studySkillRepository.findByStudyRoomId(studyRoom.getId());
-    }//getStudySkills()
+    }
 
 
     //관리자 스터디 그룹 관리 페이지에서 스터디 멤버 목록 조회
     public List<PostRespDto.StudyMemberListDto> postStudyMemberListInAdminPage(Long studyId) {
 
         List<StudyMember> studyMembers = studyMemberRepository.findApprovedMemberById(studyId);
-
-       /* if (studyMembers.isEmpty()) {
-            throw new CustomApiException("멤버가 존재하지 않습니다.");
-        }*/
 
         return studyMembers.stream()
                 .map(PostRespDto.StudyMemberListDto::new)
@@ -411,7 +395,7 @@ public class StudyService {
         최종적으로 변환된 List<PostRespDto.StudyMemberListDto>가 반환됩니다.
         */
 
-    }//postStudyMemberListInAdminPage()
+    }
 
 
     public List<StudyResDto.ApplicationResDto> applications(Long groupId) {
@@ -429,7 +413,7 @@ public class StudyService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 스터디룸을 찾을 수 없습니다."));
     }
 
-    public Long findcreatedByBystudyId(Long studyRoomId){
+    public Long findcreatedByBystudyId(Long studyRoomId) {
         return studyRoomRepository.findcreatedByBystudyId(studyRoomId);
     }
 
@@ -452,19 +436,17 @@ public class StudyService {
 
         return studyMemberRepository.getStudyMembersByRoomIdAsAdmin(studyRoomId);
 
-    } //getStudyMembersByRoomIdAsAdmin()
+    }
 
 
     // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
     public StudyMember deleteMember(Long userId, Long studyRoomId, Long memberId) {
 
 
-
         //강제 퇴출하는 사람이 조장이 맞는지 체크
-        if(userId != studyRoomRepository.findcreatedByBystudyId(studyRoomId)){
+        if (userId != studyRoomRepository.findcreatedByBystudyId(studyRoomId)) {
             throw new CustomForbiddenException("조장만 스터디 원을 퇴출 할 수 있습니다.");
-        }
-        else{
+        } else {
             StudyMember studyMember = studyMemberRepository.findById(memberId)
                     .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
 
