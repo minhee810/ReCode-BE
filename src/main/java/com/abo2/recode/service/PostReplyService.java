@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,31 +60,27 @@ public class PostReplyService {
     }
 
     // 댓글 상세보기
-    public PostRespDto.PostReplyRespDto getPostReply(Long userId, Long studyRoomId, Long postId, Long postReplyId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 postId가 없습니다." + postId));
+    public List<PostRespDto.PostReplyRespDto> getPostReply(Long userId, Long studyRoomId, Long postId) {
+        List<PostReply> postReplyList = postReplyRepository.findByPostId(postId);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 userId가 없습니다" + userId));
+        List<PostRespDto.PostReplyRespDto> postReplyDtoList = new ArrayList<>();
+        for (PostReply postReply : postReplyList) {
+            // 댓글이 해당 게시글에 속해있는지 확인
+            if (!postReply.getPost().getId().equals(postId)) {
+                throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
+            }
 
-        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId가 존재하지 않습니다." + studyRoomId));
+            // 댓글 작성자와 현재 사용자가 동일한지 확인
+            if (!postReply.getUser().getId().equals(userId)) {
+                throw new AccessDeniedException("댓글 조회 권한이 없습니다.");
+            }
 
-        PostReply postReply = postReplyRepository.findById(postReplyId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 postReplyId가 존재하지 않습니다." + postReplyId));
-
-        // 댓글이 해당 게시글에 속해있는지 확인
-        if (!postReply.getPost().getId().equals(postId)) {
-            throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
+            postReplyDtoList.add(new PostRespDto.PostReplyRespDto(postReply, postReply.getUser().getNickname()));
         }
 
-        // 댓글 작성자와 현재 사용자가 동일한지 확인
-        if (!postReply.getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("댓글 조회 권한이 없습니다.");
-        }
-
-        return new PostRespDto.PostReplyRespDto(postReply, postReply.getUser().getNickname());
+        return postReplyDtoList;
     }
+
 
     // 게시글 댓글 수정
 

@@ -3,6 +3,7 @@ package com.abo2.recode.dto.post;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostReply;
 import com.abo2.recode.domain.studymember.StudyMember;
+import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Getter;
 import lombok.Setter;
 

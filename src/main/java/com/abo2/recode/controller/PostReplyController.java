@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -28,11 +30,11 @@ public class PostReplyController {
     }
 
     // 게시글 댓글 상세보기
-    @GetMapping("/v1/study/{study_room_id}/post/{post_id}/{postReply_id}")
-    public ResponseEntity<?> DetailPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("study_room_id") Long studyRoomId, @PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId) {
-        PostRespDto.PostReplyRespDto DetailPostReply = postReplyService.getPostReply(loginUser.getUser().getId(), studyRoomId, postId, postReplyId);
+    @GetMapping("/v1/study/{study_room_id}/post/{post_id}/postReply")
+    public ResponseEntity<?> DetailPostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("study_room_id") Long studyRoomId, @PathVariable("post_id") Long postId) {
+        List<PostRespDto.PostReplyRespDto> postReplies = postReplyService.getPostReply(loginUser.getUser().getId(), studyRoomId, postId);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 조회 완료", DetailPostReply), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 조회 완료", postReplies), HttpStatus.OK);
     }
 
 
