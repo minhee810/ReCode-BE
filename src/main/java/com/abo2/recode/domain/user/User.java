@@ -81,12 +81,8 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-<<<<<<< HEAD
-
     public void updateUser(String nickname, String email) {
-=======
-    public void updateUser(String nickname, String email){
->>>>>>> 0f5ee41165fbf6993b08aecf59ea674e534b498c
+
         this.email = email;
         this.nickname = nickname;
     }
