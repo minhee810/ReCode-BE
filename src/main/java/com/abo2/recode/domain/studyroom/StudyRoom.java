@@ -77,8 +77,6 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalDateTime updatedAt; //스터디 그룹 수정 시각
 
-    //==========================================
-
     // StudyRoom을 참조하는 StudySkill 엔티티
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<StudySkill> studySkills;
@@ -99,7 +97,6 @@ public class StudyRoom {
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    //===========================================
 
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
@@ -117,7 +114,7 @@ public class StudyRoom {
         this.currentNum = currentNum;
         this.maxNum = maxNum;
         this.master = master;
-    } //StudyRoom()
+    }
 
 
     public void updateStudyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto,

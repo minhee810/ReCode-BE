@@ -56,7 +56,7 @@ public class StudyReqDto {
 
         @NotEmpty
         private LocalDateTime updatedAt;
-        //======================================
+
         // skill 테이블의 스킬들,모집분야
         private String[] skills;
     }
@@ -104,7 +104,7 @@ public class StudyReqDto {
 
         @NotEmpty
         private LocalDateTime updatedAt;
-        //======================================
+
         // skill 테이블의 스킬들,모집분야
         private String[] skills;
     }
@@ -112,8 +112,6 @@ public class StudyReqDto {
     @Getter
     @Setter
     public static class StudyApplyReqDto {
-        //"studyId": 1, // 사용자가 신청하고자 하는 스터디의 ID
-        // "userId": 42  // 신청하는 사용자의 ID
 
         @NotEmpty
         Long studyId;

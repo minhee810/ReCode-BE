@@ -70,9 +70,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         if ("login".equalsIgnoreCase(mode)) {
-            // TODO: DB 저장
-            // TODO: 액세스 토큰, 리프레시 토큰 발급
-            // TODO: 리프레시 토큰 DB 저장
+
             log.info("email={}, name={}, nickname={}, accessToken={}", principal.getUserInfo().getEmail(),
                     principal.getUserInfo().getName(),
                     principal.getUserInfo().getNickname(),
@@ -92,8 +90,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             String accessToken = principal.getUserInfo().getAccessToken();
             OAuth2Provider provider = principal.getUserInfo().getProvider();
 
-            // TODO: DB 삭제
-            // TODO: 리프레시 토큰 삭제
             try {
                 oAuth2UserUnlinkManager.unlink(provider, accessToken);
             } catch (OAuth2AuthenticationProcessingException e) {

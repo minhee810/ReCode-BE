@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
 
 public class UserRespDto {
 
@@ -50,18 +49,18 @@ public class UserRespDto {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class FindUsernameRespDto{
+    public static class FindUsernameRespDto {
         private String username;
     }
 
     @Getter
     @Setter
-    public static class UpdateUserRespDto{
+    public static class UpdateUserRespDto {
         private Long id;
         private String email;
         private String nickname;
 
-        public UpdateUserRespDto(User user){
+        public UpdateUserRespDto(User user) {
             this.id = user.getId();
             this.email = user.getEmail();
             this.nickname = user.getNickname();
@@ -72,8 +71,9 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class CheckUsernameDuplicateRespDto{
+    public static class CheckUsernameDuplicateRespDto {
         private String username;
+
         public CheckUsernameDuplicateRespDto(User user) {
             this.username = user.getUsername();
         }
@@ -81,22 +81,22 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class EssayRespDto{
+    public static class EssayRespDto {
         private String essay;
 
-        public EssayRespDto(User user){
+        public EssayRespDto(User user) {
             this.essay = user.getEssay();
         }
     }
 
     @Getter
     @Setter
-    public static class GetUserInfoDto{
+    public static class GetUserInfoDto {
         private String username;
         private String nickname;
         private String email;
 
-        public GetUserInfoDto(User user){
+        public GetUserInfoDto(User user) {
             this.username = user.getUsername();
             this.nickname = user.getNickname();
             this.email = user.getEmail();
@@ -105,10 +105,10 @@ public class UserRespDto {
 
     @Getter
     @Setter
-    public static class ChangePasswordRespDto{
+    public static class ChangePasswordRespDto {
         private String password;
 
-        public ChangePasswordRespDto(User user){
+        public ChangePasswordRespDto(User user) {
             this.password = user.getPassword();
         }
     }

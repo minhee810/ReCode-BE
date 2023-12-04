@@ -73,7 +73,7 @@ public class QnaReplyController {
 
         List<QnaReplyResDto> qnaReplyResDtoList = new ArrayList<>();
 
-        for(QnaReply qnaReply : qnaReplies){
+        for (QnaReply qnaReply : qnaReplies) {
             QnaReplyResDto qnaReplyResDto = QnaReplyResDto.builder()
                     .id(qnaReply.getId())
                     .comment(qnaReply.getComment())

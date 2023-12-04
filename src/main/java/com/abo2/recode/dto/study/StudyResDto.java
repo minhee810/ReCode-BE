@@ -285,7 +285,7 @@ public class StudyResDto {
 
         @NotEmpty
         private LocalDateTime updatedAt;
-        //======================================
+
         // skill 테이블의 스킬들,모집분야
         private String[] skills;
 

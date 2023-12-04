@@ -86,8 +86,7 @@ public class QnaController {
 
         if (qnaInfo.getUserId().getId() != user.getId()) {
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
-        }
-        else {
+        } else {
             qnaService.qnaModify(id, qnaReqDTO);
 
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 수정 성공", qnaReqDTO), HttpStatus.OK);

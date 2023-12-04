@@ -75,8 +75,6 @@ public class StudyService {
         }
     }
 
-
-    // 민희 수정
     // 요일 문자열을 enum 타입으로 변환하는 메서드
     private DayOfWeek parseDayOfWeek(String dayOfWeekString) {
         try {
@@ -168,9 +166,8 @@ public class StudyService {
                 .build();
 
         return studyCreateRespDto;
-    }//modifyRoom()
+    }
 
-    // 민희 수정
     @Transactional
     public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
 
@@ -311,7 +308,6 @@ public class StudyService {
 
     }
 
-    //스터디 모임 상세 조회 + 민희 수정 (출석요일 추가)
     @Transactional
     public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long studyId) {
         StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(studyId)
@@ -426,7 +422,6 @@ public class StudyService {
     // 스터디룸 참가 인원 리스트 조회
     public List<StudyMember> getStudyMembersByRoomId(Long studyRoomId) {
 
-        // 찬 : Study_Member Table에서 studyRoomId = ? And status = 1인 조건을 충족하는 List<StudyMember>를 Return하도록 수정
         return studyMemberRepository.findByStudyRoomId(studyRoomId);
 
     }
@@ -439,7 +434,6 @@ public class StudyService {
     }
 
 
-    // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
     public StudyMember deleteMember(Long userId, Long studyRoomId, Long memberId) {
 
 

@@ -1,7 +1,6 @@
 package com.abo2.recode.service;
 
 import com.abo2.recode.domain.user.User;
-import com.abo2.recode.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,7 +17,7 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
 
     public void sendConfirmEmail(User user) throws MessagingException {
-        String url = "http://localhost:3000/changePassword?token=" + user.getEmailCheckToken() + "&email=" + user.getEmail();
+        String url = "http://52.79.108.89:8080/changePassword?token=" + user.getEmailCheckToken() + "&email=" + user.getEmail();
 
         String msgg = "<div style='margin:20px;'>";
         msgg += "<h1> 안녕하세요 Recode 입니다. </h1>";
@@ -45,7 +44,7 @@ public class EmailService {
     }
 
     public void sendApprovedEmail(Long studyId, Long userId, User user) throws MessagingException {
-        String url = "http://localhost:3000/login";
+        String url = "http://52.79.108.89:8080/login";
 
         String msgg = "<div style='margin:20px;'>";
         msgg += "<h1> 안녕하세요 Recode 입니다. </h1>";
@@ -72,7 +71,7 @@ public class EmailService {
     }
 
     public void sendRejectedEmail(Long studyId, Long userId, User user) throws MessagingException {
-        String url = "http://localhost:3000/login";
+        String url = "http://52.79.108.89:8080/login";
 
         String msgg = "<div style='margin:20px;'>";
         msgg += "<h1> 안녕하세요 Recode 입니다. </h1>";
