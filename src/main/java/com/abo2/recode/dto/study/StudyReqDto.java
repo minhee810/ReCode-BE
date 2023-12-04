@@ -66,10 +66,10 @@ public class StudyReqDto {
     public static class StudyModifyReqDto{
 
         @NotEmpty
-        private Long created_by;
+        private Long createdBy;
 
         @NotEmpty
-        private Long study_id;
+        private Long studyId;
 
         // Study_Room
         @NotEmpty
@@ -112,19 +112,19 @@ public class StudyReqDto {
     @Getter
     @Setter
     public static class StudyApplyReqDto{
-        //"study_id": 1, // 사용자가 신청하고자 하는 스터디의 ID
-        // "user_id": 42  // 신청하는 사용자의 ID
+        //"studyId": 1, // 사용자가 신청하고자 하는 스터디의 ID
+        // "userId": 42  // 신청하는 사용자의 ID
 
         @NotEmpty
-        Long study_id;
+        Long studyId;
 
         @NotEmpty
-        Long user_id;
+        Long userId;
 
         @Builder
-        public StudyApplyReqDto(Long study_id, Long user_id) {
-            this.study_id = study_id;
-            this.user_id = user_id;
+        public StudyApplyReqDto(Long studyId, Long userId) {
+            this.studyId = studyId;
+            this.userId = userId;
         }
     }
 

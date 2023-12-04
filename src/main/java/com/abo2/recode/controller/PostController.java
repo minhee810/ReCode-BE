@@ -27,28 +27,28 @@ public class PostController {
     private final StudyService studyService;
 
     // 게시글 목록 조회
-    @GetMapping(value = "/v1/study/{study_id}/list")
+    @GetMapping(value = "/v1/study/{studyId}/list")
     public ResponseEntity<?> postList(@AuthenticationPrincipal LoginUser loginUser,
-                                      @PathVariable Long study_id,
+                                      @PathVariable Long studyId,
                                       @RequestParam(value = "keyword", required = false) String keyword,
                                       @RequestParam(value = "category", required = false) Integer category) {
         List<PostRespDto.PostListRespDto> postListRespDto;
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            postListRespDto = postService.searchList(study_id, keyword);
+            postListRespDto = postService.searchList(studyId, keyword);
         } else if (category != null) {
-            postListRespDto = postService.filterList(study_id, category);
+            postListRespDto = postService.filterList(studyId, category);
         } else {
-            postListRespDto = postService.postList(study_id);
+            postListRespDto = postService.postList(studyId);
         }
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록 불러오기 성공", postListRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 작성
-    @PostMapping("/v1/study/{study_room_id}/posts")
+    @PostMapping("/v1/study/{studyId}/posts")
     public ResponseEntity<?> writePost(@AuthenticationPrincipal LoginUser loginUser,
-                                       @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto, @PathVariable("study_room_id") Long studyRoomId) {
+                                       @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto, @PathVariable("studyId") Long studyRoomId) {
 
         PostRespDto.PostWriteRespDto postWriteRespDto = postService.writePost(loginUser.getUser().getId(), postWriteReqDto, studyRoomId);
 
@@ -56,44 +56,44 @@ public class PostController {
     }
 
     // 게시글 상세보기
-    @GetMapping("/v1/study/posts/{post_id}")
-    public ResponseEntity<?> getPostById(@PathVariable Long post_id) {
-        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id);
+    @GetMapping("/v1/study/posts/{postId}")
+    public ResponseEntity<?> getPostById(@PathVariable Long postId) {
+        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(postId);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세보기 완료", postDetailRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 수정
-    @PutMapping("/v1/study/posts/{post_id}")
+    @PutMapping("/v1/study/posts/{postId}")
     public ResponseEntity<?> updatePost(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long post_id,
+            @PathVariable Long postId,
             @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
     ) {
-        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), post_id, postUpdateReqDto);
+        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), postId, postUpdateReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 수정되었습니다.", postUpdateRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 삭제
-    @DeleteMapping("/v1/study/posts/{post_id}")
-    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId) {
+    @DeleteMapping("/v1/study/posts/{postId}")
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("postId") Long postId) {
         postService.deletePost(loginUser.getUser().getId(), postId);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 삭제되었습니다.", null), HttpStatus.OK);
     }
 
 
     //관리자 - 스터디 그룹 관리 페이지에서 스터디 멤버 목록 조회
-    @GetMapping(value = "/v1/study-member/{study_id}/list")
+    @GetMapping(value = "/v1/study-member/{studyId}/list")
     public ResponseEntity<?> postStudyMemberListInAdminPage(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable(name = "study_id") Long study_id,
+            @PathVariable(name = "studyId") Long studyId,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "category", required = false) Integer category) {
 
         List<PostRespDto.StudyMemberListDto> studyMemberListDtos;
 
-        studyMemberListDtos = studyService.postStudyMemberListInAdminPage(study_id);
+        studyMemberListDtos = studyService.postStudyMemberListInAdminPage(studyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1,
                 "게시글 목록 불러오기 성공", studyMemberListDtos), HttpStatus.OK);

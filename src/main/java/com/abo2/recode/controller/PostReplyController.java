@@ -20,9 +20,9 @@ public class PostReplyController {
 
 
     // 게시글 댓글 작성
-    @PostMapping("/v1/study/{post_id}/postReply")
+    @PostMapping("/v1/study/{postId}/postReply")
     public ResponseEntity<?> createPostReply(@AuthenticationPrincipal LoginUser loginUser,
-                                             @PathVariable("post_id") Long postId,
+                                             @PathVariable("postId") Long postId,
                                              @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
 
         PostRespDto.PostReplyRespDto createdPostReply =
@@ -32,18 +32,22 @@ public class PostReplyController {
     }
 
     // 게시글 댓글 수정
-    @PutMapping("/v1/study/{post_id}/postReply/{postReply_id}")
-    public ResponseEntity<?> updatePostReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("postReply_id") Long postReplyId, @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
-        PostRespDto.PostReplyRespDto updatedPostReply = postReplyService.updatePostReply(loginUser.getUser().getId(), postId, postReplyId, postReplyReqDto);
+    @PutMapping("/v1/study/{postId}/postReply/{postreplyId}")
+    public ResponseEntity<?> updatePostReply(@AuthenticationPrincipal LoginUser loginUser,
+                                             @PathVariable("postId") Long postId,
+                                             @PathVariable("postreplyId") Long postReplyId,
+                                             @RequestBody PostReqDto.PostReplyReqDto postReplyReqDto) {
+        PostRespDto.PostReplyRespDto updatedPostReply
+                = postReplyService.updatePostReply(loginUser.getUser().getId(), postId, postReplyId, postReplyReqDto);
 
         return new ResponseEntity<>(new ResponseDto(1, "댓글 수정 완료", updatedPostReply), HttpStatus.OK);
     }
 
     // 게시글 댓글 삭제
-    @DeleteMapping("/v1/study/{post_id}/postReply/{postReply_id}")
+    @DeleteMapping("/v1/study/{postId}/postReply/{postreplyId}")
     public ResponseEntity<?> deletePostReply(@AuthenticationPrincipal LoginUser loginUser,
-                                             @PathVariable("post_id") Long postId,
-                                             @PathVariable("postReply_id") Long postReplyId) {
+                                             @PathVariable("postId") Long postId,
+                                             @PathVariable("postreplyId") Long postReplyId) {
         postReplyService.deletePostReply(loginUser.getUser().getId(), postId, postReplyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 삭제 완료", null), HttpStatus.OK);

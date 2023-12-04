@@ -35,7 +35,7 @@ public class QnaController {
     public ResponseEntity<?> postQna(@AuthenticationPrincipal LoginUser loginUser, @RequestBody QnaReqDTO qnaReqDTO) {
 
         try {
-            qnaReqDTO.setUser_id(loginUser.getUser().getId());
+            qnaReqDTO.setUserId(loginUser.getUser().getId());
 
             qnaService.postQna(qnaReqDTO);
 
@@ -54,7 +54,7 @@ public class QnaController {
     //Qna 목록 조회
     @GetMapping("/v1/qna")
     public ResponseEntity<?> qnaList(@AuthenticationPrincipal LoginUser loginUser, QnaResDTO qnaResDTO) {
-        qnaResDTO.setUser_id(loginUser.getUser().getId());
+        qnaResDTO.setUserId(loginUser.getUser().getId());
 
         List<Qna> qnas = qnaService.qnaList();
 
@@ -64,7 +64,7 @@ public class QnaController {
     //Qna 단일 조회
     @GetMapping("/v1/qna/{id}")
     public ResponseEntity<?> qna(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaResDTO qnaResDTO) {
-        qnaResDTO.setUser_id(loginUser.getUser().getId());
+        qnaResDTO.setUserId(loginUser.getUser().getId());
 
         Qna qna1 = qnaService.qna(id);
 
@@ -75,7 +75,7 @@ public class QnaController {
     @PutMapping("/v1/qna/{id}")
     public ResponseEntity<?> qnaModify(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, @RequestBody QnaReqDTO qnaReqDTO) {
 
-        qnaReqDTO.setUser_id(loginUser.getUser().getId());
+        qnaReqDTO.setUserId(loginUser.getUser().getId());
 
         User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
                 () -> new CustomApiException("User가 존재하지 않습니다!")
@@ -85,7 +85,7 @@ public class QnaController {
         );
 
 
-        if (qnaInfo.getUser_id().getId() != user.getId()) {
+        if (qnaInfo.getUserId().getId() != user.getId()) {
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
         }
         else {
@@ -98,19 +98,19 @@ public class QnaController {
 
     //Qna 삭제 (관리자 권한)
     @Secured(value = "ROLE_ADMIN")
-    @DeleteMapping("/admin/v1/qna/{qna_id}")
+    @DeleteMapping("/admin/v1/qna/{qnaId}")
     public ResponseEntity<?> qnaDelete(
-            @PathVariable(value = "qna_id") Long qna_id
+            @PathVariable(value = "qnaId") Long qnaId
     ) {
 
-        Qna qnaInfo = qnaRepository.findById(qna_id).orElseThrow(
+        Qna qnaInfo = qnaRepository.findById(qnaId).orElseThrow(
                 () -> new CustomApiException("Qna가 존재하지 않습니다!")
         );
 
-        qnaService.qnaDelete(qna_id);
+        qnaService.qnaDelete(qnaId);
 
         QnaResDTO qnaResDTO = QnaResDTO.builder()
-                .user_id(qnaInfo.getUser_id().getId())
+                .userId(qnaInfo.getUserId().getId())
                 .title(qnaInfo.getTitle())
                 .category(qnaInfo.getCategory())
                 .content(qnaInfo.getContent())

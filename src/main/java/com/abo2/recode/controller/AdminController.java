@@ -67,11 +67,11 @@ public class AdminController {
 
     } //adminSkillAdd()
 
-    // 관리자의 스터디 모임 삭제 /api/v1/study/{study_id}
+    // 관리자의 스터디 모임 삭제 /api/v1/study/{studyId}
     @Secured(value = "ROLE_ADMIN")
-    @DeleteMapping(value = "/admin/v1/study/{study_id}")
+    @DeleteMapping(value = "/admin/v1/study/{studyId}")
     public ResponseEntity<ResponseDto> adminStudyRoomDelete(
-            @PathVariable Long study_id,
+            @PathVariable Long studyId,
             @AuthenticationPrincipal LoginUser loginUser
     ){
         // Debugging: Log the user information
@@ -86,7 +86,7 @@ public class AdminController {
 
         // DB에서 StudyRoom Entity 삭제
         AdminResDto.StudyDeleteResponseDto studyDeleteResponseDto
-                = adminService.adminStudyRoomDelete(study_id);
+                = adminService.adminStudyRoomDelete(studyId);
 
         ResponseDto<AdminResDto.StudyDeleteResponseDto> responseDto
                 = new ResponseDto<>(1,"스터디 모집 글이 성공적으로 삭제되었습니다",studyDeleteResponseDto);
@@ -96,11 +96,11 @@ public class AdminController {
 
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급/강등
     @Secured(value = "ROLE_ADMIN")
-    @PutMapping(value="/admin/v1/study-member/{study_room_id}/{user_id}")
+    @PutMapping(value="/admin/v1/study-member/{studyId}/{userId}")
     public ResponseEntity<ResponseDto> memberRoleChange(
             @RequestBody AdminReqDto.MemberRoleReqDto memberRoleReqDto,
-            @PathVariable(name = "study_room_id") Long study_room_id,
-            @PathVariable(name = "user_id") Long user_id
+            @PathVariable(name = "studyId") Long studyId,
+            @PathVariable(name = "userId") Long userId
     ){
 
             /* MemberRoleReqDto
@@ -114,15 +114,15 @@ public class AdminController {
 
         //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
         AdminResDto.MemberRoleResDto memberRoleResDto
-                = adminService.memberRoleChange(memberRoleReqDto,study_room_id,user_id);
+                = adminService.memberRoleChange(memberRoleReqDto,studyId,userId);
 
         return new ResponseEntity<>(new ResponseDto<>(1,"사용자 권한이 성공적으로 변경되었습니다.",memberRoleResDto),
                 HttpStatus.OK);
     }//memberRoleChange()
 
     // 스터디 그룹에서 멤버 목록 불러오기 (study_member의 역할까지 불러와야함.
-    @GetMapping(value = "/v1/study/{study_room_id}/memberlistandstatus")
-    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("study_room_id") Long studyRoomId){
+    @GetMapping(value = "/v1/study/{studyId}/memberlistandstatus")
+    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("studyId") Long studyRoomId){
 
         List<StudyResDto.StudyMemberAndStatusListRespDto> studyMembers = studyService.getStudyMembersByRoomIdAsAdmin(studyRoomId);
 

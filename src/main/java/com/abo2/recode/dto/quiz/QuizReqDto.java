@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class QuizReqDto {
 
     /*
-        QUIZ_ID  	DIFFICULTY  	QUIZ_LINK  	TITLE  	STUDY_ROOM_ID  	USER_ID
+        QUIZ_ID  	DIFFICULTY  	QUIZ_LINK  	TITLE  	studyId  	userId
     */
     @Getter
     @Setter
@@ -21,6 +21,6 @@ public class QuizReqDto {
         private String quiz_link;
         private Long studyRoomId;
         private Long userId;
-        private LocalDate created_At;
+        private LocalDate createdAt;
     }
 }
