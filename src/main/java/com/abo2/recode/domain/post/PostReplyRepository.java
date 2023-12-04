@@ -1,10 +1,11 @@
 package com.abo2.recode.domain.post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface PostReplyRepository extends JpaRepository<PostReply, Long> {
 
-    List<PostReply> findByPostId(Long postId);
+    List<PostReply> findByPostId(@Param("post_id") Long postId);
 }
