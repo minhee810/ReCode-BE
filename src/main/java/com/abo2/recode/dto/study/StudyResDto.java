@@ -434,5 +434,12 @@ public class StudyResDto {
         private String essay;
     }//class ApplicationEssayResDto
 
+    @Getter
+    @Setter
+    public static class CheckStudyMaserRespDto{
+        private String username;
+        private String masterNickname;
+    }
+
 }
 
