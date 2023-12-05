@@ -2,9 +2,12 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.studymember.StudyMember;
+import com.abo2.recode.domain.user.User;
+import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
+import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.service.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +18,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -27,9 +30,12 @@ public class StudyroomController {
 
     StudyService studyService;
 
+    private UserRepository userRepository;
+
     @Autowired
-    public StudyroomController(StudyService studyService) {
+    public StudyroomController(StudyService studyService, UserRepository userRepository) {
         this.studyService = studyService;
+        this.userRepository = userRepository;
     }
 
     @CrossOrigin
@@ -130,7 +136,7 @@ public class StudyroomController {
     } //applications()
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
-    @GetMapping(value = "/study-groups/{groupId}/applications/{userId}")
+    @GetMapping(value = "/v1/study-groups/{groupId}/applications/{userId}")
     public ResponseEntity<?> applicationsEssay(
             @PathVariable(name = "groupId") Long groupId,
             @PathVariable(name = "userId") Long userId
@@ -199,4 +205,38 @@ public class StudyroomController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", studyMemberListRespDto), HttpStatus.OK);
     } //deleteMember()
+<<<<<<< HEAD
 }
+=======
+
+    // 해당 스터디의 스터디장인지 체크
+    @GetMapping(value = "/v1/study/{studyId}/check-master")
+    public ResponseEntity<?> checkMaster(@AuthenticationPrincipal LoginUser loginUser,
+                                         @PathVariable("studyId") Long studyRoomId) {
+        Long userId = loginUser.getUser().getId();
+        Optional<User> userOpt = userRepository.findById(loginUser.getUser().getId());
+
+        if (!userOpt.isPresent()) {
+            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 유저가 없습니다.", null));
+        }
+
+        Long masterId = studyService.findcreatedByBystudyId(studyRoomId);
+        if (masterId == null) {
+            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 스터디가 존재하지 않습니다.", null));
+        }
+
+        if (!userId.equals(masterId)) {
+            throw new CustomApiException("해당 스터디의 스터디 조장이 아닙니다.");
+        }
+
+        User master = userOpt.get();
+        StudyResDto.CheckStudyMaserRespDto checkStudyMasterRespDto = new StudyResDto.CheckStudyMaserRespDto();
+        checkStudyMasterRespDto.setUsername(master.getUsername());
+        checkStudyMasterRespDto.setMasterNickname(master.getNickname());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "해당 스터디의 스터디 조장입니다.", checkStudyMasterRespDto), HttpStatus.OK);
+    }
+
+
+}
+>>>>>>> 701b38ab00e28af24a86dbda3aa6b4f7afa0770a
