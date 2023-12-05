@@ -56,7 +56,7 @@ public class StudyroomController {
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(name = "studyId") Long studyId,
             @RequestBody StudyReqDto.StudyModifyReqDto studyModifyReqDto
-    ){
+    ) {
         // 수정할 스터디 룸 정보,조장 아이디 정보 입력
         studyModifyReqDto.setStudyId(studyId);
         studyModifyReqDto.setCreatedBy(loginUser.getUser().getId());
@@ -164,7 +164,7 @@ public class StudyroomController {
     private List<StudyResDto.StudyMemberListRespDto> getStudyMemberListRespDtos(List<StudyMember> studyMembers) {
         List<StudyResDto.StudyMemberListRespDto> studyMemberListRespDtoList = new ArrayList<>();
 
-        for(StudyMember studyMember : studyMembers){
+        for (StudyMember studyMember : studyMembers) {
             StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                     = StudyResDto.StudyMemberListRespDto.builder()
                     .id(studyMember.getId())
@@ -173,7 +173,7 @@ public class StudyroomController {
                     .status(studyMember.getStatus())
                     .build();
 
-          studyMemberListRespDtoList.add(studyMemberListRespDto);
+            studyMemberListRespDtoList.add(studyMemberListRespDto);
 
         }
         return studyMemberListRespDtoList;
@@ -199,5 +199,4 @@ public class StudyroomController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", studyMemberListRespDto), HttpStatus.OK);
     } //deleteMember()
-
 }
