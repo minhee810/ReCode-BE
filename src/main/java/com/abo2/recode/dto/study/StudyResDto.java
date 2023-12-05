@@ -308,14 +308,16 @@ public class StudyResDto {
         @NotEmpty
         private LocalDateTime updatedAt;
         //======================================
-        // skill 테이블의 스킬들,모집분야
-        private String[] skills;
+
+
+        // 선택된 Skill 들의 이름 리스트
+        private Set<StudyReqDto.SkillDto> skills;
 
         @Builder
         public StudyCreateRespDto(String studyName, String title, String description,
                                   LocalTime startTime, LocalTime endTime, Set<String> attendanceDay,
                                   LocalDate startDate, LocalDate endDate, Integer maxNum, Long userId,
-                                  LocalDateTime createdAt, LocalDateTime updatedAt, String[] skills) {
+                                  LocalDateTime createdAt, LocalDateTime updatedAt, Set<StudyReqDto.SkillDto> skills) {
             this.studyName = studyName;
             this.title = title;
             this.description = description;
@@ -331,6 +333,18 @@ public class StudyResDto {
             this.skills = skills;
         }
     }
+
+    // skill 객체를 받아오기 위한
+    @Getter
+    @Setter
+    public class SkillDto{
+        @NotEmpty
+        private String skillName;
+
+        @NotEmpty
+        private String position;
+    }
+
 
     @Getter
     @Setter
@@ -372,27 +386,6 @@ public class StudyResDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ApplicationResDto{
-/*        ApplicationResponse
-        HTTP/1.1 200 OK
-        Content-Type: application/json
-
-        {
-            "code": 1,
-                "message": "신청 인원 목록을 성공적으로 조회했습니다.",
-                "data": [
-            {
-                "userId": 100,
-                    "username": "applicant_username1",
-                    "status": "pending" // 또는 'accepted', 'rejected'
-            },
-            {
-                "userId": 101,
-                    "username": "applicant_username2",
-                    "status": "pending"
-            }
-            // 추가 신청자 데이터...
-            ]
-        }*/
 
         @NotEmpty
         private Long userId;
@@ -413,16 +406,6 @@ public class StudyResDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ApplicationEssayResDto{
-
-    /*    {
-            "code": 1,
-                "message": "신청 인원의 자기소개서를 성공적으로 조회했습니다.",
-                "data": {
-            "username" : "user2",
-                    "email" : "user1234@google.com",
-                    "essay" : "asjskdfljfeifh",
-        }
-        }*/
 
         @NotEmpty
         private String username;

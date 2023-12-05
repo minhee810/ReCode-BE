@@ -4,6 +4,7 @@ package com.abo2.recode.domain.studyroom;
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
+import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
@@ -133,5 +134,12 @@ public class StudyRoom {
         this.maxNum = studyModifyReqDto.getMaxNum();
         this.updatedAt = LocalDateTime.now();
     }
+
+//    public void addSkill(String skillName, String position){
+//        Skill skill = new Skill(skillName, position);
+//        StudySkill studySkill = new StudySkill(this, skill);
+//        studySkills.add(studySkill);
+//        skill.getStudySkills().add(studySkill);
+//    }
 }
 

@@ -1,13 +1,13 @@
 package com.abo2.recode.dto.study;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.abo2.recode.domain.skill.Skill;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -56,10 +56,23 @@ public class StudyReqDto {
 
         @NotEmpty
         private LocalDateTime updatedAt;
-        //======================================
-        // skill 테이블의 스킬들,모집분야
-        private String[] skills;
+
+        // 선택된 Skill 들의 이름 리스트
+        private Set<SkillDto> skills;
     }
+
+    // skill 객체를 받아오기 위한
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class SkillDto{
+        @NotEmpty
+        private String skillName;
+
+        @NotEmpty
+        private String position;
+    }
+
 
     @Getter
     @Setter
@@ -106,7 +119,7 @@ public class StudyReqDto {
         private LocalDateTime updatedAt;
         //======================================
         // skill 테이블의 스킬들,모집분야
-        private String[] skills;
+        private Set<SkillDto> skills;
     }
 
     @Getter
@@ -132,9 +145,6 @@ public class StudyReqDto {
     @Getter
     @Setter
     public static class StudyMembershipReqDto{
-     /*   {
-            "status" : "approved" //"Rejected"
-        }*/
 
         @NotEmpty
         @Size(min = 1, max = 50)

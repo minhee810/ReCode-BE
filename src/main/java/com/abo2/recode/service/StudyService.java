@@ -13,12 +13,14 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.post.PostRespDto;
+import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,15 +132,42 @@ public class StudyService {
             studyRoom.getAttendanceDay().add(attendanceDay);
         }
 
-        for (String skillName : studyModifyReqDto.getSkills()) {
-            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
+        // 연관관계 AttendanceDay 저장
+        for (String day : studyModifyReqDto.getAttendanceDay()) {
+            AttendanceDay attendanceDay = AttendanceDay.builder()
+                    .attendanceDay(day)
+                    .studyRoom(studyRoom)
+                    .build();
 
+            studyRoom.getAttendanceDay().add(attendanceDay);
+        }
+
+        // Skill 정보 저장 로직
+        Set<StudyReqDto.SkillDto> skillDtos = studyModifyReqDto.getSkills();
+        Set<Skill> skills = new HashSet<>();
+
+        for (StudyReqDto.SkillDto skillDto : skillDtos) {
+            String skillName = skillDto.getSkillName();
+            String position = skillDto.getPosition();
+
+
+            Skill skill = skillRepository.findBySkillName(skillName);
+            if (skill == null) {
+                skill = new Skill(skillName, position);
+                skillRepository.save(skill);
+            }
+
+            skills.add(skill);
+        }
+
+        for (Skill skill : skills) {
             StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
 
-            studyRoom.getStudySkills().add(studySkill);
+            studySkillRepository.save(studySkill);
+
         }
 
         // StudyRoom의 AttendanceDay 정보를 String Set으로 변환
@@ -148,7 +177,6 @@ public class StudyService {
                 .map(AttendanceDay::getAttendanceDay)
                 .collect(Collectors.toSet());
 
-        String[] skillNames = studyModifyReqDto.getSkills();
 
         // studyRoom 기반으로 studyCreateRespDto 채우기
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
@@ -163,7 +191,7 @@ public class StudyService {
                 .title(studyRoom.getTitle())
                 .updatedAt(studyRoom.getUpdatedAt())
                 .attendanceDay(attendanceDays) // Set<String>으로 변환한 정보를 저장
-                .skills(skillNames)
+                .skills(skillDtos)
                 .userId(studyRoom.getMaster().getId())
                 .build();
 
@@ -177,9 +205,6 @@ public class StudyService {
         // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        System.out.println("master = " + master);
-        System.out.println("studyCreateReqDto.getAttendanceDay() = " + studyCreateReqDto.getAttendanceDay());
 
         // 문자열로 받은 시간 localTime 타입으로 파싱
         LocalTime startTime = parseTime(studyCreateReqDto.getStartTime());
@@ -211,21 +236,33 @@ public class StudyService {
             studyRoom.getAttendanceDay().add(attendanceDay);
         }
 
+        // Skill 정보 저장 로직
+        Set<StudyReqDto.SkillDto> skillDtos = studyCreateReqDto.getSkills();
+        Set<Skill> skills = new HashSet<>();
 
-        // 3. study_skill 테이블에 skill 삽입
-        // 3-1. Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
-        // expertise
-        for (String skillName : studyCreateReqDto.getSkills()) {
-            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
+        for (StudyReqDto.SkillDto skillDto : skillDtos) {
+            String skillName = skillDto.getSkillName();
+            String position = skillDto.getPosition();
 
+
+            Skill skill = skillRepository.findBySkillName(skillName);
+            if (skill == null) {
+                skill = new Skill(skillName, position);
+                skillRepository.save(skill);
+            }
+
+            skills.add(skill);
+        }
+
+        for (Skill skill : skills) {
             StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
 
             studySkillRepository.save(studySkill);
-        }
 
+        }
 
         // StudyRoom의 AttendanceDay 정보를String Set으로 변환
         Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
@@ -234,8 +271,6 @@ public class StudyService {
                 .map(AttendanceDay::getAttendanceDay)
                 .collect(Collectors.toSet());
 
-
-        String[] skillNames = studyCreateReqDto.getSkills();
 
         // ResponseDto 생성
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
@@ -250,7 +285,7 @@ public class StudyService {
                 .title(studyRoom.getTitle())
                 .updatedAt(studyRoom.getUpdatedAt())
                 .attendanceDay(attendanceDays) // Set<String>으로 변환한 정보를 저장
-                .skills(skillNames)
+                .skills(skillDtos)
                 .userId(master.getId())
                 .build();
 
@@ -473,5 +508,8 @@ public class StudyService {
             return studyMember;
         }
     }
+
+
+
 }
 

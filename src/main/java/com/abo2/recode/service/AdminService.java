@@ -10,6 +10,7 @@ import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
+import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,49 +29,30 @@ public class AdminService {
 
     private SkillRepository skillRepository;
 
-    private StudySkillRepository studySkillRepository;
-
-    private StudyMemberRepository studyMemberRepository;
-
-    private PostRepository postRepository;
-
-    private AttendanceRepository attendanceRepository;
-
-    private QuizRepository quizRepository;
-
     private StudyRoomRepository studyRoomRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
     @Autowired
-    public AdminService(SkillRepository skillRepository, StudySkillRepository studySkillRepository,
-                        StudyMemberRepository studyMemberRepository, PostRepository postRepository,
-                        AttendanceRepository attendanceRepository, QuizRepository quizRepository,
-                        StudyRoomRepository studyRoomRepository) {
+    public AdminService(SkillRepository skillRepository, StudyRoomRepository studyRoomRepository) {
         this.skillRepository = skillRepository;
-        this.studySkillRepository = studySkillRepository;
-        this.studyMemberRepository = studyMemberRepository;
-        this.postRepository = postRepository;
-        this.attendanceRepository = attendanceRepository;
-        this.quizRepository = quizRepository;
         this.studyRoomRepository = studyRoomRepository;
     }
 
     // 관리자가 기술 스택 관리
-    public SkillResDto.AdminSkillAddResDto adminSkillAdd(String[] addskills){
+    public SkillResDto.AdminSkillAddResDto adminSkillAdd(SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto) {
 
-        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = new SkillResDto.AdminSkillAddResDto();
-        ArrayList<String> skills = new ArrayList<>();
+        Skill skill = Skill.builder()
+                .skillName(adminSkillAddReqDto.getSkillName())
+                .position(adminSkillAddReqDto.getPosition())
+                .build();
 
-        for(String addskill : addskills){
-            Skill skill = Skill.builder()
-                    .skillName(addskill)
-                    .build();
-            skillRepository.save(skill);
-            skills.add(addskill);
-        }
+        skillRepository.save(skill);
 
-        adminSkillAddResDto.setSkills(skills);
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = SkillResDto.AdminSkillAddResDto.builder()
+                .position(skill.getPosition())
+                .skillName(skill.getSkillName())
+                .build();
 
         return adminSkillAddResDto;
 
@@ -88,35 +70,25 @@ public class AdminService {
     @Transactional
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급
     public AdminResDto.MemberRoleResDto memberRoleChange(AdminReqDto.MemberRoleReqDto memberRoleReqDto,
-                                                         Long studyId,Long userId) {
-        //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
-        //-> 알람 기능까지 구현해야 고려 가능한 기능이므로 일단 제외하고 구현
-
-    /*    MemberRoleReqDto
-            {
-            "role": "group_leader" //or "group_member"
-        }
-    }*/
-
+                                                         Long studyId, Long userId) {
         AdminResDto.MemberRoleResDto memberRoleResDto = AdminResDto.MemberRoleResDto.builder()
                 .userId(userId)
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        try{
+        try {
             Long createdBy = studyRoomRepository.findcreatedByBystudyId(studyId);
             logger.info(createdBy.toString());
 
-            if((memberRoleReqDto.getRole().equals("group_leader"))
-                    && !(userId == createdBy)){
+            if ((memberRoleReqDto.getRole().equals("group_leader"))
+                    && !(userId == createdBy)) {
                 //조원을 조장으로 승격. studyRoom의 createdBy를 체크해서 현재 유저가 조장이 맞는지도 체크해야함.
 
                 //StudyRoom의 createdBy를 업데이트 해야함.
-                studyRoomRepository.memberRolePromote(studyId,userId);
+                studyRoomRepository.memberRolePromote(studyId, userId);
 
                 memberRoleResDto.setNewRole("group_leader");
-            }
-            else if (memberRoleReqDto.getRole().equals("group_member")) { //조장을 조원으로 강등
+            } else if (memberRoleReqDto.getRole().equals("group_member")) { //조장을 조원으로 강등
                 //StudyRoom의 createdBy를 null로 업데이트 해야함.
                 studyRoomRepository.memberRoleDemote(studyId);
 
@@ -124,37 +96,22 @@ public class AdminService {
             }
 
 
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             //조장이 공석인 상황 -> 무조건 해당 유저를 조장으로 승격
-            studyRoomRepository.memberRolePromote(studyId,userId);
+            studyRoomRepository.memberRolePromote(studyId, userId);
             memberRoleResDto.setNewRole("group_leader");
         }
-
-        //    - 한 번에 한 명의 멤버만이 그룹장이 될 수 있으므로, 권한 이전 시에 현재 그룹장은 자동으로 일반 멤버로 강등되는 로직이 필요합니다.
-
-          /*      MemberRoleResDto
-             {
-            "code": 1,
-                "msg": "사용자 권한이 성공적으로 변경되었습니다.",
-                "data": {
-            "userId": 42,
-                    "newRole": "group_leader",
-                    "updatedAt": "2023-11-06T12:00:00Z"
-        }*/
-
         return memberRoleResDto;
     } //memberRoleChange()
 
-    // 스킬 목록 조회
-    public SkillResDto.AdminSkillAddResDto getSkills() {
-        List<Skill> skillList = skillRepository.findAll();
-        ArrayList<String> skillNames = skillList.stream()
-                .map(Skill::getSkillName)
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        SkillResDto.AdminSkillAddResDto response = new SkillResDto.AdminSkillAddResDto();
-        response.setSkills(skillNames);
-        return response;
-    }//getSkills()
+    // 전체 스킬 불러오기
+    public List<SkillResDto.AdminGetSkillResDto> getAllSkills() {
+        return skillRepository.findAll().stream()
+                .map(skill -> SkillResDto.AdminGetSkillResDto.builder()
+                        .skillName(skill.getSkillName())
+                        .position(skill.getPosition())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
 }//AdminService class
