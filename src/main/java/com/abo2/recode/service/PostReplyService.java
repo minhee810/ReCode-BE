@@ -70,11 +70,6 @@ public class PostReplyService {
                 throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
             }
 
-            // 댓글 작성자와 현재 사용자가 동일한지 확인
-            if (!postReply.getUser().getId().equals(userId)) {
-                throw new AccessDeniedException("댓글 조회 권한이 없습니다.");
-            }
-
             postReplyDtoList.add(new PostRespDto.PostReplyRespDto(postReply, postReply.getUser().getNickname()));
         }
 
@@ -84,8 +79,10 @@ public class PostReplyService {
 
     // 게시글 댓글 수정
 
-    public PostRespDto.PostReplyRespDto updatePostReply(Long userId, Long postId, Long postReply_id, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto updatePostReply(Long userId,Long studyRoomId, Long postId, Long postReply_id, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
+        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 스터디룸이 없습니다." + studyRoomId));
 
         PostReply postReply = postReplyRepository.findById(postReply_id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postReply_id));
@@ -112,7 +109,7 @@ public class PostReplyService {
 
     // 게시글 댓글 삭제
 
-    public void deletePostReply(Long userId, Long postId, Long postReplyId) {
+    public void deletePostReply(Long userId,Long studyRoomId, Long postId, Long postReplyId) {
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 댓글이 없습니다." + postReplyId));
 
