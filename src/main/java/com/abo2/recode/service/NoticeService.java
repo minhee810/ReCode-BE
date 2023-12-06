@@ -10,6 +10,7 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,12 +92,11 @@ public class NoticeService {
     // 공지사항 목록 조회
     @Transactional
     public List<NoticeRespDto> getAllNotices() {
-        List<Notice> notice = noticeRepository.findAll();
+        List<Notice> notice = noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return notice.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
     private NoticeRespDto convertToDto(Notice notice) {
         NoticeRespDto dto = new NoticeRespDto();
         dto.setId(notice.getId());

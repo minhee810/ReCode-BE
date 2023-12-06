@@ -100,7 +100,7 @@ public class StudyRoom {
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    //===========================================
+
 
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
@@ -135,11 +135,5 @@ public class StudyRoom {
         this.updatedAt = LocalDateTime.now();
     }
 
-//    public void addSkill(String skillName, String position){
-//        Skill skill = new Skill(skillName, position);
-//        StudySkill studySkill = new StudySkill(this, skill);
-//        studySkills.add(studySkill);
-//        skill.getStudySkills().add(studySkill);
-//    }
 }
 

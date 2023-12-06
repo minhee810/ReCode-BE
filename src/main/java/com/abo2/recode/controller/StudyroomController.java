@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,8 +44,9 @@ public class StudyroomController {
     @Transactional
     @PostMapping(value = "/v1/study") // @AuthenticationPrincipal 에서 LoginUser 객체를 꺼내와야 함. LoginUSer
     public ResponseEntity<?> createRoom(@AuthenticationPrincipal LoginUser loginUser,
-                                        @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
+                                        @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto, BindingResult bindingResult) {
 
+        
         // 스터디 이름이 중복되지 않는지 확인 필요
         studyCreateReqDto.setUserId(loginUser.getUser().getId());
 

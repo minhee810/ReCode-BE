@@ -20,6 +20,7 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,8 +108,8 @@ public class StudyService {
     public StudyResDto.StudyCreateRespDto modifyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto) {
 
         // studyId로 Studyroom 조회
-        StudyRoom studyRoom = studyRoomRepository.findById(studyModifyReqDto.getStudyId()).orElseThrow(
-                () -> new CustomApiException("존재하지 않는 스터디 그룹입니다.")
+        StudyRoom studyRoom = studyRoomRepository.findById(studyModifyReqDto.getStudyId())
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 스터디 그룹입니다.")
         );
 
         // 현재 수정하는 사람이 스터디 조장인지 체크
@@ -188,6 +189,10 @@ public class StudyService {
     @Transactional
     public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
 
+        // 스터디 이름 중복 검사
+        if (studyRoomRepository.existsByStudyName(studyCreateReqDto.getStudyName())) {
+            throw new CustomApiException("스터디 이름이 이미 존재합니다.");
+        }
         // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -384,6 +389,8 @@ public class StudyService {
                 .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
                 .collect(Collectors.toList());
     }//mainList()
+
+
 
     // Study_skill 불러오기
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
