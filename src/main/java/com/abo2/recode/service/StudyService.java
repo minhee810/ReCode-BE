@@ -359,9 +359,9 @@ public class StudyService {
     }//postStudyMemberListInAdminPage()
 
 
-    public List<StudyResDto.ApplicationResDto> applications(Long groupId) {
+    public List<StudyResDto.ApplicationResDto> applications(Long study_room_id) {
 
-        return studyMemberRepository.applications(groupId);
+        return studyMemberRepository.applications(study_room_id);
     }
 
     public StudyResDto.ApplicationEssayResDto applicationsEssay(Long groupId, Long userId) {

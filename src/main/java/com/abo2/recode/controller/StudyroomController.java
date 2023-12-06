@@ -110,19 +110,19 @@ public class StudyroomController {
     }//mainList()
 
     // 스터디룸 관리 화면에서 신청 현황 멤버 목록 불러오기
-    @GetMapping(value = "/study-groups/{groupId}/applications")
+    @GetMapping(value = "/v1/study-groups/{study_room_id}/applications")
     public ResponseEntity<?> applications(
-            @PathVariable(name = "groupId") Long groupId
+            @PathVariable(name = "study_room_id") Long study_room_id
     ) {
 
-        List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(groupId);
+        List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(study_room_id);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "신청 인원 목록을 성공적으로 조회했습니다.", applicationResDtoList)
                 , HttpStatus.OK);
     }
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
-    @GetMapping(value = "/study-groups/{groupId}/applications/{user_id}")
+    @GetMapping(value = "/v1/study-groups/{groupId}/applications/{user_id}")
     public ResponseEntity<?> applicationsEssay(
             @PathVariable(name = "groupId") Long groupId,
             @PathVariable(name = "user_id") Long user_Id
