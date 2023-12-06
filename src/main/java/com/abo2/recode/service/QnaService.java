@@ -28,7 +28,6 @@ public class QnaService {
         Qna qna = Qna.builder()
                 .userId(user)
                 .title(qnaReqDTO.getTitle())
-                .category(qnaReqDTO.getCategory())
                 .content(qnaReqDTO.getContent())
                 .build();
 
@@ -55,7 +54,6 @@ public class QnaService {
         Qna qna = Qna.builder()
                 .id(id)
                 .title(qnaReqDTO.getTitle())
-                .category(qnaReqDTO.getCategory())
                 .content(qnaReqDTO.getContent())
                 .build();
 

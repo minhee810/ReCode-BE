@@ -7,6 +7,7 @@ import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
+import com.abo2.recode.dto.qna.QnaReplyDTO;
 import com.abo2.recode.dto.qna.QnaReqDTO;
 import com.abo2.recode.dto.qna.QnaResDTO;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -19,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -58,7 +60,19 @@ public class QnaController {
 
         List<Qna> qnas = qnaService.qnaList();
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnas), HttpStatus.OK);
+        List<QnaResDTO> qnaResDTOList = new ArrayList<>();
+
+        for(Qna qna : qnas){
+            qnaResDTO = QnaResDTO.builder()
+                    .userId(qna.getUserId().getId())
+                    .title(qna.getTitle())
+                    .content(qna.getContent())
+                    .build();
+
+            qnaResDTOList.add(qnaResDTO);
+        }
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnaResDTOList), HttpStatus.OK);
     }
 
     //Qna 단일 조회
@@ -68,7 +82,13 @@ public class QnaController {
 
         Qna qna1 = qnaService.qna(id);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qna1), HttpStatus.OK);
+        qnaResDTO = QnaResDTO.builder()
+                .userId(qna1.getUserId().getId())
+                .title(qna1.getTitle())
+                .content(qna1.getContent())
+                .build();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qnaResDTO), HttpStatus.OK);
     }
 
     //Qna 수정
@@ -112,7 +132,6 @@ public class QnaController {
         QnaResDTO qnaResDTO = QnaResDTO.builder()
                 .userId(qnaInfo.getUserId().getId())
                 .title(qnaInfo.getTitle())
-                .category(qnaInfo.getCategory())
                 .content(qnaInfo.getContent())
                 .build();
 
