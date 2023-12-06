@@ -12,6 +12,8 @@ import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
 import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.skill.SkillResDto;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +27,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AdminService {
 
-    private SkillRepository skillRepository;
+    private final SkillRepository skillRepository;
 
-    private StudyRoomRepository studyRoomRepository;
+    private final StudyRoomRepository studyRoomRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
-    @Autowired
-    public AdminService(SkillRepository skillRepository, StudyRoomRepository studyRoomRepository) {
-        this.skillRepository = skillRepository;
-        this.studyRoomRepository = studyRoomRepository;
-    }
 
     // 관리자가 기술 스택 관리
     public SkillResDto.AdminSkillAddResDto adminSkillAdd(SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto) {

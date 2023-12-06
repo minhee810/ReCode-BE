@@ -11,4 +11,5 @@ public interface SkillRepository extends JpaRepository<Skill,Long> {
     Skill findBySkillNameAndPosition(String skillName, String position);
 
     List<Skill> findByPosition(String position);
+
 }

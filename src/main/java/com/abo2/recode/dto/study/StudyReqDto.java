@@ -1,9 +1,12 @@
 package com.abo2.recode.dto.study;
 
 import com.abo2.recode.domain.skill.Skill;
+import com.abo2.recode.dto.skill.SkillReqDto;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,8 +61,25 @@ public class StudyReqDto {
         private LocalDateTime updatedAt;
 
         // 선택된 Skill 들의 이름 리스트
-        private Set<SkillDto> skills;
+//        @NotEmpty
+//        private String[] skillNames;
+//        private List<SkillReqDto.GetSkillNameReqDto> skillNames;
+
+//        private Set<StudyResDto.SkillDto> skills;
+
+        @NotEmpty
+        private List<String> skillNames;
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class SkillNamesDto{
+        @NotEmpty
+        private String skillName;
+
+    }
+
 
     // skill 객체를 받아오기 위한
     @Getter
@@ -69,8 +89,10 @@ public class StudyReqDto {
         @NotEmpty
         private String skillName;
 
-        @NotEmpty
-        private String position;
+        @JsonCreator
+        public SkillDto(String skillName) {
+            this.skillName = skillName;
+        }
     }
 
 
@@ -97,29 +119,31 @@ public class StudyReqDto {
         @Size(min = 1, max = 300)
         private String description;
 
-        @NotEmpty
+        @NotNull
         private String startTime; //스터디 출석 인정 시작 시간 "12:00"
 
-        @NotEmpty
+        @NotNull
         private String endTime; //스터디 출석 인정 끝 시간 "12:10"
 
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
-        @NotEmpty
+        @NotNull
         private LocalDate startDate;
 
-        @NotEmpty
+        @NotNull
         private LocalDate endDate;
 
         @NotEmpty
         private Integer maxNum;
 
-        @NotEmpty
         private LocalDateTime updatedAt;
+
+        private LocalDateTime createdAt;
         //======================================
         // skill 테이블의 스킬들,모집분야
-        private Set<SkillDto> skills;
+        @NotEmpty
+        private List<String> skillNames;
     }
 
     @Getter

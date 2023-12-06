@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -281,19 +282,19 @@ public class StudyResDto {
         @Size(min = 1, max = 300)
         private String description;
 
-        @NotEmpty
+        @NotNull
         private LocalTime startTime; //스터디 출석 인정 시작 시간 " 12:00"
 
-        @NotEmpty
+        @NotNull
         private LocalTime endTime; //스터디 출석 인정 끝 시간 " 12:10"
 
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
-        @NotEmpty
+        @NotNull
         private LocalDate startDate;
 
-        @NotEmpty
+        @NotNull
         private LocalDate endDate;
 
         @NotEmpty
@@ -302,22 +303,24 @@ public class StudyResDto {
         @NotEmpty
         private Long userId; // 별도로 가져오는 코드 필요(입력 받지 않음)
 
-        @NotEmpty
         private LocalDateTime createdAt;
 
-        @NotEmpty
         private LocalDateTime updatedAt;
         //======================================
 
 
         // 선택된 Skill 들의 이름 리스트
-        private Set<StudyReqDto.SkillDto> skills;
+//        private Set<StudyReqDto.SkillDto> skills;
+
+        @NotEmpty
+        private List<String> skillNames;
+//        private String[] skillNames;
 
         @Builder
         public StudyCreateRespDto(String studyName, String title, String description,
                                   LocalTime startTime, LocalTime endTime, Set<String> attendanceDay,
                                   LocalDate startDate, LocalDate endDate, Integer maxNum, Long userId,
-                                  LocalDateTime createdAt, LocalDateTime updatedAt, Set<StudyReqDto.SkillDto> skills) {
+                                  LocalDateTime createdAt, LocalDateTime updatedAt, List<String> skillNames) {
             this.studyName = studyName;
             this.title = title;
             this.description = description;
@@ -330,7 +333,7 @@ public class StudyResDto {
             this.userId = userId;
             this.createdAt = createdAt;
             this.updatedAt = updatedAt;
-            this.skills = skills;
+            this.skillNames = skillNames;
         }
     }
 
@@ -341,8 +344,6 @@ public class StudyResDto {
         @NotEmpty
         private String skillName;
 
-        @NotEmpty
-        private String position;
     }
 
 
