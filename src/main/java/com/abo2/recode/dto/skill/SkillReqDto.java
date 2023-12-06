@@ -1,6 +1,7 @@
 package com.abo2.recode.dto.skill;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
@@ -26,14 +27,15 @@ public class SkillReqDto {
         }
     }
 
-//    @Getter
-//    @Setter
-//    public static class getSkillNameReqDto {
-//
-//        // 사용자가 선택한 skillName 을 받아오는 dto
-//        @NotEmpty
-//        private List<String> skillName;
-//    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class GetSkillNameReqDto {
+
+        // 사용자가 선택한 skillName 을 받아오는 dto
+        @NotEmpty
+        private List<String> skillName;
+    }
 
     // 사용자가 선택한 skill
     @Getter

@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class StudyroomController {
 
         //1. studyReqDto를 DB에 넣기 Service에서 처리
         StudyResDto.StudyCreateRespDto studyCreateRespDto = studyService.createRoom(studyCreateReqDto);
+
 
         new ResponseDto<>(HttpStatus.OK.value(), "Success", studyCreateReqDto);
 
@@ -205,9 +207,7 @@ public class StudyroomController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", studyMemberListRespDto), HttpStatus.OK);
     } //deleteMember()
-<<<<<<< HEAD
-}
-=======
+
 
     // 해당 스터디의 스터디장인지 체크
     @GetMapping(value = "/v1/study/{studyId}/check-master")
@@ -239,4 +239,4 @@ public class StudyroomController {
 
 
 }
->>>>>>> 701b38ab00e28af24a86dbda3aa6b4f7afa0770a
+
