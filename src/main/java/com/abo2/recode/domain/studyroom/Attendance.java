@@ -1,11 +1,9 @@
 package com.abo2.recode.domain.studyroom;
 
 import com.abo2.recode.domain.user.User;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.mapping.ToOne;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -29,7 +27,7 @@ public class Attendance {
     private StudyRoom studyRoom;  // 스터디룸 아이디
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user; // 사용자의 아이디
 
     @CreatedDate

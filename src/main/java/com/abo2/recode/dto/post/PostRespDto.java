@@ -3,6 +3,7 @@ package com.abo2.recode.dto.post;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostReply;
 import com.abo2.recode.domain.studymember.StudyMember;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,6 +48,8 @@ public class PostRespDto {
         private String title;
         private String content;
         private String category;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime createdAt;
         private String nickname;
 
@@ -139,20 +142,6 @@ public class PostRespDto {
 
     public static class StudyMemberListDto {
 
-//
-//        private Long Id; //스터디 룸 member 일련번호
-//
-//        @ManyToOne
-//        @JoinColumn(name = "study_room_id")
-//        private StudyRoom studyRoom;
-//
-//        @ManyToOne
-//        @JoinColumn(name = "user_id")
-//        private User user;
-//
-//        @Column(nullable = false,length = 50)
-//        private Integer status;
-
         private Long Id;
         private Long studyRoomId;
         private Long userId;
@@ -164,6 +153,5 @@ public class PostRespDto {
             this.userId = studyMember.getUser().getId();
             this.status = studyMember.getStatus();
         }
-    }//StudyMemberListDto
-
+    }
 }

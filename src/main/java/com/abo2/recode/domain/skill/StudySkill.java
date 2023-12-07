@@ -32,4 +32,6 @@ public class StudySkill {
         this.studyRoom = studyRoom;
         this.skill = skill;
     }
+
+
 }

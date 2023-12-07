@@ -45,18 +45,16 @@ public class PostReplyService {
         PostReply savedPostReply = postReplyRepository.save(postReply);
         String nickName = user.getNickname();
 
-        System.out.println("DEBUG: created PostReplyRespDto - nickName: " + nickName + ", createdAt: " + savedPostReply.getCreatedAt());
-
         return new PostRespDto.PostReplyRespDto(savedPostReply, nickName);
     }
 
 
     // 게시글 댓글 수정
-    public PostRespDto.PostReplyRespDto updatePostReply(Long userId, Long postId, Long postReply_id, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto updatePostReply(Long userId, Long postId, Long postreplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
 
-        PostReply postReply = postReplyRepository.findById(postReply_id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postReply_id));
+        PostReply postReply = postReplyRepository.findById(postreplyId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postreplyId));
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId가 존재하지 않습니다." + postId));

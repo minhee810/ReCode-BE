@@ -34,13 +34,13 @@ public class QnaReply {
 
     @ManyToOne
     @JoinColumn(name = "qna_id", nullable = false, updatable = false)
-    private Qna qna_id;
+    private Qna qnaId;
 
     @Builder
-    public QnaReply(Long id, String comment, Qna qna_id) {
+    public QnaReply(Long id, String comment, Qna qnaId) {
         this.id = id;
         this.comment = comment;
-        this.qna_id = qna_id;
+        this.qnaId = qnaId;
 
     }
 }

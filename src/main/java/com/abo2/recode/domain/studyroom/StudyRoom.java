@@ -7,6 +7,7 @@ import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
+import com.abo2.recode.dto.study.StudyReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,7 +69,6 @@ public class StudyRoom {
     @JoinColumn(name = "created_by")
     private User master;
 
-
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt; //스터디 그룹 만든 시각
@@ -99,6 +99,7 @@ public class StudyRoom {
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Post> posts;
 
+
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
                      LocalDate endDate, LocalTime startTime, LocalTime endTime,
@@ -115,5 +116,22 @@ public class StudyRoom {
         this.currentNum = currentNum;
         this.maxNum = maxNum;
         this.master = master;
+    } //StudyRoom()
+
+
+    public void updateStudyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto,
+                                LocalTime startTime, LocalTime endTime) {
+
+        this.studyName = studyModifyReqDto.getStudyName();
+        this.title = studyModifyReqDto.getTitle();
+        this.description = studyModifyReqDto.getDescription();
+        this.startDate = studyModifyReqDto.getStartDate();
+        this.endDate = studyModifyReqDto.getEndDate();
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.maxNum = studyModifyReqDto.getMaxNum();
+        this.updatedAt = LocalDateTime.now();
     }
+
 }
+

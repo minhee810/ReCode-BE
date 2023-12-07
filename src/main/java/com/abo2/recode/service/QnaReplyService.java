@@ -21,14 +21,16 @@ public class QnaReplyService {
 
     //Qna 댓글 생성
     @Transactional
-    public void postQnaReply(QnaReplyDTO qnaReplyDTO) {
-        Qna qna = qnaRepository.findById(qnaReplyDTO.getQna_id()).orElseThrow();
+    public QnaReply postQnaReply(QnaReplyDTO qnaReplyDTO) {
+        Qna qna = qnaRepository.findById(qnaReplyDTO.getQnaId()).orElseThrow();
         QnaReply qnaReply = QnaReply.builder()
                 .comment(qnaReplyDTO.getComment())
-                .qna_id(qna)
+                .qnaId(qna)
                 .build();
 
         qnaReplyRepository.save(qnaReply);
+
+        return qnaReply;
     }
 
     //Qna 댓글 조회 (목록)
@@ -39,15 +41,17 @@ public class QnaReplyService {
 
     //Qna 댓글 수정
     @Transactional
-    public void qnaReplyModify(QnaReplyDTO qnaReplyDTO, Long id) {
-        Qna qna = qnaRepository.findById(qnaReplyDTO.getQna_id()).orElseThrow();
+    public QnaReply qnaReplyModify(QnaReplyDTO qnaReplyDTO, Long id) {
+        Qna qna = qnaRepository.findById(qnaReplyDTO.getQnaId()).orElseThrow();
         QnaReply qnaReply = QnaReply.builder()
                 .id(id)
                 .comment(qnaReplyDTO.getComment())
-                .qna_id(qna)
+                .qnaId(qna)
                 .build();
 
         qnaReplyRepository.save(qnaReply);
+
+        return qnaReply;
     }
 
     //Qna 댓글 삭제

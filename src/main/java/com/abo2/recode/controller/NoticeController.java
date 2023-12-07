@@ -8,7 +8,6 @@ import com.abo2.recode.dto.notice.NoticeReqDto;
 import com.abo2.recode.dto.notice.NoticeRespDto;
 
 import com.abo2.recode.service.NoticeService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
