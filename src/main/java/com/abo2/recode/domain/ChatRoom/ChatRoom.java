@@ -18,8 +18,7 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //ChatRoom 일련번호
 
-
-
-
+    @Column(name="title")
+    private String title;
 
 }

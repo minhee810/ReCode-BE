@@ -27,5 +27,10 @@ public class ChatRoomUserLink {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoomId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by")
+    private User master;
+
+
 
 }
