@@ -2,20 +2,27 @@ package com.abo2.recode.dto.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class BookRespDto {
 
-    private String title;
-    private String link;
-    private String image;
-    private String author;
-    private String discount;
-    private String publisher;
-    private String pubdate;
-    private String isbn;
-    private String description;
+    public int display;
+    private Item[] items;
+
+    @Getter
+    @Setter
+    public static class Item{
+        private String image;
+        private String title;
+        private String link;
+        private String author;
+        private String publisher;
+        private String pubdate;
+        private String description;
+    }
 }
