@@ -3,6 +3,7 @@ package com.abo2.recode.dto.post;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostReply;
 import com.abo2.recode.domain.studymember.StudyMember;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,6 +48,8 @@ public class PostRespDto {
         private String title;
         private String content;
         private String category;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime createdAt;
         private String nickname;
 

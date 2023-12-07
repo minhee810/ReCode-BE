@@ -29,9 +29,6 @@ public class Qna {
     private String title;
 
     @Column(nullable = false)
-    private String category;
-
-    @Column(nullable = false)
     private String content;
 
     @CreatedDate
@@ -50,11 +47,10 @@ public class Qna {
     private List<QnaReply> qnaReplies = new ArrayList<>();
 
     @Builder
-    public Qna(Long id, User userId, String title, String category, String content) {
+    public Qna(Long id, User userId, String title, String content) {
         this.id = id;
         this.userId = userId;
         this.title = title;
-        this.category = category;
         this.content = content;
     }
 }

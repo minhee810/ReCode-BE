@@ -99,7 +99,6 @@ public class StudyRoom {
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    //===========================================
 
     @Builder
     public StudyRoom(Long id, String studyName, String title, String description, LocalDate startDate,
@@ -133,5 +132,6 @@ public class StudyRoom {
         this.maxNum = studyModifyReqDto.getMaxNum();
         this.updatedAt = LocalDateTime.now();
     }
+
 }
 

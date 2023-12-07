@@ -2,9 +2,12 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.studymember.StudyMember;
+import com.abo2.recode.domain.user.User;
+import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
+import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.service.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -27,22 +32,27 @@ public class StudyroomController {
 
     StudyService studyService;
 
+    private UserRepository userRepository;
+
     @Autowired
-    public StudyroomController(StudyService studyService) {
+    public StudyroomController(StudyService studyService, UserRepository userRepository) {
         this.studyService = studyService;
+        this.userRepository = userRepository;
     }
 
     @CrossOrigin
     @Transactional
     @PostMapping(value = "/v1/study") // @AuthenticationPrincipal 에서 LoginUser 객체를 꺼내와야 함. LoginUSer
     public ResponseEntity<?> createRoom(@AuthenticationPrincipal LoginUser loginUser,
-                                        @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
+                                        @RequestBody StudyReqDto.StudyCreateReqDto studyCreateReqDto, BindingResult bindingResult) {
+
 
         // 스터디 이름이 중복되지 않는지 확인 필요
         studyCreateReqDto.setUserId(loginUser.getUser().getId());
 
         //1. studyReqDto를 DB에 넣기 Service에서 처리
         StudyResDto.StudyCreateRespDto studyCreateRespDto = studyService.createRoom(studyCreateReqDto);
+
 
         new ResponseDto<>(HttpStatus.OK.value(), "Success", studyCreateReqDto);
 
@@ -129,7 +139,7 @@ public class StudyroomController {
     }
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
-    @GetMapping(value = "/study-groups/{groupId}/applications/{userId}")
+    @GetMapping(value = "/v1/study-groups/{groupId}/applications/{userId}")
     public ResponseEntity<?> applicationsEssay(
             @PathVariable(name = "groupId") Long groupId,
             @PathVariable(name = "userId") Long userId
@@ -198,5 +208,35 @@ public class StudyroomController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "해당 멤버를 내보냈습니다.", studyMemberListRespDto), HttpStatus.OK);
     }
+
+
+    // 해당 스터디의 스터디장인지 체크
+    @GetMapping(value = "/v1/study/{studyId}/check-master")
+    public ResponseEntity<?> checkMaster(@AuthenticationPrincipal LoginUser loginUser,
+                                         @PathVariable("studyId") Long studyRoomId) {
+        Long userId = loginUser.getUser().getId();
+        Optional<User> userOpt = userRepository.findById(loginUser.getUser().getId());
+
+        if (!userOpt.isPresent()) {
+            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 유저가 없습니다.", null));
+        }
+
+        Long masterId = studyService.findcreatedByBystudyId(studyRoomId);
+        if (masterId == null) {
+            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 스터디가 존재하지 않습니다.", null));
+        }
+
+        if (!userId.equals(masterId)) {
+            throw new CustomApiException("해당 스터디의 스터디 조장이 아닙니다.");
+        }
+
+        User master = userOpt.get();
+        StudyResDto.CheckStudyMaserRespDto checkStudyMasterRespDto = new StudyResDto.CheckStudyMaserRespDto();
+        checkStudyMasterRespDto.setUsername(master.getUsername());
+        checkStudyMasterRespDto.setMasterNickname(master.getNickname());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "해당 스터디의 스터디 조장입니다.", checkStudyMasterRespDto), HttpStatus.OK);
+    }
+
 
 }

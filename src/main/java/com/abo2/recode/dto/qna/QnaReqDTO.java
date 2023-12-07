@@ -11,7 +11,6 @@ public class QnaReqDTO {
 
     private Long userId;
     private String title;
-    private String category;
     private String content;
 
 }
