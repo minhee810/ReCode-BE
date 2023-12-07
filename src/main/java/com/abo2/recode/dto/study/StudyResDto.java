@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,19 +25,19 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyRoomDetailResDto {
+    public static class StudyRoomDetailResDto{
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long studyRoomId; //스터디 그룹 일련번호
 
-        @Column(unique = true, nullable = false, length = 50)
+        @Column(unique = true,nullable = false,length = 50)
         private String studyName; //스터디 그룹 네임
 
-        @Column(nullable = false, length = 50)
+        @Column(nullable = false,length = 50)
         private String title; //스터디 주제
 
-        @Column(nullable = false, length = 300)
+        @Column(nullable = false,length = 300)
         private String description; //스터디 그룹 소개글
 
         @Column(nullable = false)
@@ -185,11 +186,11 @@ public class StudyResDto {
                 this.masterEmail = studyRoom.getMaster().getEmail();
             }
         }
-    }
+    } //class StudyListRespDto
 
     @Getter
     @Setter
-    public static class StudyMemberListRespDto {
+    public static class StudyMemberListRespDto{
 
         private Long Id; //스터디 룸 member 일련번호
 
@@ -206,11 +207,11 @@ public class StudyResDto {
             this.nickname = nickname;
             this.status = status;
         }
-    }
+    }//StudyMemberListRespDto
 
     @Getter
     @Setter
-    public static class StudyMemberAndStatusListRespDto {
+    public static class StudyMemberAndStatusListRespDto{
 
         private Long userId;
 
@@ -227,11 +228,18 @@ public class StudyResDto {
             this.username = username;
             this.createdBy = createdBy;
         }
-    }
+    }//StudyMemberAndStatusListRespDto
 
     @Getter
     @Setter
-    public static class StudyRoomApplyResDto {
+    public static class StudyRoomApplyResDto{
+     /*   {
+            "code": 1,
+                "msg": "스터디 신청에 성공하였습니다.",
+                "data": {
+            "studyId": 1
+        }
+        }*/
 
         @NotEmpty
         private Long studyId;
@@ -241,6 +249,21 @@ public class StudyResDto {
             this.studyId = studyId;
         }
     }
+
+//    @Getter
+//    @Setter
+//    public static class StudyRoomCreateResDto{
+//
+//        private Long id;
+//        private String study_name;
+//        private String title;
+//        private List<String> skillNames;
+//        private Integer current_num;
+//        private Integer max_num;
+//        private String masterEmail;
+//        private String masterNickname;
+//
+//    }
 
     @Getter
     @Setter
@@ -259,19 +282,19 @@ public class StudyResDto {
         @Size(min = 1, max = 300)
         private String description;
 
-        @NotEmpty
+        @NotNull
         private LocalTime startTime; //스터디 출석 인정 시작 시간 " 12:00"
 
-        @NotEmpty
+        @NotNull
         private LocalTime endTime; //스터디 출석 인정 끝 시간 " 12:10"
 
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
-        @NotEmpty
+        @NotNull
         private LocalDate startDate;
 
-        @NotEmpty
+        @NotNull
         private LocalDate endDate;
 
         @NotEmpty
@@ -280,20 +303,24 @@ public class StudyResDto {
         @NotEmpty
         private Long userId; // 별도로 가져오는 코드 필요(입력 받지 않음)
 
-        @NotEmpty
         private LocalDateTime createdAt;
 
-        @NotEmpty
         private LocalDateTime updatedAt;
         //======================================
-        // skill 테이블의 스킬들,모집분야
-        private String[] skills;
+
+
+        // 선택된 Skill 들의 이름 리스트
+//        private Set<StudyReqDto.SkillDto> skills;
+
+        @NotEmpty
+        private List<String> skillNames;
+//        private String[] skillNames;
 
         @Builder
         public StudyCreateRespDto(String studyName, String title, String description,
                                   LocalTime startTime, LocalTime endTime, Set<String> attendanceDay,
                                   LocalDate startDate, LocalDate endDate, Integer maxNum, Long userId,
-                                  LocalDateTime createdAt, LocalDateTime updatedAt, String[] skills) {
+                                  LocalDateTime createdAt, LocalDateTime updatedAt, List<String> skillNames) {
             this.studyName = studyName;
             this.title = title;
             this.description = description;
@@ -306,13 +333,33 @@ public class StudyResDto {
             this.userId = userId;
             this.createdAt = createdAt;
             this.updatedAt = updatedAt;
-            this.skills = skills;
+            this.skillNames = skillNames;
         }
     }
 
+    // skill 객체를 받아오기 위한
     @Getter
     @Setter
-    public static class StudyMembershipResDto {
+    public class SkillDto{
+        @NotEmpty
+        private String skillName;
+
+    }
+
+
+    @Getter
+    @Setter
+    public static class StudyMembershipResDto{
+      /*  {
+            "code":1
+            "msg": "가입 신청이 승인되었습니다."   // or "가입 신청이 거부되었습니다."
+            "data": {
+            "id": 2
+            "studyId": 1
+            "userId": 2
+            "status": "approved" // or "rejected"
+        }
+        }*/
 
         @NotEmpty
         private Long id; //나(승인하는 스터디 조장)
@@ -333,13 +380,13 @@ public class StudyResDto {
             this.studyId = studyId;
             this.status = status;
         }
-    }
+    }//StudyMembershipResDto
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplicationResDto {
+    public static class ApplicationResDto{
 
         @NotEmpty
         private Long userId;
@@ -353,13 +400,13 @@ public class StudyResDto {
         @NotEmpty
         private String email;
 
-    }
+    }//ApplicationResDto
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplicationEssayResDto {
+    public static class ApplicationEssayResDto{
 
         @NotEmpty
         private String username;
@@ -369,7 +416,13 @@ public class StudyResDto {
 
         @NotEmpty
         private String essay;
+    }//class ApplicationEssayResDto
+
+    @Getter
+    @Setter
+    public static class CheckStudyMaserRespDto{
+        private String username;
+        private String masterNickname;
     }
 
 }
-
