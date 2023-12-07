@@ -11,6 +11,7 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,10 +46,12 @@ public class ChatService {
         return usernameList;
     }
 
-    public void createChatRoom(ChatReqDto.ChatCreateReqDto chatCreateReqDto) {
+    public ChatReqDto.ChatCreateReqDto createChatRoom(ChatReqDto.ChatCreateReqDto chatCreateReqDto) {
         // 1.chatRoom Entity
         ChatRoom chatRoom = new ChatRoom(chatCreateReqDto.getChatRoomTitle());
         ChatRoom result = chatRoomRepository.save(chatRoom);
+        User master = null;
+
 
         // 2. chatRoomUserLink Entity
         for(Long user_id : chatCreateReqDto.getUserIdList()){
@@ -59,8 +62,14 @@ public class ChatService {
                     ))
                     .master(chatCreateReqDto.getMaster())
                     .build();
-            chatRoomUserLinkRepository.save(chatRoomUserLink);
+            master = chatRoomUserLinkRepository.save(chatRoomUserLink).getMaster();
         }
+
+        return ChatReqDto.ChatCreateReqDto.builder()
+                .chatRoomTitle(result.getTitle())
+                .master(master)
+                .userIdList(chatCreateReqDto.getUserIdList())
+                .build();
     }//createChatRoom()
 
     public String getchatRoomTitleBychatRoomId(Long chatRoomId) {

@@ -2,6 +2,7 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.ChatRoom.Chat;
+import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.chat.ChatReqDto;
 import com.abo2.recode.dto.chat.ChatResDto;
@@ -84,8 +85,8 @@ public class ChatController {
     ){
         chatCreateReqDto.setMaster(loginUser.getUser());
         // 1.chatRoom Entity,chatRoomUserLink Entity
-        chatService.createChatRoom(chatCreateReqDto);
-        return new ResponseEntity<>( new ResponseDto<>(1,"채팅방을 생성했습니다.",chatCreateReqDto), HttpStatus.OK);
+        ChatReqDto.ChatCreateReqDto chatcreatedtoresult = chatService.createChatRoom(chatCreateReqDto);
+        return new ResponseEntity<>( new ResponseDto<>(1,"채팅방을 생성했습니다.",chatcreatedtoresult), HttpStatus.OK);
     }//createChatRoom()
 
     // 채팅방 삭제
