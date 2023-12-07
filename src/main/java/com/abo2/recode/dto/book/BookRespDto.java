@@ -11,7 +11,8 @@ import lombok.Setter;
 @Setter
 public class BookRespDto {
 
-    public int display;
+    private Integer display;
+    private Integer total;
     private Item[] items;
 
     @Getter

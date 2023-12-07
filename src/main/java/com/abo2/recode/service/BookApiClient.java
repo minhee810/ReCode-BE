@@ -21,7 +21,7 @@ public class BookApiClient {
     @Value("${client-secret}")
     private String CLIENT_SECRET;
 
-    private  final String OpenNaverBookUrl_getBooks = "https://openapi.naver.com/v1/search/book.json?query={query}";
+    private  final String OpenNaverBookUrl_getBooks = "https://openapi.naver.com/v1/search/book.json?query={query}&display=100&total=";
 
     public BookRespDto requestBook(String query){
         final HttpHeaders headers = new HttpHeaders();
