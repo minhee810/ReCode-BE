@@ -69,7 +69,11 @@ public class AdminService {
             skills.add(addskill);
         }
 
-        adminSkillAddResDto.setSkills(skills);
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = SkillResDto.AdminSkillAddResDto.builder()
+                .position(skill.getPosition())
+                .skillName(skill.getSkillName())
+                .build();
+
 
         return adminSkillAddResDto;
 
