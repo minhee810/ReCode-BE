@@ -27,7 +27,7 @@ public class Attendance {
     private StudyRoom studyRoom;  // 스터디룸 아이디
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user; // 사용자의 아이디
 
     @CreatedDate

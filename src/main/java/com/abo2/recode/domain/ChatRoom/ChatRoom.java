@@ -1,6 +1,6 @@
 package com.abo2.recode.domain.ChatRoom;
 
-import com.abo2.recode.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,4 +21,7 @@ public class ChatRoom {
     @Column(name="title")
     private String title;
 
+    public ChatRoom(String title) {
+        this.title = title;
+    }
 }

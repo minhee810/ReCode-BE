@@ -2,8 +2,8 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 import com.abo2.recode.domain.ChatRoom.Chat;
-import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.ResponseDto;
+import com.abo2.recode.dto.chat.ChatReqDto;
 import com.abo2.recode.dto.chat.ChatResDto;
 import com.abo2.recode.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +39,13 @@ public class ChatController {
 
         // 1. 유저가 참여 중인 채팅방 목록 가져 오기
         // SELECT chatroomId FROM ChatRoomUserLink WHERE userId = ?;
-        List<Long> chatRoomIdList = chatService.getChatRoomsByUser(loginUser.getUser().getId());
+        List<Long> chatRoomIdList = chatService.getChatRoomNameListByUser(loginUser.getUser().getId());
 
         //2. 모든 chatRoomId에 대해 각 채팅방에 참여 중인 유저 목록 출력
         // SELECT user_id as userId FROM ChatRoomUserLink WHERE chat_room_id = ?
         // 3. 각 chatRoomId에 대해 마지막 메세지 가져오기
         for(Long chatRoomId : chatRoomIdList){
-            List<String> usernameList = chatService.getUser_nameBychatRoomId(chatRoomId);
+            List<String> usernameList = chatService.getUserNameListBychatRoomId(chatRoomId);
 
             URI uri = UriComponentsBuilder
                     .fromUriString("http://localhost:8080")
@@ -64,6 +64,7 @@ public class ChatController {
                     .chatRoomId(chatRoomId)
                     .usernameList(usernameList)
                     .lastMessage(lastmessage)
+                    .title(chatService.getchatRoomTitleBychatRoomId(chatRoomId))
                     .build();
 
             chatListDtoList.add(chatListDto);
@@ -77,8 +78,14 @@ public class ChatController {
 
     // 채팅방 생성
     @PostMapping(value = "/v1/chat/chatRoom")
-    public ResponseEntity<?> createChatRoom(){
-
+    public ResponseEntity<?> createChatRoom(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @RequestBody ChatReqDto.ChatCreateReqDto chatCreateReqDto
+    ){
+        chatCreateReqDto.setMaster(loginUser.getUser());
+        // 1.chatRoom Entity,chatRoomUserLink Entity
+        chatService.createChatRoom(chatCreateReqDto);
+        return new ResponseEntity<>( new ResponseDto<>(1,"채팅방을 생성했습니다.",chatCreateReqDto), HttpStatus.OK);
     }//createChatRoom()
 
     // 채팅방 삭제

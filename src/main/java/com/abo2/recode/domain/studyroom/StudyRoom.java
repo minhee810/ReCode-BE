@@ -4,7 +4,6 @@ package com.abo2.recode.domain.studyroom;
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
-import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
@@ -99,7 +98,6 @@ public class StudyRoom {
     // StudyRoom을 참조하는 Post 엔티티
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private List<Post> posts;
-
 
 
     @Builder

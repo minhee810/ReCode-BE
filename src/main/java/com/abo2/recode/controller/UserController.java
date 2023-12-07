@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class UserController {
         boolean isInStudyRoom = studyService.isUserInStudyRoom(user.getId(), studyRoom.getId());
 
         String myString = String.valueOf(isInStudyRoom);
-        logger.info("isInStudyRoom : "+myString);
+        logger.info("isInStudyRoom : " + myString);
 
         return ResponseEntity.ok(isInStudyRoom);
     }
@@ -158,5 +159,4 @@ public class UserController {
             return new ResponseEntity<>(new ResponseDto<>(-1, "예외 발생", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

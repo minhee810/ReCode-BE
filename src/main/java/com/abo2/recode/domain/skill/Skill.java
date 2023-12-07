@@ -34,7 +34,6 @@ public class Skill {
     }
 
 
-
 //    public void completeSignUp() {
 //        this.email = email;
 //        this.createdAt = createdAt;

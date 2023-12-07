@@ -10,51 +10,70 @@ import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.dto.admin.AdminReqDto;
 import com.abo2.recode.dto.admin.AdminResDto;
-import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.skill.SkillResDto;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AdminService {
 
-    private final SkillRepository skillRepository;
+    private SkillRepository skillRepository;
 
-    private final StudyRoomRepository studyRoomRepository;
+    private StudySkillRepository studySkillRepository;
+
+    private StudyMemberRepository studyMemberRepository;
+
+    private PostRepository postRepository;
+
+    private AttendanceRepository attendanceRepository;
+
+    private QuizRepository quizRepository;
+
+    private StudyRoomRepository studyRoomRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
+    @Autowired
+    public AdminService(SkillRepository skillRepository, StudySkillRepository studySkillRepository,
+                        StudyMemberRepository studyMemberRepository, PostRepository postRepository,
+                        AttendanceRepository attendanceRepository, QuizRepository quizRepository,
+                        StudyRoomRepository studyRoomRepository) {
+        this.skillRepository = skillRepository;
+        this.studySkillRepository = studySkillRepository;
+        this.studyMemberRepository = studyMemberRepository;
+        this.postRepository = postRepository;
+        this.attendanceRepository = attendanceRepository;
+        this.quizRepository = quizRepository;
+        this.studyRoomRepository = studyRoomRepository;
+    }
 
     // 관리자가 기술 스택 관리
-    public SkillResDto.AdminSkillAddResDto adminSkillAdd(SkillReqDto.AdminSkillAddReqDto adminSkillAddReqDto) {
+    public SkillResDto.AdminSkillAddResDto adminSkillAdd(String[] addskills) {
 
-        Skill skill = Skill.builder()
-                .skillName(adminSkillAddReqDto.getSkillName())
-                .position(adminSkillAddReqDto.getPosition())
-                .build();
+        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = new SkillResDto.AdminSkillAddResDto();
+        ArrayList<String> skills = new ArrayList<>();
 
-        skillRepository.save(skill);
+        for (String addskill : addskills) {
+            Skill skill = Skill.builder()
+                    .skillName(addskill)
+                    .build();
+            skillRepository.save(skill);
+            skills.add(addskill);
+        }
 
-        SkillResDto.AdminSkillAddResDto adminSkillAddResDto = SkillResDto.AdminSkillAddResDto.builder()
-                .position(skill.getPosition())
-                .skillName(skill.getSkillName())
-                .build();
+        adminSkillAddResDto.setSkillName(skills);
 
         return adminSkillAddResDto;
 
-    }//adminSkillAdd()
+    }
 
     //관리자가 스터디룸 엔티티 삭제
     public AdminResDto.StudyDeleteResponseDto adminStudyRoomDelete(Long studyId) {
@@ -63,12 +82,14 @@ public class AdminService {
         studyRoomRepository.deleteById(studyId);
 
         return new AdminResDto.StudyDeleteResponseDto(studyId);
-    } //adminStudyRoomDelete()
+    }
 
     @Transactional
     // 관리자 스터디 그룹 일반 멤버 스터디 그룹 장으로 승급
     public AdminResDto.MemberRoleResDto memberRoleChange(AdminReqDto.MemberRoleReqDto memberRoleReqDto,
                                                          Long studyId, Long userId) {
+        //    - 현재 그룹장이 자신의 권한을 이전할 의사가 있는지 확인하기 위한 추가적인 인증 절차가 필요할 수 있습니다.
+
         AdminResDto.MemberRoleResDto memberRoleResDto = AdminResDto.MemberRoleResDto.builder()
                 .userId(userId)
                 .updatedAt(LocalDateTime.now())
@@ -99,17 +120,20 @@ public class AdminService {
             studyRoomRepository.memberRolePromote(studyId, userId);
             memberRoleResDto.setNewRole("group_leader");
         }
-        return memberRoleResDto;
-    } //memberRoleChange()
 
-    // 전체 스킬 불러오기
-    public List<SkillResDto.AdminGetSkillResDto> getAllSkills() {
-        return skillRepository.findAll().stream()
-                .map(skill -> SkillResDto.AdminGetSkillResDto.builder()
-                        .skillName(skill.getSkillName())
-                        .position(skill.getPosition())
-                        .build())
-                .collect(Collectors.toList());
+        return memberRoleResDto;
     }
 
-}//AdminService class
+    // 스킬 목록 조회
+    public SkillResDto.AdminSkillAddResDto getSkills() {
+        List<Skill> skillList = skillRepository.findAll();
+        ArrayList<String> skillNames = skillList.stream()
+                .map(Skill::getSkillName)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        SkillResDto.AdminSkillAddResDto response = new SkillResDto.AdminSkillAddResDto();
+        response.setSkills(skillNames);
+        return response;
+    }
+
+}
