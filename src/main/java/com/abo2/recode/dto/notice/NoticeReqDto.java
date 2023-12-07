@@ -13,7 +13,7 @@ public class NoticeReqDto {
 
     @Getter
     @Setter
-    public static class AdminAddNoticeReqDto{
+    public static class AdminAddNoticeReqDto {
 
         @NotEmpty
         private String id;
@@ -32,7 +32,7 @@ public class NoticeReqDto {
         private LocalDateTime createdAt;
 
 
-        public Notice toEntity(){
+        public Notice toEntity() {
             return Notice.builder()
                     .title(title)
                     .content(content)
@@ -40,7 +40,6 @@ public class NoticeReqDto {
                     .createdAt(createdAt)
                     .build();
         }
-
 
 
     }
@@ -65,7 +64,7 @@ public class NoticeReqDto {
             this.content = content;
         }
 
-        public Notice toEntity(){
+        public Notice toEntity() {
             return Notice.builder()
                     .title(title)
                     .content(content)
@@ -76,7 +75,7 @@ public class NoticeReqDto {
 
     @Getter
     @Setter
-    public static class GetAllNoticeReqDto{
+    public static class GetAllNoticeReqDto {
 
         @NotEmpty
         private String id;
@@ -88,7 +87,7 @@ public class NoticeReqDto {
         @NotEmpty
         private String content;
 
-        public GetAllNoticeReqDto(String id, String title, String content){
+        public GetAllNoticeReqDto(String id, String title, String content) {
             this.id = id;
             this.title = title;
             this.content = content;

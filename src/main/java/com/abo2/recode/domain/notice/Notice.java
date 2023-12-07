@@ -54,7 +54,7 @@ public class Notice {
     public void setUser(Long userId) {
     }
 
-    public void setNoticeInfo(String title, String content){
+    public void setNoticeInfo(String title, String content) {
         this.title = title;
         this.content = content;
     }

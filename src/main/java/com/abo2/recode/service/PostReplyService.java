@@ -45,8 +45,6 @@ public class PostReplyService {
         PostReply savedPostReply = postReplyRepository.save(postReply);
         String nickName = user.getNickname();
 
-        System.out.println("DEBUG: created PostReplyRespDto - nickName: " + nickName + ", createdAt: " + savedPostReply.getCreatedAt());
-
         return new PostRespDto.PostReplyRespDto(savedPostReply, nickName);
     }
 

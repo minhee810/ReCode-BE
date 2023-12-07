@@ -2,8 +2,6 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.quiz.QuizRepository;
-import com.abo2.recode.domain.studymember.StudyMember;
-import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +26,7 @@ public class QuizService {
     private final StudyRoomRepository studyRoomRepository;
 
     @Transactional
-    public QuizRespDto.QuizWriteRespDto writeQuiz(Long studyId, QuizReqDto.QuizWriteReqDto quizWriteReqDto){
+    public QuizRespDto.QuizWriteRespDto writeQuiz(Long studyId, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
         // 1. user 아이디 조회
         User user = userRepository.findById(quizWriteReqDto.getUserId()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -88,7 +85,7 @@ public class QuizService {
     }
 
     @Transactional
-    public void quizDelete(Long userId, Long studyId, Long quizId){
+    public void quizDelete(Long userId, Long studyId, Long quizId) {
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
         StudyRoom studyRoom = studyRoomRepository.findById(studyId).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
@@ -108,7 +105,7 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizRespDto.QuizDetailRespDto quizDetail(Long userId, Long studyId, Long quizId){
+    public QuizRespDto.QuizDetailRespDto quizDetail(Long userId, Long studyId, Long quizId) {
         // 유저, 스터디 룸 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
         StudyRoom studyRoom = studyRoomRepository.findById(studyId).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
@@ -120,11 +117,11 @@ public class QuizService {
     }
 
     @Transactional
-    public List<QuizRespDto.QuizListRespDto> searchList(Long studyId, String keyword){
+    public List<QuizRespDto.QuizListRespDto> searchList(Long studyId, String keyword) {
 
         List<Quiz> quizzes = quizRepository.findQuizByKeyword(studyId, keyword);
 
-        if(quizzes.isEmpty()) {
+        if (quizzes.isEmpty()) {
             throw new CustomApiException("해당 퀴즈가 존재하지 않습니다.");
         }
 

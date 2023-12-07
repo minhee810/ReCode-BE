@@ -15,7 +15,6 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailService {
 
-    private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
 
     public void sendConfirmEmail(User user) throws MessagingException {
