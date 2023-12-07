@@ -307,8 +307,6 @@ public class StudyResDto {
 
         private LocalDateTime updatedAt;
         //======================================
-
-
         // 선택된 Skill 들의 이름 리스트
 //        private Set<StudyReqDto.SkillDto> skills;
 
