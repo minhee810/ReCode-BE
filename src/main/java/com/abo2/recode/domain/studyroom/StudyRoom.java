@@ -30,7 +30,7 @@ import java.util.Set;
 public class StudyRoom {
 
     @Id
-    @Column(name = "study_room_id")
+    @Column(name = "study_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 일련번호
 

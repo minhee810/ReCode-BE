@@ -359,23 +359,23 @@ public class StudyService {
     }//postStudyMemberListInAdminPage()
 
 
-    public List<StudyResDto.ApplicationResDto> applications(Long study_room_id) {
+    public List<StudyResDto.ApplicationResDto> applications(Long studyId) {
 
-        return studyMemberRepository.applications(study_room_id);
+        return studyMemberRepository.applications(studyId);
     }
 
-    public StudyResDto.ApplicationEssayResDto applicationsEssay(Long groupId, Long userId) {
+    public StudyResDto.ApplicationEssayResDto applicationsEssay(Long studyId, Long userId) {
 
-        return studyMemberRepository.applicationsEssay(groupId, userId);
+        return studyMemberRepository.applicationsEssay(studyId, userId);
     }
 
-    public StudyRoom findStudyRoomById(Long studyRoomId) {
-        return studyRoomRepository.findById(studyRoomId)
+    public StudyRoom findStudyRoomById(Long studyId) {
+        return studyRoomRepository.findById(studyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 스터디룸을 찾을 수 없습니다."));
     }
 
-    public boolean isUserInStudyRoom(Long user_id, Long Study_id) {
-        Optional<StudyMember> studyMember = studyMemberRepository.findByUserAndStudyRoom(user_id, Study_id);
+    public boolean isUserInStudyRoom(Long userId, Long studyId) {
+        Optional<StudyMember> studyMember = studyMemberRepository.findByUserAndStudyRoom(userId, studyId);
         return studyMember.isPresent();
     }
 
