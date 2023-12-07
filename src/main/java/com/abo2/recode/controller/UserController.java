@@ -159,5 +159,4 @@ public class UserController {
             return new ResponseEntity<>(new ResponseDto<>(-1, "예외 발생", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
