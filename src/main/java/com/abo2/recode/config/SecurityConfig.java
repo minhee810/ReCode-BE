@@ -89,7 +89,6 @@ public class SecurityConfig {
                         .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
-
         );
         return http.build();
     }
