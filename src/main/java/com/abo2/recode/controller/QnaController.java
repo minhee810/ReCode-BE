@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,7 +59,21 @@ public class QnaController {
 
         List<Qna> qnas = qnaService.qnaList();
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnas), HttpStatus.OK);
+        List<QnaResDTO> qnaResDTOList = new ArrayList<>();
+
+        for (Qna qna : qnas) {
+            qnaResDTO = QnaResDTO.builder()
+                    .qnaId(qna.getId())
+                    .userId(qna.getUserId().getId())
+                    .title(qna.getTitle())
+                    .content(qna.getContent())
+                    .build();
+
+            qnaResDTOList.add(qnaResDTO);
+        }
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnaResDTOList), HttpStatus.OK);
+
     }
 
     //Qna 단일 조회

@@ -52,6 +52,7 @@ public class AdminService {
                 .skillName(skill.getSkillName())
                 .build();
 
+
         return adminSkillAddResDto;
 
     }//adminSkillAdd()

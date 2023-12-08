@@ -1,6 +1,7 @@
 package com.abo2.recode.domain.ChatRoom;
 
 import com.abo2.recode.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -26,5 +27,14 @@ public class ChatRoomUserLink {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoomId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by")
+    private User master;
 
+    @Builder
+    public ChatRoomUserLink(User userId, ChatRoom chatRoomId, User master) {
+        this.userId = userId;
+        this.chatRoomId = chatRoomId;
+        this.master = master;
+    }
 }
