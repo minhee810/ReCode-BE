@@ -11,29 +11,19 @@ public class AdminResDto {
 
     @Getter
     @Setter
-    public static class StudyDeleteResponseDto{
+    public static class StudyDeleteResponseDto {
 
         @NotEmpty
-        private Long study_id;
+        private Long studyId;
 
-        public StudyDeleteResponseDto(Long study_id) {
-            this.study_id = study_id;
+        public StudyDeleteResponseDto(Long studyId) {
+            this.studyId = studyId;
         }
-    }//class StudyDeleteResponseDto
+    }
 
     @Getter
     @Setter
-    public static class MemberRoleResDto{
-
-   /*     {
-            "code": 1,
-                "msg": "사용자 권한이 성공적으로 변경되었습니다.",
-                "data": {
-            "userId": 42,
-                    "newRole": "group_leader",
-                    "updatedAt": "2023-11-06T12:00:00Z"
-        }
-        }*/
+    public static class MemberRoleResDto {
 
         @NotEmpty
         private Long userId;
@@ -50,6 +40,6 @@ public class AdminResDto {
             this.newRole = newRole;
             this.updatedAt = updatedAt;
         }
-    }//MemberRoleResDto
+    }
 
-}//AdminResDto
+}

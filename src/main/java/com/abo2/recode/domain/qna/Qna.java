@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -27,9 +29,6 @@ public class Qna {
     private String title;
 
     @Column(nullable = false)
-    private String category;
-
-    @Column(nullable = false)
     private String content;
 
     @CreatedDate
@@ -41,14 +40,17 @@ public class Qna {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private User user_id;
+    private User userId;
+
+    // Qna을 참조하는 QnaReply 엔티티
+    @OneToMany(mappedBy = "qnaId", cascade = CascadeType.ALL)
+    private List<QnaReply> qnaReplies = new ArrayList<>();
 
     @Builder
-    public Qna(Long id, User user_id, String title, String category, String content) {
+    public Qna(Long id, User userId, String title, String content) {
         this.id = id;
-        this.user_id = user_id;
+        this.userId = userId;
         this.title = title;
-        this.category = category;
         this.content = content;
     }
 }

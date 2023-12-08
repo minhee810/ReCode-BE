@@ -29,11 +29,11 @@ public class NoticeService {
 
     // 공지사항 작성
     @Transactional
-    public NoticeRespDto createNotice(NoticeReqDto.AdminAddNoticeReqDto adminAddNoticeReqDto){
+    public NoticeRespDto createNotice(NoticeReqDto.AdminAddNoticeReqDto adminAddNoticeReqDto) {
         // Notice 엔티티를 생성하고 작성자 정보 설정
 
         User admin = userRepository.findById(adminAddNoticeReqDto.getUserId().getId())
-                .orElseThrow(()->new CustomApiException("존재하지 않는 관리자"));
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 관리자"));
 
         Notice notice = Notice.builder()
                 .title(adminAddNoticeReqDto.getTitle())
@@ -59,7 +59,7 @@ public class NoticeService {
         Notice updateNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 공지사항 글 입니다. "));
 
-        updateNotice.setNoticeInfo( adminUpdateNoticeReqDto.getTitle(), adminUpdateNoticeReqDto.getContent());
+        updateNotice.setNoticeInfo(adminUpdateNoticeReqDto.getTitle(), adminUpdateNoticeReqDto.getContent());
 
         NoticeRespDto updateNoticeRespDto = NoticeRespDto.builder()
                 .id(adminUpdateNoticeReqDto.getUserId().getId())
@@ -67,38 +67,38 @@ public class NoticeService {
                 .content(adminUpdateNoticeReqDto.getContent())
                 .build();
 
-       return updateNoticeRespDto;
+        return updateNoticeRespDto;
     }
 
     // 공지사항 상세보기
     @Transactional
-    public NoticeRespDto detailNotice(Long noticeId){
+    public NoticeRespDto detailNotice(Long noticeId) {
 
         Optional<Notice> detailNotice = noticeRepository.findById(noticeId); // null 값 체크
         if (detailNotice.isPresent()) {
             return convertToDto(detailNotice.get());        // 값이 존재할 때만 dto 형태로 반환
-        }else {
+        } else {
             throw new CustomApiException("존재하지 않는 공지사항 글입니다. ");
         }
     }
 
     // 공지사항 삭제
     @Transactional
-    public void deleteNotice(Long noticeId){
+    public void deleteNotice(Long noticeId) {
         noticeRepository.deleteById(noticeId);
     }
 
 
     // 공지사항 목록 조회
     @Transactional
-    public List<NoticeRespDto> getAllNotices(){
+    public List<NoticeRespDto> getAllNotices() {
         List<Notice> notice = noticeRepository.findAll();
         return notice.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private NoticeRespDto convertToDto (Notice notice){
+    private NoticeRespDto convertToDto(Notice notice) {
         NoticeRespDto dto = new NoticeRespDto();
         dto.setId(notice.getId());
         dto.setTitle(notice.getTitle());
