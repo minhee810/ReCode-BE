@@ -20,7 +20,7 @@ import java.util.List;
 public class Post {
 
     @Id
-    @Column(name = "post_id")
+    @Column(name = "postId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Post 일련번호 - PK
 
@@ -31,7 +31,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @JoinColumn(name = "studyId")
     private StudyRoom studyRoom;
 
     @ManyToOne
@@ -69,7 +69,6 @@ public class Post {
         this.user = user;
         this.category = category;
     }
-
 
 
 }

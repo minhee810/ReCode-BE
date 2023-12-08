@@ -11,22 +11,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 public class Quiz {
-
-//    Table Quiz{
-//        quiz_id integer [primary key]
-//        user_id integer
-//        study_id integer
-//        title varchar
-//        quiz_link varchar
-//        difficulty integer
-//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +27,11 @@ public class Quiz {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @JoinColumn(name = "studyId")
     private StudyRoom studyRoom;
 
     @OneToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)

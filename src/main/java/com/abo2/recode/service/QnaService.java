@@ -23,12 +23,11 @@ public class QnaService {
     @Transactional
     public void postQna(QnaReqDTO qnaReqDTO) {
 
-        User user = userRepository.findById(qnaReqDTO.getUser_id()).orElseThrow();
+        User user = userRepository.findById(qnaReqDTO.getUserId()).orElseThrow();
 
         Qna qna = Qna.builder()
-                .user_id(user)
+                .userId(user)
                 .title(qnaReqDTO.getTitle())
-                .category(qnaReqDTO.getCategory())
                 .content(qnaReqDTO.getContent())
                 .build();
 
@@ -55,7 +54,6 @@ public class QnaService {
         Qna qna = Qna.builder()
                 .id(id)
                 .title(qnaReqDTO.getTitle())
-                .category(qnaReqDTO.getCategory())
                 .content(qnaReqDTO.getContent())
                 .build();
 

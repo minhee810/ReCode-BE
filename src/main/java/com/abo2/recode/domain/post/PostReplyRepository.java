@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PostReplyRepository extends JpaRepository<PostReply, Long> {
 
-    List<PostReply> findByPostId(@Param("post_id") Long postId);
+    List<PostReply> findByPostId(@Param("postId") Long postId);
 }

@@ -20,7 +20,7 @@ public class PostReqDto {
         private Long postId;
         private String title;
         private String content;
-        private Long studyRoomId;
+        private Long studyId;
         private Long userId;
         private Integer category;
         private User nickname;
@@ -39,7 +39,7 @@ public class PostReqDto {
         private String content;
 
         @NotEmpty
-        private Long studyRoomId;
+        private Long studyId;
 
         @NotEmpty
         private Long userId;
@@ -62,7 +62,7 @@ public class PostReqDto {
         private String content;
 
         @NotEmpty
-        private Long studyRoomId;
+        private Long studyId;
 
         @NotEmpty
         private Long userId;
@@ -95,7 +95,7 @@ public class PostReqDto {
         @CreatedDate
         private LocalDateTime createdAt;
 
-        private Long studyRoomId;
+        private Long studyId;
     }
 
 
