@@ -75,6 +75,7 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+
     public void updateUser(String nickname, String email) {
         this.email = email;
         this.nickname = nickname;

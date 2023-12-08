@@ -95,7 +95,7 @@ public class PostReqDto {
         @CreatedDate
         private LocalDateTime createdAt;
 
-        private Long studyRoomId;
+        private Long studyId;
     }
 
 

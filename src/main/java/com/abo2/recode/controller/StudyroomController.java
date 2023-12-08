@@ -127,9 +127,9 @@ public class StudyroomController {
     }
 
     // 스터디룸 관리 화면에서 신청 현황 멤버 목록 불러오기
-    @GetMapping(value = "/v1/study-groups/{study_id}/applications")
+    @GetMapping(value = "/v1/study-groups/{studyId}/applications")
     public ResponseEntity<?> applications(
-            @PathVariable(name = "study_id") Long studyId
+            @PathVariable Long studyId
     ) {
 
         List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(studyId);
@@ -139,10 +139,10 @@ public class StudyroomController {
     }
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
-    @GetMapping(value = "/v1/study-groups/{study_id}/applications/{user_id}")
+    @GetMapping(value = "/v1/study-groups/{studyId}/applications/{userId}")
     public ResponseEntity<?> applicationsEssay(
-            @PathVariable(name = "study_id") Long studyId,
-            @PathVariable(name = "user_id") Long userId
+            @PathVariable(name = "studyId") Long studyId,
+            @PathVariable(name = "userId") Long userId
     ) {
         StudyResDto.ApplicationEssayResDto applicationEssayResDto =
                 studyService.applicationsEssay(studyId, userId);
@@ -152,10 +152,9 @@ public class StudyroomController {
     }
 
 
-    // 스터디룸 멤버 인원 조회
-    @Transactional
-    @GetMapping(value = "/v1/study/{study_id}/memberlist")
-    public ResponseEntity<List<StudyMember>> getsStudyMembers(@PathVariable("study_id") Long studyId) {
+    // 스터디 그룹에서 멤버 목록 불러오기 +(찬:Study_member의 status 역시 고려하여 가입 승인 된 스터디멤버만 조회하도록 수정)
+    @GetMapping(value = "/v1/study/{studyId}/memberlist")
+    public ResponseEntity<?> getsStudyMembers(@PathVariable Long studyId) {
         List<StudyMember> studyMembers = studyService.getStudyMembersByRoomId(studyId);
 
         logger.info(studyMembers.toString());
@@ -191,13 +190,13 @@ public class StudyroomController {
 
 
     //스터디 그룹에서 멤버 강퇴 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
-    @DeleteMapping(value = "/v1/{studyId}/member/{member_id}")
+    @DeleteMapping(value = "/v1/{studyId}/member/{memberId}")
     public ResponseEntity<?> deleteMember(@AuthenticationPrincipal LoginUser loginUser,
-                                          @PathVariable("studyId") Long studyRoomId,
-                                          @PathVariable("member_id") Long memberId) {
+                                          @PathVariable Long studyId,
+                                          @PathVariable Long memberId) {
 
         StudyMember studyMember
-                = studyService.deleteMember(loginUser.getUser().getId(), studyRoomId, memberId);
+                = studyService.deleteMember(loginUser.getUser().getId(), studyId, memberId);
 
         StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                 = StudyResDto.StudyMemberListRespDto.builder()

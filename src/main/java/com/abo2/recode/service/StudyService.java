@@ -429,8 +429,8 @@ public class StudyService {
     }
 
 
-    public Long findcreatedByBystudyId(Long studyRoomId) {
-        return studyRoomRepository.findcreatedByBystudyId(studyRoomId);
+    public Long findcreatedByBystudyId(Long studyId) {
+        return studyRoomRepository.findcreatedByBystudyId(studyId);
     }
 
     public boolean isUserInStudyRoom(Long userId, Long studyId) {
@@ -440,27 +440,27 @@ public class StudyService {
 
 
     // 스터디룸 참가 인원 리스트 조회
-    public List<StudyMember> getStudyMembersByRoomId(Long studyRoomId) {
+    public List<StudyMember> getStudyMembersByRoomId(Long studyId) {
 
         // 찬 : Study_Member Table에서 studyRoomId = ? And status = 1인 조건을 충족하는 List<StudyMember>를 Return하도록 수정
-        return studyMemberRepository.findByStudyRoomId(studyRoomId);
+        return studyMemberRepository.findByStudyRoomId(studyId);
 
     }
 
     // 관리자 - 스터디룸 참가 인원 리스트 조회
-    public List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(Long studyRoomId) {
+    public List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(Long studyId) {
 
-        return studyMemberRepository.getStudyMembersByRoomIdAsAdmin(studyRoomId);
+        return studyMemberRepository.getStudyMembersByRoomIdAsAdmin(studyId);
 
     }
 
 
     // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
-    public StudyMember deleteMember(Long userId, Long studyRoomId, Long memberId) {
+    public StudyMember deleteMember(Long userId, Long studyId, Long memberId) {
 
 
         //강제 퇴출하는 사람이 조장이 맞는지 체크
-        if (userId != studyRoomRepository.findcreatedByBystudyId(studyRoomId)) {
+        if (userId != studyRoomRepository.findcreatedByBystudyId(studyId)) {
             throw new CustomForbiddenException("조장만 스터디 원을 퇴출 할 수 있습니다.");
         } else {
             StudyMember studyMember = studyMemberRepository.findById(memberId)

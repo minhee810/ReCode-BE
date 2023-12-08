@@ -48,38 +48,41 @@ public class PostController {
     // 게시글 작성
     @PostMapping("/v1/study/{studyId}/posts")
     public ResponseEntity<?> writePost(@AuthenticationPrincipal LoginUser loginUser,
-                                       @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto, @PathVariable("studyId") Long studyRoomId) {
+                                       @RequestBody PostReqDto.PostWriteReqDto postWriteReqDto, @PathVariable Long studyId) {
 
-        PostRespDto.PostWriteRespDto postWriteRespDto = postService.writePost(postWriteReqDto.getUserId(), postWriteReqDto, studyRoomId);
+        PostRespDto.PostWriteRespDto postWriteRespDto = postService.writePost(postWriteReqDto.getUserId(), postWriteReqDto, studyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "글 작성 성공", postWriteRespDto), HttpStatus.OK);
     }
 
     // 게시글 상세보기
-    @GetMapping("/v1/study/{study_room_id}/post/{post_id}")
-    public ResponseEntity<?> getPostById(@PathVariable Long post_id, @PathVariable("study_room_id") Long studyRoomId) {
-        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(post_id, studyRoomId);
+    @GetMapping("/v1/study/{studyId}/post/{postId}")
+    public ResponseEntity<?> getPostById(@PathVariable Long postId, @PathVariable Long studyId) {
+        PostRespDto.PostDetailRespDto postDetailRespDto = postService.getPostById(postId, studyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세보기 완료", postDetailRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 수정
-    @PutMapping("/v1/study/{study_room_id}/post/edit/{post_id}")
+
+    @PutMapping("/v1/study/{studyId}/post/edit/{postId}")
     public ResponseEntity<?> updatePost(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long post_id, @PathVariable("study_room_id") Long studyRoomId,
+            @PathVariable Long postId, @PathVariable("studyId") Long studyId,
             @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
     ) {
-        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), post_id, studyRoomId, postUpdateReqDto);
+
+        PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), postId, studyId, postUpdateReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 수정되었습니다.", postUpdateRespDto), HttpStatus.OK);
     }
 
 
     // 게시글 삭제
-    @DeleteMapping("/v1/study/{study_room_id}/post/{post_id}")
-    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable("post_id") Long postId, @PathVariable("study_room_id") Long studyRoomId) {
-        postService.deletePost(loginUser.getUser().getId(), postId, studyRoomId);
+    @DeleteMapping("/v1/study/{studyId}/post/{postId}")
+    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long
+            postId, @PathVariable Long studyId) {
+        postService.deletePost(loginUser.getUser().getId(), postId, studyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 삭제되었습니다.", null), HttpStatus.OK);
     }

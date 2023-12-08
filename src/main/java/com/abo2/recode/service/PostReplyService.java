@@ -33,7 +33,7 @@ public class PostReplyService {
 
 
     // 게시글 댓글 작성
-    public PostRespDto.PostReplyRespDto createPostReply(Long userId, Long postId, Long studyRoomId, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto createPostReply(Long userId, Long postId, Long studyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId가 없습니다." + postId));
@@ -41,8 +41,8 @@ public class PostReplyService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 userId가 없습니다" + userId));
 
-        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId가 존재하지 않습니다." + studyRoomId));
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyId가 존재하지 않습니다." + studyId));
 
 
         PostReply postReply = new PostReply();
@@ -58,7 +58,7 @@ public class PostReplyService {
     }
 
     // 댓글 상세보기
-    public List<PostRespDto.PostReplyRespDto> getPostReply(Long userId, Long studyRoomId, Long postId) {
+    public List<PostRespDto.PostReplyRespDto> getPostReply(Long userId, Long studyId, Long postId) {
         List<PostReply> postReplyList = postReplyRepository.findByPostId(postId);
 
         List<PostRespDto.PostReplyRespDto> postReplyDtoList = new ArrayList<>();
@@ -76,10 +76,10 @@ public class PostReplyService {
 
 
     // 게시글 댓글 수정
-    public PostRespDto.PostReplyRespDto updatePostReply(Long userId,Long studyRoomId, Long postId, Long postReplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto updatePostReply(Long userId,Long studyId, Long postId, Long postReplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
-        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 스터디룸이 없습니다." + studyRoomId));
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 스터디룸이 없습니다." + studyId));
 
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postReplyId));
@@ -105,8 +105,7 @@ public class PostReplyService {
     }
 
     // 게시글 댓글 삭제
-
-    public void deletePostReply(Long userId,Long studyRoomId, Long postId, Long postReplyId) {
+    public void deletePostReply(Long userId,Long studyId, Long postId, Long postReplyId) {
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 댓글이 없습니다." + postReplyId));
 
