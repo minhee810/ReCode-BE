@@ -14,16 +14,16 @@ import com.abo2.recode.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class QnaController {
 
     private final QnaService qnaService;
@@ -31,7 +31,7 @@ public class QnaController {
     private final UserRepository userRepository;
 
     //Qna 생성
-    @PostMapping("/v1/qna")
+    @PostMapping("/qna")
     public ResponseEntity<?> postQna(@AuthenticationPrincipal LoginUser loginUser, @RequestBody QnaReqDTO qnaReqDTO) {
 
         try {
@@ -52,7 +52,7 @@ public class QnaController {
     }
 
     //Qna 목록 조회
-    @GetMapping("/v1/qna")
+    @GetMapping("/qna")
     public ResponseEntity<?> qnaList(@AuthenticationPrincipal LoginUser loginUser, QnaResDTO qnaResDTO) {
         qnaResDTO.setUserId(loginUser.getUser().getId());
 
@@ -62,17 +62,18 @@ public class QnaController {
     }
 
     //Qna 단일 조회
-    @GetMapping("/v1/qna/{id}")
+    @GetMapping("/qna/{id}")
     public ResponseEntity<?> qna(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaResDTO qnaResDTO) {
         qnaResDTO.setUserId(loginUser.getUser().getId());
+
 
         Qna qna1 = qnaService.qna(id);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qna1), HttpStatus.OK);
     }
 
-    //Qna 수정
-    @PutMapping("/v1/qna/{id}")
+    //Qna 수정 (본인)
+    @PutMapping("/qna/{id}")
     public ResponseEntity<?> qnaModify(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, @RequestBody QnaReqDTO qnaReqDTO) {
 
         qnaReqDTO.setUserId(loginUser.getUser().getId());
@@ -85,36 +86,33 @@ public class QnaController {
         );
 
 
-        if (qnaInfo.getUserId().getId() != user.getId()) {
+        if (!Objects.equals(qnaInfo.getUserId().getId(), user.getId())) {
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
         }
         else {
-            qnaService.qnaModify(id, qnaReqDTO);
 
+            qnaService.qnaModify(id, qnaReqDTO);
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 수정 성공", qnaReqDTO), HttpStatus.OK);
         }
-    } //qnaModify()
+    }
 
+//Qna 삭제 (본인, 관리자)
+    @DeleteMapping("/qna/{id}")
+    public ResponseEntity<?> qnaDelete(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, QnaReqDTO qnaReqDTO) {
+        qnaReqDTO.setUserId(loginUser.getUser().getId());
 
-    //Qna 삭제 (관리자 권한)
-    @Secured(value = "ROLE_ADMIN")
-    @DeleteMapping("/admin/v1/qna/{qnaId}")
-    public ResponseEntity<?> qnaDelete(
-            @PathVariable(value = "qnaId") Long qnaId
-    ) {
-
-        Qna qnaInfo = qnaRepository.findById(qnaId).orElseThrow(
+        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
+                () -> new CustomApiException("User가 존재하지 않습니다!")
+        );
+        Qna qnaInfo = qnaRepository.findById(id).orElseThrow(
                 () -> new CustomApiException("Qna가 존재하지 않습니다!")
         );
 
-        qnaService.qnaDelete(qnaId);
+        if (Objects.equals(qnaInfo.getUserId().getId(), user.getId()) || user.getRole() == UserEnum.ADMIN) {
 
-        QnaResDTO qnaResDTO = QnaResDTO.builder()
-                .userId(qnaInfo.getUserId().getId())
-                .title(qnaInfo.getTitle())
-                .content(qnaInfo.getContent())
-                .build();
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", qnaResDTO), HttpStatus.OK);
+            qnaService.qnaDelete(id);
+            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.FORBIDDEN);
     }
 }

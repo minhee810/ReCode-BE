@@ -43,8 +43,8 @@ public class Qna {
     private User userId;
 
     // Qna을 참조하는 QnaReply 엔티티
-    @OneToMany(mappedBy = "qnaId", cascade = CascadeType.ALL)
-    private List<QnaReply> qnaReplies = new ArrayList<>();
+//    @OneToMany(mappedBy = "qnaId", cascade = CascadeType.ALL)
+//    private List<QnaReply> qnaReplies = new ArrayList<>();
 
     @Builder
     public Qna(Long id, User userId, String title, String content) {
