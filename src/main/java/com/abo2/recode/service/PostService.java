@@ -30,7 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final StudyRoomRepository studyRoomRepository;
-    private final StudyMemberRepository studyMemberRepository;
+    private final StudyMemberRepository study_memberRepository;
 
     // 게시글 불러오기
     public List<PostRespDto.PostListRespDto> postList(Long studyId) {
