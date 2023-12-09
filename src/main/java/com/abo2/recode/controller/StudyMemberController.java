@@ -78,6 +78,8 @@ public class StudyMemberController {
                     .status("Approved")
                     .build();
 
+
+
             emailService.sendApprovedEmail(studyId, userId, user);
 
             return new ResponseEntity<>(new ResponseDto<>(1, "가입 신청이 승인되었습니다.",
