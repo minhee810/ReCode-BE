@@ -129,7 +129,11 @@ public class StudyroomController {
     // 스터디룸 관리 화면에서 신청 현황 멤버 목록 불러오기
     @GetMapping(value = "/v1/study-groups/{studyId}/applications")
     public ResponseEntity<?> applications(
+<<<<<<< HEAD
             @PathVariable Long studyId
+=======
+            @PathVariable(name = "studyId") Long studyId
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
     ) {
 
         List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(studyId);
@@ -139,10 +143,17 @@ public class StudyroomController {
     }
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
+<<<<<<< HEAD
     @GetMapping(value = "/v1/study-groups/{studyId}/applications/{userId}")
     public ResponseEntity<?> applicationsEssay(
             @PathVariable(name = "studyId") Long studyId,
             @PathVariable(name = "userId") Long userId
+=======
+    @GetMapping(value = "/v1/study-groups/{studyId}/applications/{user_id}")
+    public ResponseEntity<?> applicationsEssay(
+            @PathVariable Long studyId,
+            @PathVariable(name = "user_id") Long userId
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
     ) {
         StudyResDto.ApplicationEssayResDto applicationEssayResDto =
                 studyService.applicationsEssay(studyId, userId);
@@ -177,7 +188,7 @@ public class StudyroomController {
             StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                     = StudyResDto.StudyMemberListRespDto.builder()
                     .id(studyMember.getId())
-                    .studyRoomId(studyMember.getStudyRoom().getId())
+                    .studyId(studyMember.getStudyRoom().getId())
                     .nickname(studyMember.getUser().getNickname())
                     .status(studyMember.getStatus())
                     .build();
@@ -201,7 +212,7 @@ public class StudyroomController {
         StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                 = StudyResDto.StudyMemberListRespDto.builder()
                 .id(studyMember.getId())
-                .studyRoomId(studyMember.getStudyRoom().getId())
+                .studyId(studyMember.getStudyRoom().getId())
                 .nickname(studyMember.getUser().getNickname())
                 .status(studyMember.getStatus())
                 .build();
@@ -213,7 +224,7 @@ public class StudyroomController {
     // 해당 스터디의 스터디장인지 체크
     @GetMapping(value = "/v1/study/{studyId}/check-master")
     public ResponseEntity<?> checkMaster(@AuthenticationPrincipal LoginUser loginUser,
-                                         @PathVariable("studyId") Long studyRoomId) {
+                                         @PathVariable("studyId") Long studyId) {
         Long userId = loginUser.getUser().getId();
         Optional<User> userOpt = userRepository.findById(loginUser.getUser().getId());
 
@@ -221,7 +232,7 @@ public class StudyroomController {
             return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 유저가 없습니다.", null));
         }
 
-        Long masterId = studyService.findcreatedByBystudyId(studyRoomId);
+        Long masterId = studyService.findcreatedByBystudyId(studyId);
         if (masterId == null) {
             return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 스터디가 존재하지 않습니다.", null));
         }

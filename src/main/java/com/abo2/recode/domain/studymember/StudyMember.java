@@ -17,7 +17,7 @@ import javax.persistence.*;
                 "FROM Study_Member as sm " +
                 "INNER JOIN Users as u " +
                 "ON u.user_id = sm.user_id " +
-                "WHERE sm.status = 0 AND sm.study_room_id = :studyId AND u.user_id = :userId",
+                "WHERE sm.status = 0 AND sm.studyId = :studyId AND u.user_id = :userId",
         resultSetMapping = "ApplicationEssayResDtoMapping"
 )
 @SqlResultSetMapping(
@@ -37,7 +37,7 @@ import javax.persistence.*;
         query = "SELECT sm.user_id as userId,u.username,sm.status,u.email " +
                 "FROM Study_Member as sm " +
                 "LEFT OUTER JOIN Users as u ON sm.user_id = u.user_id " +
-                "WHERE sm.study_room_id=:studyId AND sm.status = 0",
+                "WHERE sm.studyId=:studyId AND sm.status = 0",
         resultSetMapping = "ApplicationResDtoMapping"
 )
 
@@ -56,11 +56,11 @@ import javax.persistence.*;
 
 @NamedNativeQuery(
         name = "StudyMemberAndStatusListRespDto",
-        query = "SELECT sm.study_room_id as studyId,sm.user_id as userId,u.username,sr.created_by as createdBy " +
+        query = "SELECT sm.studyId as studyId,sm.user_id as userId,u.username,sr.created_by as createdBy " +
                 "FROM Study_Member as sm " +
                 "INNER JOIN Users as u ON sm.user_id = u.user_id " +
-                "INNER JOIN Study_Room as sr ON sm.study_room_id = sr.study_room_id " +
-                "WHERE sm.study_room_id=:studyId AND sm.status = 1",
+                "INNER JOIN Study_Room as sr ON sm.studyId = sr.studyId " +
+                "WHERE sm.studyId=:studyId AND sm.status = 1",
         resultSetMapping = "StudyMemberAndStatusListRespDtoMapping"
 )
 
@@ -85,12 +85,12 @@ import javax.persistence.*;
 public class StudyMember {
 
     @Id
-    @Column(name = "study_member_id")
+    @Column(name = "studyMemberId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 룸 member 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @JoinColumn(name = "studyId")
     private StudyRoom studyRoom;
 
     @ManyToOne

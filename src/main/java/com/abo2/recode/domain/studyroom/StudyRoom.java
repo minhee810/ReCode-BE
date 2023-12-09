@@ -31,7 +31,7 @@ import java.util.Set;
 public class StudyRoom {
 
     @Id
-    @Column(name = "study_id")
+    @Column(name = "studyId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //스터디 그룹 일련번호
 
@@ -132,4 +132,12 @@ public class StudyRoom {
         this.maxNum = studyModifyReqDto.getMaxNum();
         this.updatedAt = LocalDateTime.now();
     }
+<<<<<<< HEAD
 }
+=======
+
+}
+
+
+
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc

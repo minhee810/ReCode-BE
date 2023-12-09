@@ -21,14 +21,14 @@ public class PostReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postReply_id")
+    @Column(name = "postReplyId")
     private Long id;
 
     @Column(nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post post;
 
     @ManyToOne

@@ -23,7 +23,7 @@ public class Attendance {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @JoinColumn(name = "studyId")
     private StudyRoom studyRoom;  // 스터디룸 아이디
 
     @ManyToOne

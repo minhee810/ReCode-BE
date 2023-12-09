@@ -20,7 +20,7 @@ public class StudySkill {
     private Long id; //스터디 그룹 스킬 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
+    @JoinColumn(name = "studyId")
     private StudyRoom studyRoom;
 
     @OneToOne

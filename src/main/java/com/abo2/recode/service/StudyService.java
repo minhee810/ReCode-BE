@@ -333,11 +333,11 @@ public class StudyService {
 
         log.info("studyId {}", studyId);
 
-        List<StudySkill> studySkills = studySkillRepository.findByStudyRoomId(studyId);
+        List<StudySkill> studySkills = studySkillRepository.findBystudyId(studyId);
 
         log.info("studySkills {} : ", studySkills);
 
-        Set<AttendanceDay> attendanceDaySet = attendanceDayRepository.findByStudyRoomId(studyId);
+        Set<AttendanceDay> attendanceDaySet = attendanceDayRepository.findBystudyId(studyId);
 
         log.info("attendanceDaySet{}", attendanceDaySet);
 
@@ -360,7 +360,7 @@ public class StudyService {
             StudyRoom room = studyRoom.get();
 
             if (!(room.getMaster().getId() == userId)) {
-                studyMemberRepository.deleteByUserIdAndStudyRoomId(userId, studyId);
+                studyMemberRepository.deleteByUserIdAndstudyId(userId, studyId);
             } else {
                 throw new CustomApiException("스터디 장은 탈퇴가 불가능합니다. 권한을 양도한 후에 시도해 주시기 바랍니다.");
             }
@@ -381,7 +381,7 @@ public class StudyService {
 
     // Study_skill 불러오기
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
-        return studySkillRepository.findByStudyRoomId(studyRoom.getId());
+        return studySkillRepository.findBystudyId(studyRoom.getId());
     }
 
 
@@ -442,8 +442,13 @@ public class StudyService {
     // 스터디룸 참가 인원 리스트 조회
     public List<StudyMember> getStudyMembersByRoomId(Long studyId) {
 
+<<<<<<< HEAD
         // 찬 : Study_Member Table에서 studyRoomId = ? And status = 1인 조건을 충족하는 List<StudyMember>를 Return하도록 수정
         return studyMemberRepository.findByStudyRoomId(studyId);
+=======
+        // 찬 : Study_Member Table에서 studyId = ? And status = 1인 조건을 충족하는 List<StudyMember>를 Return하도록 수정
+        return studyMemberRepository.findBystudyId(studyId);
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
 
     }
 

@@ -36,7 +36,7 @@ public class PostService {
     // 게시글 불러오기
     public List<PostRespDto.PostListRespDto> postList(Long studyId) {
 
-        List<Post> posts = postRepository.findPostsByStudyRoomId(studyId);
+        List<Post> posts = postRepository.findPostsByStudyId(studyId);
 
         if (posts.isEmpty()) {
             throw new CustomApiException("해당 스터디에 게시글이 존재하지 않습니다.");
@@ -54,7 +54,11 @@ public class PostService {
         User user = userRepository.findById(postWriteReqDto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다" + userId));
 
+<<<<<<< HEAD
         StudyRoom studyRoom = studyRoomRepository.findById(postWriteReqDto.getStudyRoomId())
+=======
+        StudyRoom studyRoom = studyRoomRepository.findById(postWriteReqDto.getStudyId())
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
                 .orElseThrow(() -> new EntityNotFoundException("해당 스터디 룸이 존재하지 않습니다" + studyId));
 
         Post post = new Post();
@@ -76,7 +80,11 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId에 대한 게시글을 찾을 수 없습니다: " + postId));
         StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+<<<<<<< HEAD
                 .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId를 찾을 수 없습니다." + studyId));
+=======
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyId를 찾을 수 없습니다." + studyId));
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
 
         return new PostRespDto.PostDetailRespDto(post);
     }
@@ -87,7 +95,11 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다: " + postId));
         StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+<<<<<<< HEAD
                 .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId가 존재하지 않습니다." + studyId));
+=======
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyId가 존재하지 않습니다." + studyId));
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
 
         // 게시글 작성자와 현재 사용자가 동일한지 확인
         if (!post.getUser().getId().equals(userId)) {
@@ -111,7 +123,11 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 게시글이 없습니다. " + postId));
 
         StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+<<<<<<< HEAD
                 .orElseThrow(() -> new EntityNotFoundException("해당 studyRoomId가 존재하지 않습니다." + studyId));
+=======
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyId가 존재하지 않습니다." + studyId));
+>>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
 
         // 게시글 작성자와 현재 사용자가 동일한지 확인
         if (!post.getUser().getId().equals(userId)) {

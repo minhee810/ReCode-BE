@@ -167,7 +167,7 @@ public class UserService {
         List<StudyResDto.MyStudyRespDto> myStudyRespDtos = new ArrayList<>();
 
         for (StudyMember studyMember : studyMembers) {
-            List<StudySkill> skills = studySkillRepository.findByStudyRoomId(studyMember.getStudyRoom().getId());
+            List<StudySkill> skills = studySkillRepository.findBystudyId(studyMember.getStudyRoom().getId());
             StudyResDto.MyStudyRespDto myStudyRespDto = new StudyResDto.MyStudyRespDto(studyMember, skills);
             myStudyRespDtos.add(myStudyRespDto);
         }

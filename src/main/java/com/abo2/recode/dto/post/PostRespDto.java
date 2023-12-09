@@ -143,13 +143,13 @@ public class PostRespDto {
     public static class StudyMemberListDto {
 
         private Long Id;
-        private Long studyRoomId;
+        private Long studyId;
         private Long userId;
         private Integer status;
 
         public StudyMemberListDto(StudyMember studyMember) {
             Id = studyMember.getId();
-            this.studyRoomId = studyMember.getStudyRoom().getId();
+            this.studyId = studyMember.getStudyRoom().getId();
             this.userId = studyMember.getUser().getId();
             this.status = studyMember.getStatus();
         }
