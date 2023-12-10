@@ -20,7 +20,7 @@ public class PostReqDto {
         private Long postId;
         private String title;
         private String content;
-        private Long studyId;
+        private Long studyRoomId;
         private Long userId;
         private Integer category;
         private User nickname;

@@ -65,23 +65,12 @@ public class PostController {
 
 
     // 게시글 수정
-<<<<<<< HEAD
-
     @PutMapping("/v1/study/{studyId}/post/edit/{postId}")
     public ResponseEntity<?> updatePost(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable Long postId, @PathVariable("studyId") Long studyId,
             @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
     ) {
-
-=======
-    @PutMapping("/v1/study/{studyId}/post/edit/{postId}")
-    public ResponseEntity<?> updatePost(
-            @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long postId, @PathVariable Long studyId,
-            @RequestBody PostReqDto.PostUpdateReqDto postUpdateReqDto
-    ) {
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
         PostRespDto.PostUpdateRespDto postUpdateRespDto = postService.updatePost(loginUser.getUser().getId(), postId, studyId, postUpdateReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 수정되었습니다.", postUpdateRespDto), HttpStatus.OK);
     }
@@ -89,12 +78,7 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/v1/study/{studyId}/post/{postId}")
-<<<<<<< HEAD
-    public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long
-            postId, @PathVariable Long studyId) {
-=======
     public ResponseEntity<?> deletePost(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long postId, @PathVariable Long studyId) {
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
         postService.deletePost(loginUser.getUser().getId(), postId, studyId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글이 성공적으로 삭제되었습니다.", null), HttpStatus.OK);

@@ -14,7 +14,7 @@ public class QuizReqDto {
         private String title;
         private Integer difficulty;
         private String quiz_link;
-        private Long studyId;
+        private Long studyRoomId;
         private Long userId;
         private LocalDate createdAt;
     }

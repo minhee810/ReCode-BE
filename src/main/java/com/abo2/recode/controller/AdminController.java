@@ -103,9 +103,9 @@ public class AdminController {
 
     // 스터디 그룹에서 멤버 목록 불러오기 (study_member의 역할까지 불러와야함.
     @GetMapping(value = "/v1/study/{studyId}/memberlistandstatus")
-    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("studyId") Long studyId) {
+    public ResponseEntity<?> getsStudyMembersandStatus(@PathVariable("studyId") Long studyRoomId) {
 
-        List<StudyResDto.StudyMemberAndStatusListRespDto> studyMembers = studyService.getStudyMembersByRoomIdAsAdmin(studyId);
+        List<StudyResDto.StudyMemberAndStatusListRespDto> studyMembers = studyService.getStudyMembersByRoomIdAsAdmin(studyRoomId);
 
 
         if (studyMembers.isEmpty()) {
@@ -125,4 +125,3 @@ public class AdminController {
     }// getsStudyMembersandStatus()
 
 }//AdminController
-

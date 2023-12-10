@@ -76,22 +76,13 @@ public class PostReplyService {
 
 
     // 게시글 댓글 수정
-<<<<<<< HEAD
     public PostRespDto.PostReplyRespDto updatePostReply(Long userId,Long studyId, Long postId, Long postReplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
-=======
-    public PostRespDto.PostReplyRespDto updatePostReply(Long userId, Long studyId, Long postId, Long postreplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
 
         StudyRoom studyRoom = studyRoomRepository.findById(studyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 스터디룸이 없습니다." + studyId));
 
-<<<<<<< HEAD
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postReplyId));
-=======
-        PostReply postReply = postReplyRepository.findById(postreplyId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postreplyId));
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId가 존재하지 않습니다." + postId));
@@ -114,10 +105,6 @@ public class PostReplyService {
     }
 
     // 게시글 댓글 삭제
-<<<<<<< HEAD
-=======
-
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
     public void deletePostReply(Long userId,Long studyId, Long postId, Long postReplyId) {
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 댓글이 없습니다." + postReplyId));

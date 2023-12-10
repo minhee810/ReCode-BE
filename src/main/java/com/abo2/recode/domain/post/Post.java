@@ -20,18 +20,18 @@ import java.util.List;
 public class Post {
 
     @Id
-    @Column(name = "postId")
+    @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Post 일련번호 - PK
 
     @Column(nullable = false, length = 50)
     private String title;
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "studyId")
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
     @ManyToOne

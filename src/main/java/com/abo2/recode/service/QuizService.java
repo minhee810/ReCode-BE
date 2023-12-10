@@ -31,7 +31,7 @@ public class QuizService {
         User user = userRepository.findById(quizWriteReqDto.getUserId()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
         // 2. StudyRoom 아이디 조회
-        StudyRoom studyRoom = studyRoomRepository.findById(quizWriteReqDto.getStudyId()).orElseThrow(() -> new CustomApiException("스터디 룸이 존재하지 않습니다."));
+        StudyRoom studyRoom = studyRoomRepository.findById(quizWriteReqDto.getStudyRoomId()).orElseThrow(() -> new CustomApiException("스터디 룸이 존재하지 않습니다."));
 
         // dto 에 반영
         Quiz quiz = new Quiz();
@@ -51,7 +51,7 @@ public class QuizService {
     @Transactional
     public List<QuizRespDto.QuizListRespDto> quizList(Long studyId) {
 
-        List<Quiz> quizList = quizRepository.findQuizBystudyId(studyId);
+        List<Quiz> quizList = quizRepository.findQuizByStudyRoomId(studyId);
 
         if (quizList.isEmpty()) {
             throw new CustomApiException("스터디에 등록된 퀴즈가 없습니다. 등록해주세요!");

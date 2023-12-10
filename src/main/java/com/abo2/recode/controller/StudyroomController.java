@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -129,11 +128,7 @@ public class StudyroomController {
     // 스터디룸 관리 화면에서 신청 현황 멤버 목록 불러오기
     @GetMapping(value = "/v1/study-groups/{studyId}/applications")
     public ResponseEntity<?> applications(
-<<<<<<< HEAD
             @PathVariable Long studyId
-=======
-            @PathVariable(name = "studyId") Long studyId
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
     ) {
 
         List<StudyResDto.ApplicationResDto> applicationResDtoList = studyService.applications(studyId);
@@ -143,17 +138,10 @@ public class StudyroomController {
     }
 
     // 스터디룸 관리 화면에서 신청 현황 멤버의 에세이 조회
-<<<<<<< HEAD
     @GetMapping(value = "/v1/study-groups/{studyId}/applications/{userId}")
     public ResponseEntity<?> applicationsEssay(
             @PathVariable(name = "studyId") Long studyId,
             @PathVariable(name = "userId") Long userId
-=======
-    @GetMapping(value = "/v1/study-groups/{studyId}/applications/{user_id}")
-    public ResponseEntity<?> applicationsEssay(
-            @PathVariable Long studyId,
-            @PathVariable(name = "user_id") Long userId
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
     ) {
         StudyResDto.ApplicationEssayResDto applicationEssayResDto =
                 studyService.applicationsEssay(studyId, userId);

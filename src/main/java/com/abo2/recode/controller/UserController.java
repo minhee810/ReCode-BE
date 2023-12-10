@@ -112,11 +112,11 @@ public class UserController {
     }
 
     // 스터디 룸 가입 여부 확인
-    @GetMapping("/v1/users/{userId}/studyrooms/{studyId}/isInStudyRoom")
-    public ResponseEntity<Boolean> isInStudyRoom(@PathVariable Long userId, @PathVariable Long studyId) {
+    @GetMapping("/v1/users/{userId}/studyrooms/{studyRoomId}/isInStudyRoom")
+    public ResponseEntity<Boolean> isInStudyRoom(@PathVariable Long userId, @PathVariable Long studyRoomId) {
         User user = userService.findUserById(userId);
         logger.info(user.toString());
-        StudyRoom studyRoom = studyService.findStudyRoomById(studyId);
+        StudyRoom studyRoom = studyService.findStudyRoomById(studyRoomId);
         logger.info(studyRoom.toString());
 
         boolean isInStudyRoom = studyService.isUserInStudyRoom(user.getId(), studyRoom.getId());

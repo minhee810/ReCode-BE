@@ -75,10 +75,6 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ba0d9111227bca8e3d8d6488bfd74a735ce7afbc
     public void updateUser(String nickname, String email) {
         this.email = email;
         this.nickname = nickname;

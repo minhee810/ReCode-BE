@@ -15,11 +15,11 @@ import javax.persistence.*;
 public class AttendanceDay {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "attendanceDayId")
+    @Column(name = "attendance_day_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "studyId")
+    @JoinColumn(name = "study_room_id")
     private StudyRoom studyRoom;
 
     @Column(nullable = false)
