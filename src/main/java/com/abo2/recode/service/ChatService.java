@@ -1,17 +1,25 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.ChatRoom.ChatRoom;
-import com.abo2.recode.domain.ChatRoom.ChatRoomRepository;
-import com.abo2.recode.domain.ChatRoom.ChatRoomUserLink;
-import com.abo2.recode.domain.ChatRoom.ChatRoomUserLinkRepository;
+import com.abo2.recode.domain.chatroom.ChatRoom;
+import com.abo2.recode.domain.chatroom.ChatRoomRepository;
+import com.abo2.recode.domain.chatroom.ChatRoomUserLink;
+import com.abo2.recode.domain.chatroom.ChatRoomUserLinkRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.chat.ChatReqDto;
 import com.abo2.recode.handler.ex.CustomApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.constraints.Null;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +30,8 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
 
     private final UserRepository userRepository;
+
+    private final Logger logger = LoggerFactory.getLogger(ChatService.class);
 
     @Autowired
     public ChatService(ChatRoomUserLinkRepository chatRoomUserLinkRepository,
@@ -36,7 +46,7 @@ public class ChatService {
     }
 
     public List<String> getUserNameListBychatRoomId(Long chatRoomId) {
-        List<Long> userIdList = chatRoomUserLinkRepository.getUser_idBychatRoomId(chatRoomId);
+        List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
 
         List<String> usernameList = userRepository.findAllById(userIdList)
                 .stream()
@@ -47,7 +57,7 @@ public class ChatService {
     }
 
     public ChatReqDto.ChatCreateReqDto createChatRoom(ChatReqDto.ChatCreateReqDto chatCreateReqDto) {
-        // 1.chatRoom Entity
+        // 1.chatroom Entity
         ChatRoom chatRoom = new ChatRoom(chatCreateReqDto.getChatRoomTitle());
         ChatRoom result = chatRoomRepository.save(chatRoom);
         User master = null;
@@ -77,4 +87,67 @@ public class ChatService {
                 () -> new CustomApiException("특정 유저가 참여중인 채팅방 목록 출력 중 오류 발생 : 존재하지 않는 채팅방")
         ).getTitle();
     }
-}
+
+    @Transactional
+    public ChatRoom deleteChatRoom(Long userId,Long chatRoomId) {
+
+        // 채팅방 삭제하는 사람이 채팅방 만든 사람인지 체크
+        if(
+                userId  != chatRoomUserLinkRepository.getMasterBychatRoomId(chatRoomId).get(0)
+        ) {
+            throw new CustomApiException("채팅방 생성자만 채팅방을 삭제 할 수 있습니다.");
+        }
+       ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
+               () -> new CustomApiException("존재하지 않는 chatroom")
+       );
+
+        // chatroom,chatuserlink 삭제
+        chatRoomUserLinkRepository.deleteBychatRoomId(chatRoomId);
+        chatRoomRepository.deleteById(chatRoomId);
+
+        // RestTemplate() -> chatting 삭제
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://localhost:8080")
+                .path("/chat/room/{chatRoomId}/delete")
+                .buildAndExpand(chatRoomId)
+                .encode()
+                .toUri();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        try{
+            restTemplate.delete(uri);
+            logger.info("ChatRoom Delete complete");
+        }
+        catch (HttpClientErrorException e){
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                logger.error("Resource not found");
+            } else {
+                logger.error("DELETE request failed with status code: " + e.getStatusCode());
+            }
+        }catch (Exception e) {
+            logger.error("An error occurred: " + e.getMessage());
+        }
+
+        return chatRoom;
+    }//deleteChatRoom()
+
+    public List<String> getNicknameList(Long chatRoomId) {
+
+        List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+        List<String> nicknameList = new ArrayList<>();
+
+        for(Long userId : userIdList){
+            String nickname = userRepository.getNicknameByuserId(userId);
+            nicknameList.add(nickname);
+        }
+
+        return nicknameList;
+    }//getUsernameList()
+
+    public void leaveChatRoom(Long userId, Long chatRoomId) {
+
+        // chatuserlink 삭제
+        chatRoomUserLinkRepository.deleteBychatRoomIdAnduserId(userId,chatRoomId);
+    }
+}//ChatService

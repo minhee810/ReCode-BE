@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -32,6 +36,23 @@ public class ChatResDto {
             this.usernameList = usernameList;
             this.title = title;
             this.lastMessage = lastMessage;
+        }
+    } //ChatListDto
+
+    @Getter
+    @Setter
+    public static class ChatDeleteResDto{
+
+        @NotEmpty
+        private Long id; //ChatRoom 일련번호
+
+        @NotEmpty
+        private String title;
+
+        @Builder
+        public ChatDeleteResDto(Long id, String title) {
+            this.id = id;
+            this.title = title;
         }
     }
 }
