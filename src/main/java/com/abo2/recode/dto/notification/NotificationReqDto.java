@@ -1,4 +1,4 @@
-package com.abo2.recode.dto.Notification;
+package com.abo2.recode.dto.notification;
 
 import lombok.Getter;
 import lombok.Setter;

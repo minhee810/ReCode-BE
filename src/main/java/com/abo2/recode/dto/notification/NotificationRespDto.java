@@ -1,4 +1,4 @@
-package com.abo2.recode.dto.Notification;
+package com.abo2.recode.dto.notification;
 
 import com.abo2.recode.domain.notification.Notifications;
 import com.abo2.recode.domain.studymember.StudyMember;

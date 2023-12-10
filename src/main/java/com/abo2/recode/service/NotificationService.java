@@ -5,7 +5,7 @@ import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
-import com.abo2.recode.dto.Notification.NotificationRespDto;
+import com.abo2.recode.dto.notification.NotificationRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
