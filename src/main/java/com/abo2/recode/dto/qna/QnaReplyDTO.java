@@ -1,8 +1,12 @@
 package com.abo2.recode.dto.qna;
 
+import com.abo2.recode.domain.qna.QnaReply;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter

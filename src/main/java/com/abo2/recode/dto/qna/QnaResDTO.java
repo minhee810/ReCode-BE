@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.qna;
 
+import com.abo2.recode.domain.qna.Qna;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +14,4 @@ public class QnaResDTO {
     private String title;
     private String content;
 
-    @Builder
-    public QnaResDTO(Long qnaId, Long userId, String title, String content) {
-        this.qnaId = qnaId;
-        this.userId = userId;
-        this.title = title;
-        this.content = content;
-    }
 }

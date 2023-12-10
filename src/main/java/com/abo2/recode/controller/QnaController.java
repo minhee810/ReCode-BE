@@ -59,21 +59,7 @@ public class QnaController {
 
         List<Qna> qnas = qnaService.qnaList();
 
-        List<QnaResDTO> qnaResDTOList = new ArrayList<>();
-
-        for (Qna qna : qnas) {
-            qnaResDTO = QnaResDTO.builder()
-                    .qnaId(qna.getId())
-                    .userId(qna.getUserId().getId())
-                    .title(qna.getTitle())
-                    .content(qna.getContent())
-                    .build();
-
-            qnaResDTOList.add(qnaResDTO);
-        }
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnaResDTOList), HttpStatus.OK);
-
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 목록 조회 성공", qnas), HttpStatus.OK);
     }
 
     //Qna 단일 조회

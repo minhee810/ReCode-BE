@@ -21,8 +21,10 @@ public class QnaReplyService {
 
     //Qna 댓글 생성
     @Transactional
-    public QnaReply postQnaReply(QnaReplyDTO qnaReplyDTO) {
-        Qna qna = qnaRepository.findById(qnaReplyDTO.getQnaId()).orElseThrow();
+    public QnaReply postQnaReply(Long qnaId, QnaReplyDTO qnaReplyDTO) {
+
+        Qna qna = qnaRepository.findById(qnaId).orElseThrow();
+
         QnaReply qnaReply = QnaReply.builder()
                 .comment(qnaReplyDTO.getComment())
                 .qnaId(qna)
@@ -33,16 +35,21 @@ public class QnaReplyService {
         return qnaReply;
     }
 
-    //Qna 댓글 조회 (목록)
-    @Transactional
-    public List<QnaReply> qnaReplies() {
-        return qnaReplyRepository.findAll();
-    }
+    //Qna 댓글 목록 조회
+//    @Transactional
+//    public List<QnaReply> qnaReplies(Long qnaId) {
+//
+//        //
+////        Qna qna = qnaRepository.findById(qnaId).orElseThrow();
+//
+//
+//       return qnaReplyRepository.findAllByQnaId(qnaId);
+//    }
 
     //Qna 댓글 수정
     @Transactional
-    public QnaReply qnaReplyModify(QnaReplyDTO qnaReplyDTO, Long id) {
-        Qna qna = qnaRepository.findById(qnaReplyDTO.getQnaId()).orElseThrow();
+    public QnaReply qnaReplyModify(QnaReplyDTO qnaReplyDTO, Long id, Long qnaId) {
+        Qna qna = qnaRepository.findById(qnaId).orElseThrow();
         QnaReply qnaReply = QnaReply.builder()
                 .id(id)
                 .comment(qnaReplyDTO.getComment())

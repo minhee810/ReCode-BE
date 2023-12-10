@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class QnaReplyController {
 
@@ -32,12 +33,8 @@ public class QnaReplyController {
     private final QnaRepository qnaRepository;
 
     //Qna 댓글 생성
-    @PostMapping("/v1/qna-reply/{qnaId}")
-    public ResponseEntity<?> postQnaReply(
-            @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable(value = "qnaId") Long qnaId,
-            @RequestBody QnaReplyDTO qnaReplyDTO
-    ) {
+    @PostMapping("/qna-reply/{qnaId}")
+    public ResponseEntity<?> postQnaReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable(value = "qnaId") Long qnaId, @RequestBody QnaReplyDTO qnaReplyDTO) {
         qnaReplyDTO.setUserId(loginUser.getUser().getId());
 
         User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
@@ -47,12 +44,12 @@ public class QnaReplyController {
                 () -> new CustomApiException("Qna가 존재하지 않습니다!")
         );
 
-        if (user.getId() == qna.getUserId().getId() || user.getRole() == UserEnum.ADMIN) {
+        if (Objects.equals(user.getId(), qna.getUserId().getId()) || user.getRole() == UserEnum.ADMIN) {
 
-            qnaReplyDTO.setQnaId(qnaId);
-            QnaReply qnaReply = qnaReplyService.postQnaReply(qnaReplyDTO);
+//            qnaReplyDTO.setQnaId(qnaId);
+            qnaReplyService.postQnaReply(qnaId, qnaReplyDTO);
 
-            qnaReplyDTO.setId(qnaReply.getId());
+//            qnaReplyDTO.setId(qnaReply.getId());
 
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 작성 성공", qnaReplyDTO), HttpStatus.OK);
 
@@ -61,63 +58,61 @@ public class QnaReplyController {
     }
 
     //Qna 댓글 조회
-    @GetMapping("/v1/qna-reply/{qnaId}")
-    public ResponseEntity<?> qnaReplys(
-            @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable(value = "qnaId") Long qnaId,
-            QnaReplyDTO qnaReplyDTO) {
-        qnaReplyDTO.setUserId(loginUser.getUser().getId());
-
-        qnaReplyDTO.setQnaId(qnaId);
-        List<QnaReply> qnaReplies = qnaReplyService.qnaReplies();
-
-        List<QnaReplyResDto> qnaReplyResDtoList = new ArrayList<>();
-
-        for(QnaReply qnaReply : qnaReplies){
-            QnaReplyResDto qnaReplyResDto = QnaReplyResDto.builder()
-                    .id(qnaReply.getId())
-                    .comment(qnaReply.getComment())
-                    .createdAt(qnaReply.getCreatedAt())
-                    .updatedAt(qnaReply.getUpdatedAt())
-                    .build();
-
-            qnaReplyResDtoList.add(qnaReplyResDto);
-        }
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 조회 성공", qnaReplyResDtoList), HttpStatus.OK);
-    }
+//    @GetMapping("/qna-reply/{qnaId}")
+//    public ResponseEntity<?> qnaReplys(@AuthenticationPrincipal LoginUser loginUser, @PathVariable(value = "qnaId") Long qnaId, QnaReplyDTO qnaReplyDTO) {
+//        qnaReplyDTO.setUserId(loginUser.getUser().getId());
+//
+//
+////        qnaReplyDTO.setQnaId(qnaId);
+//        List<QnaReply> qnaReplies = qnaReplyService.qnaReplies(qnaId);
+//
+////        List<QnaReplyResDto> qnaReplyResDtoList = new ArrayList<>();
+//
+////        for(QnaReply qnaReply : qnaReplies){
+////            QnaReplyResDto qnaReplyResDto = QnaReplyResDto.builder()
+////                    .id(qnaReply.getId())
+////                    .comment(qnaReply.getComment())
+////                    .createdAt(qnaReply.getCreatedAt())
+////                    .updatedAt(qnaReply.getUpdatedAt())
+////                    .build();
+////
+////            qnaReplyResDtoList.add(qnaReplyResDto);
+////        }
+//
+//        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 조회 성공", qnaReplies), HttpStatus.OK);
+//    }
 
     //Qna 댓글 수정
-    @PutMapping("/v1/qna-reply/{qnaId}/{qnaReplyId}")
-    public ResponseEntity<?> qnaReplyModify(
-            @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable(value = "qnaId") Long qnaId,
-            @PathVariable(value = "qnaReplyId") Long qnaReplyId,
-            @RequestBody QnaReplyDTO qnaReplyDTO) {
-
-        qnaReplyDTO.setUserId(loginUser.getUser().getId());
-
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
-                () -> new CustomApiException("User가 존재하지 않습니다!")
-        );
-        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
-                () -> new CustomApiException("Qna가 존재하지 않습니다!")
-        );
-
-        if (qna.getUserId().getId() == user.getId()) {
-
-            qnaReplyDTO.setQnaId(qnaId);
-            QnaReply qnaReply = qnaReplyService.qnaReplyModify(qnaReplyDTO, qnaReplyId);
-            qnaReplyDTO.setId(qnaReply.getId());
-
-            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 수정 성공", qnaReplyDTO), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.BAD_REQUEST);
-    }
+//    @PutMapping("/qna-reply/{qnaId}/{qnaReplyId}")
+//    public ResponseEntity<?> qnaReplyModify(
+//            @AuthenticationPrincipal LoginUser loginUser,
+//            @PathVariable(value = "qnaId") Long qnaId,
+//            @PathVariable(value = "qnaReplyId") Long qnaReplyId,
+//            @RequestBody QnaReplyDTO qnaReplyDTO) {
+//
+//        qnaReplyDTO.setUserId(loginUser.getUser().getId());
+//
+//        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
+//                () -> new CustomApiException("User가 존재하지 않습니다!")
+//        );
+//        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
+//                () -> new CustomApiException("Qna가 존재하지 않습니다!")
+//        );
+//
+//        if (qna.getUserId().getId() == user.getId()) {
+//
+//            qnaReplyDTO.setQnaId(qnaId);
+//            QnaReply qnaReply = qnaReplyService.qnaReplyModify(qnaReplyDTO, qnaReplyId);
+//            qnaReplyDTO.setId(qnaReply.getId());
+//
+//            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 수정 성공", qnaReplyDTO), HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.BAD_REQUEST);
+//    }
 
     //Qna 댓글 삭제 (관리자 권한)
     @Secured(value = "ROLE_ADMIN")
-    @DeleteMapping("/admin/v1/qna-reply/{qnaId}/{qnaReplyId}")
+    @DeleteMapping("/qna-reply/{qnaId}/{qnaReplyId}")
     public ResponseEntity<?> qnaReplyDelete(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(value = "qnaId") Long qnaId,
