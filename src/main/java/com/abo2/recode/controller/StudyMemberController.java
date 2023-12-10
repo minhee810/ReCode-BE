@@ -73,6 +73,8 @@ public class StudyMemberController {
                     .status("Approved")
                     .build();
 
+
+
             emailService.sendApprovedEmail(studyId, userId, user);
             Long studyMemberId = getStudyMemberId(studyId, userId);
 

@@ -8,12 +8,14 @@ import lombok.Setter;
 @Setter
 public class QnaResDTO {
 
+    private Long qnaId;
     private Long userId;
     private String title;
     private String content;
 
     @Builder
-    public QnaResDTO(Long userId, String title, String content) {
+    public QnaResDTO(Long qnaId, Long userId, String title, String content) {
+        this.qnaId = qnaId;
         this.userId = userId;
         this.title = title;
         this.content = content;
