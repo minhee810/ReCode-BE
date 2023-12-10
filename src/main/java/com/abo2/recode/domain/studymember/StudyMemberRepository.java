@@ -72,4 +72,6 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
             nativeQuery = true
     )
     List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(@Param("studyId") Long studyId);
+
+    Optional<StudyMember> findByUserIdAndStudyRoomId(Long userId, Long studyId);
 }
