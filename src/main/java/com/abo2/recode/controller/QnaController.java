@@ -36,11 +36,12 @@ public class QnaController {
 
     //Qna 단일 조회
     @GetMapping("/qna/{id}")
+
     public ResponseEntity<?> qnaDetail(@PathVariable Long id) {
 
-        QnaResDTO qnaResDTO = qnaService.qna(id);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qnaResDTO), HttpStatus.OK);
+//        System.out.println(qnaResDTO.getQnaReplyList().get(0).getComment());
+        return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qnaService.qna(id)), HttpStatus.OK);
     }
 
     //Qna 생성

@@ -9,7 +9,7 @@ import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReplyDTO;
-import com.abo2.recode.dto.qna.QnaReplyResDto;
+//import com.abo2.recode.dto.qna.QnaReplyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.service.QnaReplyService;
 import lombok.RequiredArgsConstructor;
@@ -37,23 +37,26 @@ public class QnaReplyController {
     public ResponseEntity<?> postQnaReply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable(value = "qnaId") Long qnaId, @RequestBody QnaReplyDTO qnaReplyDTO) {
         qnaReplyDTO.setUserId(loginUser.getUser().getId());
 
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
-                () -> new CustomApiException("User가 존재하지 않습니다!")
-        );
-        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
-                () -> new CustomApiException("Qna가 존재하지 않습니다!")
-        );
+//        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
+//                () -> new CustomApiException("User가 존재하지 않습니다!")
+//        );
+//        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
+//                () -> new CustomApiException("Qna가 존재하지 않습니다!")
+//        );
+//
+//        if (Objects.equals(user.getId(), qna.getUserId().getId()) || user.getRole() == UserEnum.ADMIN) {
+//
+////            qnaReplyDTO.setQnaId(qnaId);
+//            qnaReplyService.postQnaReply(qnaId, qnaReplyDTO);
+//
+////            qnaReplyDTO.setId(qnaReply.getId());
+qnaReplyService.postQnaReply(qnaId, qnaReplyDTO);
 
-        if (Objects.equals(user.getId(), qna.getUserId().getId()) || user.getRole() == UserEnum.ADMIN) {
-
-//            qnaReplyDTO.setQnaId(qnaId);
-            qnaReplyService.postQnaReply(qnaId, qnaReplyDTO);
-
-//            qnaReplyDTO.setId(qnaReply.getId());
-
-            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 작성 성공", qnaReplyDTO), HttpStatus.OK);
-
-        }
+System.out.println(qnaId);
+        System.out.println(qnaReplyDTO.getComment());
+//            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 작성 성공", qnaReplyDTO), HttpStatus.OK);
+//
+//        }
         return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.BAD_REQUEST);
     }
 
@@ -125,13 +128,13 @@ public class QnaReplyController {
                 () -> new CustomApiException("User가 존재하지 않습니다!")
         );
 
-        if (qna.getUserId() == user || user.getRole() == UserEnum.ADMIN) {
-
-            qnaReplyDTO.setQnaId(qnaId);
-            qnaReplyService.qnaReplyDelete(qnaReplyId);
-
-            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 삭제 성공", qnaReplyDTO), HttpStatus.OK);
-        }
+//        if (qna.getUserId() == user || user.getRole() == UserEnum.ADMIN) {
+//
+//            qnaReplyDTO.setQnaId(qnaId);
+//            qnaReplyService.qnaReplyDelete(qnaReplyId);
+//
+//            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 삭제 성공", qnaReplyDTO), HttpStatus.OK);
+//        }
         return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.BAD_REQUEST);
     }
 }

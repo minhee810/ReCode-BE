@@ -1,9 +1,12 @@
 package com.abo2.recode.service;
 
 import com.abo2.recode.domain.qna.Qna;
+import com.abo2.recode.domain.qna.QnaReply;
+import com.abo2.recode.domain.qna.QnaReplyRepository;
 import com.abo2.recode.domain.qna.QnaRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
+import com.abo2.recode.dto.qna.QnaReplyDTO;
 import com.abo2.recode.dto.qna.QnaReqDTO;
 import com.abo2.recode.dto.qna.QnaResDTO;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import java.util.List;
 public class QnaService {
 
     private final QnaRepository qnaRepository;
+    private final QnaReplyRepository qnaReplyRepository;
     private final UserRepository userRepository;
 
 
@@ -52,6 +56,21 @@ public class QnaService {
     public QnaResDTO qna(Long qnaId) {
 
         Qna qna = qnaRepository.findById(qnaId).orElseThrow();
+        List<QnaReply> qnaReplies = qnaReplyRepository.findByQnaId(qnaId);
+
+
+        List<QnaReplyDTO> qnaReplyDTOList = new ArrayList<>();
+        qnaReplies.forEach(q -> {
+            QnaReplyDTO dto = QnaReplyDTO.builder()
+                    .qnaId(q.getId())
+                    .comment(q.getComment())
+                    .createdAt(q.getCreatedAt())
+                    .updatedAt(q.getUpdatedAt())
+                    .build();
+
+            qnaReplyDTOList.add(dto);
+
+        });
 
         return QnaResDTO.builder()
                 .id(qna.getId())
@@ -62,6 +81,7 @@ public class QnaService {
                 .userId(qna.getUser().getId())
                 .role(qna.getUser().getRole())
                 .nickname(qna.getUser().getNickname())
+                .qnaReplyList(qnaReplyDTOList)
                 .build();
     }
 
