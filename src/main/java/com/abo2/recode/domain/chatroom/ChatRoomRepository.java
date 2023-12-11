@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.ChatRoom;
+package com.abo2.recode.domain.chatroom;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
