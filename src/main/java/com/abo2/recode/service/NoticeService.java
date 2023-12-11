@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,7 +93,7 @@ public class NoticeService {
     // 공지사항 목록 조회
     @Transactional
     public List<NoticeRespDto> getAllNotices() {
-        List<Notice> notice = noticeRepository.findAll();
+        List<Notice> notice = noticeRepository.findAllByOrderByUpdatedAtDesc();
         return notice.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -103,13 +104,34 @@ public class NoticeService {
         dto.setId(notice.getId());
         dto.setTitle(notice.getTitle());
         dto.setContent(notice.getContent());
-        dto.setCreatedBy(notice.getCreatedBy().getNickname());  // User 타입 반환해야함.
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
-        String formatterCreatedAt = notice.getCreatedAt().format(formatter);
-        dto.setCreatedAt(formatterCreatedAt);  // LocalDateTime 반환해야함.
-
+        dto.setCreatedBy(notice.getCreatedBy().getNickname());
+        dto.setCreatedAt(notice.getCreatedAt());
+        dto.setUpdatedAt(notice.getUpdatedAt());
         return dto;
     }
 
+    // 공지사항 제목 검색
+
+    public List<NoticeRespDto> findByTitleContaining(String title) {
+        List<Notice> noticeList = noticeRepository.findByTitleContaining(title);
+        List<NoticeRespDto> dtoList = new ArrayList<>();
+
+        for (Notice notice : noticeList) {
+            NoticeRespDto dto = NoticeRespDto.toDto(notice);
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
+
+    // 작성자 검색
+    public List<NoticeRespDto> findByCreatedByContaining(String createdBy) {
+        List<Notice> noticeList = noticeRepository.findByCreatedByContaining(createdBy);
+        List<NoticeRespDto> dtoList = new ArrayList<>();
+        for (Notice notice : noticeList) {
+            NoticeRespDto dto = NoticeRespDto.toDto(notice);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 }
