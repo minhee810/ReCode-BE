@@ -191,8 +191,8 @@ public class StudyroomController {
     //스터디 그룹에서 멤버 강퇴 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
     @DeleteMapping(value = "/v1/{studyId}/member/{memberId}")
     public ResponseEntity<?> deleteMember(@AuthenticationPrincipal LoginUser loginUser,
-                                          @PathVariable Long studyId,
-                                          @PathVariable Long memberId) {
+                                          @PathVariable("studyId") Long studyId,
+                                          @PathVariable("memberId") Long memberId) {
 
         StudyMember studyMember
                 = studyService.deleteMember(loginUser.getUser().getId(), studyId, memberId);

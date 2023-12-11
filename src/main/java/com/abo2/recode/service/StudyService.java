@@ -2,6 +2,7 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -47,6 +48,7 @@ public class StudyService {
     private final SkillRepository skillRepository;
     private final UserRepository userRepository;
     private final StudyMemberRepository studyMemberRepository;
+    private final NotificationRepository notificationRepository;
 
 
     //스터디 조장의 스터디 멤버 승인/거부
@@ -441,10 +443,13 @@ public class StudyService {
 
     }
 
-
     // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
+    @Transactional
     public StudyMember deleteMember(Long userId, Long studyId, Long memberId) {
 
+        if ((studyMemberRepository.findSpecificByUserId(userId, studyId)) == memberId) {
+            throw new CustomForbiddenException("자기 자신을 퇴출 할 수 없습니다.");
+        }
 
         //강제 퇴출하는 사람이 조장이 맞는지 체크
         if (userId != studyRoomRepository.findcreatedByBystudyId(studyId)) {
@@ -453,6 +458,7 @@ public class StudyService {
             StudyMember studyMember = studyMemberRepository.findById(memberId)
                     .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
 
+            notificationRepository.deleteByMemberId(memberId);
             studyMemberRepository.delete(studyMember);
 
             return studyMember;
