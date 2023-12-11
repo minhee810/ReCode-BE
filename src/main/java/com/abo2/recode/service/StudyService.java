@@ -2,6 +2,7 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -17,16 +18,11 @@ import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
@@ -48,6 +44,22 @@ public class StudyService {
     private final UserRepository userRepository;
     private final StudyMemberRepository studyMemberRepository;
 
+    private UserBadgeRepository userBadgeRepository;
+
+    @Autowired
+    public StudyService(AttendanceDayRepository attendanceDayRepository, AttendanceDayRepository attendanceDayRepository1, StudyRoomRepository studyRoomRepository,
+                        StudySkillRepository studySkillRepository,
+                        SkillRepository skillRepository,
+                        UserRepository userRepository,
+                        StudyMemberRepository studyMemberRepository, UserBadgeRepository userBadgeRepository) {
+        this.attendanceDayRepository = attendanceDayRepository1;
+        this.studyRoomRepository = studyRoomRepository;
+        this.studySkillRepository = studySkillRepository;
+        this.skillRepository = skillRepository;
+        this.userRepository = userRepository;
+        this.studyMemberRepository = studyMemberRepository;
+        this.userBadgeRepository = userBadgeRepository;
+    }
 
     //스터디 조장의 스터디 멤버 승인/거부
     @Transactional
