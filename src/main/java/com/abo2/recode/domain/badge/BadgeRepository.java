@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
-    Badge findByLevel(String level);
+    Badge findByName(String name);
 }

@@ -155,4 +155,14 @@ public class BadgeService {
         userBadge.setCreatedAt(LocalDateTime.now());
         userBadgeRepository.save(userBadge);
     }
+
+    public BadgeRespDto.GetBadgeRespDto getBadge(Long userId) {
+        // 뱃지 정보를 가져오려는 대상 조회
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 사용자가 존재하지 않습니다."));
+
+        // 뱃지 정보 가져오기
+        UserBadge getBadge = userBadgeRepository.findByUserId(userId).orElseThrow(() -> new CustomApiException("뱃지 정보가 없습니다."));
+
+        return new BadgeRespDto.GetBadgeRespDto(getBadge);
+    }
 }

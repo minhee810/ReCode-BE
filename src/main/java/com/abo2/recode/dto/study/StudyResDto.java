@@ -1,9 +1,11 @@
 package com.abo2.recode.dto.study;
 
+import com.abo2.recode.domain.badge.UserBadge;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,7 +66,7 @@ public class StudyResDto {
         private List<String> skillNames;
 
         @CreatedDate
-        @Column(nullable = false)
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH시 mm분 ss초")
         private LocalDateTime createdAt; //스터디 그룹 만든 시각
 
         @LastModifiedDate
@@ -73,6 +75,8 @@ public class StudyResDto {
 
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
+
+        private Long userId;
 
         public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills, Set<String> attendanceDays) {
             this.studyRoomId = studyRoom.getId();
@@ -99,6 +103,7 @@ public class StudyResDto {
             this.createdAt = studyRoom.getCreatedAt();
             this.updatedAt = studyRoom.getUpdatedAt();
             this.attendanceDay = attendanceDays;
+            this.userId = studyRoom.getMaster().getId();
         }
 
     }

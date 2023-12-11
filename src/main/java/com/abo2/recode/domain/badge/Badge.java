@@ -17,5 +17,5 @@ public class Badge {
     @Column(name = "badge_id")
     private Long id;
 
-    private String level;
+    private String name;
 }

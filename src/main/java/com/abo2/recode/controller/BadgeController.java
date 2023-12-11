@@ -30,7 +30,12 @@ public class BadgeController {
         return new ResponseEntity<>(new ResponseDto<>(1, "평가 완료", estimateRespDto), HttpStatus.OK);
     }
 
-//    // 사용자의 뱃지 정보 가져오기
-//    @GetMapping(value = "/get-badge/{userId}/")
-//    public ResponseEntity<?> getBadge(@RequestParam Long userId)
+    // 사용자의 뱃지 정보 가져오기
+    @GetMapping(value = "/get-badge/{userId}")
+    public ResponseEntity<?> getBadge(@PathVariable Long userId) {
+
+        BadgeRespDto.GetBadgeRespDto getBadgeRespDto = badgeService.getBadge(userId);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자의 뱃지 불러오기 성공", getBadgeRespDto), HttpStatus.OK);
+    }
 }

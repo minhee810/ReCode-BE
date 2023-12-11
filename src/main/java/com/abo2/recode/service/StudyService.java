@@ -2,6 +2,8 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.badge.UserBadge;
+import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -47,6 +49,8 @@ public class StudyService {
     private UserRepository userRepository;
 
     private StudyMemberRepository studyMemberRepository;
+
+    private UserBadgeRepository userBadgeRepository;
 
     @Autowired
     public StudyService(AttendanceDayRepository attendanceDayRepository, StudyRoomRepository studyRoomRepository,
