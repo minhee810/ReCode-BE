@@ -42,7 +42,10 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
     @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :studyId", nativeQuery = true)
     void memberRoleDemote(@Param("studyId") Long studyId);
 
-    @Query("SELECT sm FROM StudyRoom sm WHERE (sm.studyName LIKE %:keyword% OR sm.title LIKE %:keyword%)")
-    List<Post> findStudyRoomsByKeyword(@Param("keyword") String keyword);
+    @Query("SELECT DISTINCT sm FROM StudyRoom sm LEFT JOIN FETCH sm.studySkills WHERE sm.title LIKE %:title%")
+    List<StudyRoom> findStudyRoomsByTitle(@Param("title") String title);
+
+    @Query("SELECT DISTINCT sm FROM StudyRoom sm LEFT JOIN FETCH sm.studySkills WHERE sm.studyName LIKE %:studyName%")
+    List<StudyRoom> findStudyRoomsByStudyName(@Param("studyName") String studyName);
 
 }

@@ -374,7 +374,7 @@ public class StudyService {
     public List<StudyResDto.StudyListRespDto> mainList() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
         return studyRooms.stream()
-                .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
+                .map((StudyResDto.StudyListRespDto::new))
                 .collect(Collectors.toList());
     }
 
@@ -469,6 +469,33 @@ public class StudyService {
 
             return studyMember;
         }
+    }
+    // 메인 제목 검색
+    public List<StudyResDto.StudyListRespDto> findStudyRoomByTile(String title) {
+        List<StudyRoom> studyRooms = studyRoomRepository.findStudyRoomsByTitle(title);
+
+        if (studyRooms.isEmpty()) {
+            throw new CustomApiException("해당 스터디가 존재하지 않습니다.");
+        }
+
+        return studyRooms.stream()
+                .distinct()
+                .map((StudyResDto.StudyListRespDto::new))
+                .collect(Collectors.toList());
+    }
+
+    // 메인 스터디 이름 검색
+    public List<StudyResDto.StudyListRespDto> findStudyRoomByStudyName(String studyName) {
+        List<StudyRoom> studyRooms = studyRoomRepository.findStudyRoomsByStudyName(studyName);
+
+        if (studyRooms.isEmpty()) {
+            throw new CustomApiException("해당 스터디가 존재하지 않습니다.");
+        }
+
+        return studyRooms.stream()
+                .distinct()
+                .map((StudyResDto.StudyListRespDto::new))
+                .collect(Collectors.toList());
     }
 
 }
