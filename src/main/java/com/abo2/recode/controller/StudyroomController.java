@@ -119,13 +119,10 @@ public class StudyroomController {
 
     // 스터디 목록 조회
     @GetMapping(value = "/main/list")
-    public ResponseEntity<?> mainList(@RequestParam(required = false) String title,
-                                      @RequestParam(required = false) String studyName) {
+    public ResponseEntity<?> mainList(@RequestParam(required = false) String keyword) {
         List<StudyResDto.StudyListRespDto> studyListRespDto;
-        if (title != null && !title.isEmpty()) {
-            studyListRespDto = studyService.findStudyRoomByTile(title);
-        } else if (studyName != null && !studyName.isEmpty()) {
-            studyListRespDto = studyService.findStudyRoomByStudyName(studyName);
+        if (keyword != null && !keyword.isEmpty()) {
+            studyListRespDto = studyService.findStudyRoomByKeyword(keyword);
         } else {
             studyListRespDto = studyService.mainList();
         }
