@@ -58,5 +58,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "DELETE FROM User u WHERE u.id = :userId", nativeQuery = true)
     void deleteWithoutRelatedInfo(@Param("userId") Long userId);
 
+<<<<<<< HEAD
 
 }
+=======
+    @Query(value = "SELECT nickname FROM Users u WHERE u.user_id = :userId", nativeQuery = true)
+    String getNicknameByuserId(@Param("userId") Long userId);
+}
+>>>>>>> d17fb37e5659cc15c25f111516a6bc6c4ed83562

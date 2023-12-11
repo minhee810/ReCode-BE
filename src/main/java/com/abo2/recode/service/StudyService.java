@@ -17,10 +17,16 @@ import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
@@ -32,34 +38,16 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class StudyService {
 
+    private final AttendanceDayRepository attendanceDayRepository;
+    private final StudyRoomRepository studyRoomRepository;
+    private final StudySkillRepository studySkillRepository;
+    private final SkillRepository skillRepository;
+    private final UserRepository userRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
-    @Autowired
-    private AttendanceDayRepository attendanceDayRepository;
-
-    private StudyRoomRepository studyRoomRepository;
-
-    private StudySkillRepository studySkillRepository;
-
-    private SkillRepository skillRepository;
-
-    private UserRepository userRepository;
-
-    private StudyMemberRepository studyMemberRepository;
-
-    @Autowired
-    public StudyService(AttendanceDayRepository attendanceDayRepository, StudyRoomRepository studyRoomRepository,
-                        StudySkillRepository studySkillRepository,
-                        SkillRepository skillRepository,
-                        UserRepository userRepository,
-                        StudyMemberRepository studyMemberRepository) {
-        this.studyRoomRepository = studyRoomRepository;
-        this.studySkillRepository = studySkillRepository;
-        this.skillRepository = skillRepository;
-        this.userRepository = userRepository;
-        this.studyMemberRepository = studyMemberRepository;
-    }
 
     //스터디 조장의 스터디 멤버 승인/거부
     @Transactional
@@ -470,6 +458,5 @@ public class StudyService {
             return studyMember;
         }
     }
-
 
 }

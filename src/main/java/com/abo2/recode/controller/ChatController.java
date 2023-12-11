@@ -1,8 +1,8 @@
 package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
-import com.abo2.recode.domain.ChatRoom.Chat;
-import com.abo2.recode.domain.user.User;
+import com.abo2.recode.domain.chatroom.Chat;
+import com.abo2.recode.domain.chatroom.ChatRoom;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.chat.ChatReqDto;
 import com.abo2.recode.dto.chat.ChatResDto;
@@ -57,7 +57,7 @@ public class ChatController {
 
             //getForObject
             RestTemplate restTemplate = new RestTemplate();
-            String lastmessage = restTemplate.getForObject(uri,Chat.class).getMsg();
+            String lastmessage = restTemplate.getForObject(uri, Chat.class).getMsg();
 
             //4. ChatListDto , chatListDtoList에 담기
             /*    ChatResDto.ChatListDto = {Long chatRoomId; List<String> usernameList; String lastMessage; }*/
@@ -73,9 +73,15 @@ public class ChatController {
         return new ResponseEntity<>( new ResponseDto<>(1,"현재 참여 중인 채팅방 목록입니다.",chatListDtoList), HttpStatus.OK);
     }//getChatRoomsByUser()
 
-    // 참여 중인 채팅방 탈퇴
-
-    // 채팅방에서 다시 목록으로 돌아가기
+    // 참여 중인 채팅방 나가기
+    @DeleteMapping(value = "/v1/chat/{chatRoomId}/leave-chatRoom")
+    public ResponseEntity<?> leaveChatRoom(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable(name = "chatRoomId") Long chatRoomId
+    ){
+        chatService.leaveChatRoom(loginUser.getUser().getId(),chatRoomId);
+        return new ResponseEntity<>(new ResponseDto<>(1,"채팅방에서 나갔습니다.",chatRoomId),HttpStatus.OK);
+    }//leaveChatRoom()
 
     // 채팅방 생성
     @PostMapping(value = "/v1/chat/chatRoom")
@@ -84,14 +90,37 @@ public class ChatController {
             @RequestBody ChatReqDto.ChatCreateReqDto chatCreateReqDto
     ){
         chatCreateReqDto.setMaster(loginUser.getUser());
-        // 1.chatRoom Entity,chatRoomUserLink Entity
+        // 1.chatroom Entity,chatRoomUserLink Entity
         ChatReqDto.ChatCreateReqDto chatcreatedtoresult = chatService.createChatRoom(chatCreateReqDto);
         return new ResponseEntity<>( new ResponseDto<>(1,"채팅방을 생성했습니다.",chatcreatedtoresult), HttpStatus.OK);
     }//createChatRoom()
 
     // 채팅방 삭제
+    @DeleteMapping(value = "/v1/chat/{chatRoomId}/delete-chatRoom")
+    public ResponseEntity<?> deleteChatRoom(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable(name = "chatRoomId") Long chatRoomId
+    ){
+        // chatroom,chatuserlink 삭제
+        // RestTemplate() -> chatting 삭제
+        ChatRoom chatRoom = chatService.deleteChatRoom(loginUser.getUser().getId(),chatRoomId);
+
+        ChatResDto.ChatDeleteResDto chatDeleteResDto = ChatResDto.ChatDeleteResDto.builder()
+                .id(chatRoom.getId())
+                .title(chatRoom.getTitle())
+                .build();
+
+        return new ResponseEntity<>(new ResponseDto<>(1,"채팅방을 삭제했습니다.",chatDeleteResDto),HttpStatus.OK);
+    } //deleteChatRoom()
 
     // 특정 채팅방에 참여 중인 유저 목록 출력 -> 채팅 창
-
+    // 특정 채팅방 입장 -> username,chatRoomId
+    @GetMapping(value = "/v1/chat/{chatRoomId}/user-list")
+    public ResponseEntity<?> getUserList(
+            @PathVariable(name = "chatRoomId") Long chatRoomId
+    ){
+        List<String> nicknameList = chatService.getNicknameList(chatRoomId);
+        return new ResponseEntity<>(new ResponseDto<>(1,"현재 채팅방에 참여중인 유저 리스트입니다.",nicknameList),HttpStatus.OK);
+    }//getUserList()
 
 }//ChatController

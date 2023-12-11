@@ -46,7 +46,7 @@ public class NoticeService {
         NoticeRespDto adminAddNoticeRespDto = NoticeRespDto.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
-                .content(notice.getContent())
+//                .content(notice.getContent())
                 .build();
 
         return adminAddNoticeRespDto;
@@ -64,7 +64,7 @@ public class NoticeService {
         NoticeRespDto updateNoticeRespDto = NoticeRespDto.builder()
                 .id(adminUpdateNoticeReqDto.getUserId().getId())
                 .title(adminUpdateNoticeReqDto.getTitle())
-                .content(adminUpdateNoticeReqDto.getContent())
+//                .content(adminUpdateNoticeReqDto.getContent())
                 .build();
 
         return updateNoticeRespDto;
@@ -103,7 +103,7 @@ public class NoticeService {
         dto.setId(notice.getId());
         dto.setTitle(notice.getTitle());
         dto.setContent(notice.getContent());
-        dto.setCreatedBy(notice.getCreatedBy().getUsername());  // User 타입 반환해야함.
+        dto.setCreatedBy(notice.getCreatedBy().getNickname());  // User 타입 반환해야함.
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
         String formatterCreatedAt = notice.getCreatedAt().format(formatter);

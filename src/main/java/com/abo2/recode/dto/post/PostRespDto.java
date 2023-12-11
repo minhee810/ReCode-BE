@@ -85,8 +85,10 @@ public class PostRespDto {
         private String title;
         private String content;
         private Integer category;
-        private LocalDateTime createdAt;
         private String nickName;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
+        private LocalDateTime createdAt;
 
         public PostDetailRespDto(Post post) {
             this.id = post.getId();
@@ -106,6 +108,8 @@ public class PostRespDto {
         private String title;
         private String content;
         private Integer category;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime updatedAt;
 
         public PostUpdateRespDto(Post post) {
@@ -126,7 +130,10 @@ public class PostRespDto {
         private Long postId;
         private Long userId;
         private String nickName;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime createdAt;
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime updatedAt;
 
         public PostReplyRespDto(PostReply postReply, String nickName) {
