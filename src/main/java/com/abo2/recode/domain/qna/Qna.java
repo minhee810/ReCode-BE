@@ -10,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,17 +39,20 @@ public class Qna {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private User userId;
+    private User user;
 
-    @OneToMany(mappedBy = "qnaId", orphanRemoval = true)
+    @OneToMany(mappedBy = "qna", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<QnaReply> qnaReplies;
 
     @Builder
-    public Qna(Long id, User userId, String title, String content, List<QnaReply> qnaReplies) {
+    public Qna(Long id, User user, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, List<QnaReply> qnaReplies) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.title = title;
         this.content = content;
-this.qnaReplies= qnaReplies;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.qnaReplies = qnaReplies;
     }
 }
