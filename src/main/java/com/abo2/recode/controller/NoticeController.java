@@ -2,6 +2,8 @@ package com.abo2.recode.controller;
 
 import com.abo2.recode.config.auth.LoginUser;
 
+import com.abo2.recode.domain.notice.Notice;
+import com.abo2.recode.domain.user.User;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.notice.NoticeReqDto;
 
@@ -66,19 +68,38 @@ public class NoticeController {
 
 
     // 공지사항 목록 조회 - custom 조회 가능
-    @GetMapping("/v1/notice-list")
+    @GetMapping("/notice-list")
     public ResponseEntity<?> getAllNotices(){
         List<NoticeRespDto> getAllNoticeRespDto = noticeService.getAllNotices();
         return new ResponseEntity<>(new ResponseDto<>(1, "공지사항 목록 조회 성공", getAllNoticeRespDto), HttpStatus.OK);
     }
 
     // 공지사항 상세보기
-    @GetMapping("/v1/notice-detail/{notice_id}")
+    @GetMapping("/notice-detail/{notice_id}")
     public ResponseEntity<?> detailNotice(@Valid @PathVariable("notice_id") Long noticeId){
 
         NoticeRespDto detailNoticeDto = noticeService.detailNotice(noticeId);
         return new ResponseEntity<>(new ResponseDto<>(1, "공지사항 상세보기 성공", detailNoticeDto), HttpStatus.OK);
 
     }
+
+    // 공지사항 제목검색
+    @GetMapping("/notice-search")
+    public ResponseEntity<?> searchKeyword(@RequestParam(required = false) String title,
+                                           @RequestParam(required = false) String createdBy) {
+
+        List<NoticeRespDto> noticeRespDtoList;
+        if (title != null && !title.isEmpty()) {
+            noticeRespDtoList = noticeService.findByTitleContaining(title);
+        } else if (createdBy != null) {
+            noticeRespDtoList = noticeService.findByCreatedByContaining(createdBy);
+        } else {
+            noticeRespDtoList = noticeService.getAllNotices(); // 아무 검색 조건도 없으면 모든 결과 반환
+        }
+        return new ResponseEntity<>(new ResponseDto<>(1, "공지사항 키워드 검색 성공", noticeRespDtoList), HttpStatus.OK);
+    }
+
+    // 공지사항 작성자 검색
+    // 공지사항 작성일 검색
 
 }
