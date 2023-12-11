@@ -1,6 +1,5 @@
-package com.abo2.recode.domain.ChatRoom;
+package com.abo2.recode.domain.chatroom;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
