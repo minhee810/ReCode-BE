@@ -40,17 +40,20 @@ public class Qna {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private User userId;
+    private User user;
 
-    // Qna을 참조하는 QnaReply 엔티티
-    @OneToMany(mappedBy = "qnaId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "qna", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<QnaReply> qnaReplies = new ArrayList<>();
 
     @Builder
-    public Qna(Long id, User userId, String title, String content) {
+    public Qna(Long id, User user, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, List<QnaReply> qnaReplies) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.title = title;
         this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.qnaReplies = qnaReplies;
     }
 }

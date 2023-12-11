@@ -32,15 +32,16 @@ public class QnaReply {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "qna_id", nullable = false, updatable = false)
-    private Qna qnaId;
+    private Qna qna;
 
     @Builder
-    public QnaReply(Long id, String comment, Qna qnaId) {
+    public QnaReply(Long id, String comment, LocalDateTime createdAt, LocalDateTime updatedAt, Qna qna) {
         this.id = id;
         this.comment = comment;
-        this.qnaId = qnaId;
-
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.qna = qna;
     }
 }
