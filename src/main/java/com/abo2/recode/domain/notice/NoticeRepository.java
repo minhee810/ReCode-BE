@@ -19,7 +19,4 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     @Query("SELECT n FROM Notice n WHERE n.createdBy.nickname LIKE %:createdBy%")
     List<Notice> findByCreatedByContaining(@Param("createdBy") String createdBy);
-
-
 }
-

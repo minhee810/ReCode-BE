@@ -16,7 +16,7 @@ public class BookController {
     private final BookApiClient bookApiClient;
 
     @GetMapping("/book/{query}")
-    public BookRespDto goBookPage(@PathVariable("query") String query){
+    public BookRespDto goBookPage(@PathVariable("query") String query) {
         return bookApiClient.requestBook(query);
     }
 }

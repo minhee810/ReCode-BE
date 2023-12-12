@@ -33,7 +33,7 @@ public class StudyResDto {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long studyRoomId; //스터디 그룹 일련번호
+        private Long studyId; //스터디 그룹 일련번호
 
         @Column(unique = true, nullable = false, length = 50)
         private String studyName; //스터디 그룹 네임
@@ -81,7 +81,7 @@ public class StudyResDto {
         private Long userId;
 
         public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills, Set<String> attendanceDays) {
-            this.studyRoomId = studyRoom.getId();
+            this.studyId = studyRoom.getId();
             this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
             this.description = studyRoom.getDescription();
@@ -199,16 +199,16 @@ public class StudyResDto {
 
         private Long Id; //스터디 룸 member 일련번호
 
-        private Long studyRoomId;
+        private Long studyId;
 
         private String nickname;
 
         private Integer status;
 
         @Builder
-        public StudyMemberListRespDto(Long id, Long studyRoomId, String nickname, Integer status) {
+        public StudyMemberListRespDto(Long id, Long studyId, String nickname, Integer status) {
             Id = id;
-            this.studyRoomId = studyRoomId;
+            this.studyId = studyId;
             this.nickname = nickname;
             this.status = status;
         }
@@ -220,16 +220,16 @@ public class StudyResDto {
 
         private Long userId;
 
-        private Long studyRoomId;
+        private Long studyId;
 
         private String username;
 
         private Integer createdBy;
 
         @Builder
-        public StudyMemberAndStatusListRespDto(Long userId, Long studyRoomId, String username, Integer createdBy) {
+        public StudyMemberAndStatusListRespDto(Long userId, Long studyId, String username, Integer createdBy) {
             this.userId = userId;
-            this.studyRoomId = studyRoomId;
+            this.studyId = studyId;
             this.username = username;
             this.createdBy = createdBy;
         }
@@ -426,6 +426,17 @@ public class StudyResDto {
     public static class CheckStudyMaserRespDto {
         private String username;
         private String masterNickname;
+    }
+
+    @Getter
+    public static class CheckStudyDateRespDto {
+        private LocalDate endDate;
+        private boolean isEndDateToday;
+
+        public CheckStudyDateRespDto(StudyRoom studyRoom, boolean isEndDateToday) {
+            this.endDate = studyRoom.getEndDate();
+            this.isEndDateToday = LocalDate.now().equals(endDate);
+        }
     }
 
 }
