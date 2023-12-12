@@ -73,8 +73,6 @@ public class StudyMemberController {
                     .status("Approved")
                     .build();
 
-
-
             emailService.sendApprovedEmail(studyId, userId, user);
             Long studyMemberId = getStudyMemberId(studyId, userId);
 
@@ -109,7 +107,7 @@ public class StudyMemberController {
     // 스터디 멤버 아이디 조회 메서드
     @GetMapping("/study-member-id")
     public Long getStudyMemberId(@RequestParam(name = "studyId") Long studyId,
-                                        @RequestParam(name = "userId") Long userId) {
+                                 @RequestParam(name = "userId") Long userId) {
         Long studyMemberId = studyMemberRepository.findByStudyRoomAndUser(studyId, userId);
         return studyMemberId;
     }

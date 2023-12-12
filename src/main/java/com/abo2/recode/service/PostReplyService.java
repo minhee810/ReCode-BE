@@ -5,6 +5,8 @@ import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.post.PostReply;
 import com.abo2.recode.domain.post.PostReplyRepository;
 import com.abo2.recode.domain.post.PostRepository;
+import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.post.PostReqDto;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,16 +29,21 @@ public class PostReplyService {
     private final PostReplyRepository postReplyRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final StudyRoomRepository studyRoomRepository;
 
 
     // 게시글 댓글 작성
-    public PostRespDto.PostReplyRespDto createPostReply(Long userId, Long postId, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto createPostReply(Long userId, Long postId, Long studyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId가 없습니다." + postId));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 userId가 없습니다" + userId));
+
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 studyId가 존재하지 않습니다." + studyId));
+
 
         PostReply postReply = new PostReply();
         postReply.setPost(post);
@@ -48,13 +57,32 @@ public class PostReplyService {
         return new PostRespDto.PostReplyRespDto(savedPostReply, nickName);
     }
 
+    // 댓글 상세보기
+    public List<PostRespDto.PostReplyRespDto> getPostReply(Long userId, Long studyId, Long postId) {
+        List<PostReply> postReplyList = postReplyRepository.findByPostId(postId);
+
+        List<PostRespDto.PostReplyRespDto> postReplyDtoList = new ArrayList<>();
+        for (PostReply postReply : postReplyList) {
+            // 댓글이 해당 게시글에 속해있는지 확인
+            if (!postReply.getPost().getId().equals(postId)) {
+                throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
+            }
+
+            postReplyDtoList.add(new PostRespDto.PostReplyRespDto(postReply, postReply.getUser().getNickname()));
+        }
+
+        return postReplyDtoList;
+    }
+
 
     // 게시글 댓글 수정
-    public PostRespDto.PostReplyRespDto updatePostReply(Long userId, Long postId, Long postreplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
+    public PostRespDto.PostReplyRespDto updatePostReply(Long userId,Long studyId, Long postId, Long postReplyId, PostReqDto.PostReplyReqDto postReplyReqDto) {
 
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 스터디룸이 없습니다." + studyId));
 
-        PostReply postReply = postReplyRepository.findById(postreplyId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postreplyId));
+        PostReply postReply = postReplyRepository.findById(postReplyId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 없습니다." + postReplyId));
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 postId가 존재하지 않습니다." + postId));
@@ -76,9 +104,8 @@ public class PostReplyService {
         return new PostRespDto.PostReplyRespDto(postReply, postReply.getUser().getNickname());
     }
 
-
     // 게시글 댓글 삭제
-    public void deletePostReply(Long userId, Long postId, Long postReplyId) {
+    public void deletePostReply(Long userId,Long studyId, Long postId, Long postReplyId) {
         PostReply postReply = postReplyRepository.findById(postReplyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID에 해당하는 댓글이 없습니다." + postReplyId));
 
@@ -92,7 +119,6 @@ public class PostReplyService {
 
         postReplyRepository.delete(postReply);
     }
-
 }
 
 
