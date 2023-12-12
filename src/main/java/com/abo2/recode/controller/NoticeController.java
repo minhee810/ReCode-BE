@@ -77,17 +77,15 @@ public class NoticeController {
     // 공지사항 상세보기
     @GetMapping("/notice-detail/{notice_id}")
     public ResponseEntity<?> detailNotice(@Valid @PathVariable("notice_id") Long noticeId){
-
         NoticeRespDto detailNoticeDto = noticeService.detailNotice(noticeId);
         return new ResponseEntity<>(new ResponseDto<>(1, "공지사항 상세보기 성공", detailNoticeDto), HttpStatus.OK);
 
     }
 
-    // 공지사항 제목검색
+    // 공지사항 제목, 작성자 검색
     @GetMapping("/notice-search")
     public ResponseEntity<?> searchKeyword(@RequestParam(required = false) String title,
                                            @RequestParam(required = false) String createdBy) {
-
         List<NoticeRespDto> noticeRespDtoList;
         if (title != null && !title.isEmpty()) {
             noticeRespDtoList = noticeService.findByTitleContaining(title);
@@ -98,8 +96,5 @@ public class NoticeController {
         }
         return new ResponseEntity<>(new ResponseDto<>(1, "공지사항 키워드 검색 성공", noticeRespDtoList), HttpStatus.OK);
     }
-
-    // 공지사항 작성자 검색
-    // 공지사항 작성일 검색
 
 }

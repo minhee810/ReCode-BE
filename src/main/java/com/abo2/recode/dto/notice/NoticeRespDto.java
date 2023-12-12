@@ -2,12 +2,13 @@ package com.abo2.recode.dto.notice;
 
 import com.abo2.recode.domain.notice.Notice;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
