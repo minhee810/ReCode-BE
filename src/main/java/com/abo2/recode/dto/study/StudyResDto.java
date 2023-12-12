@@ -1,45 +1,47 @@
 package com.abo2.recode.dto.study;
 
-import com.abo2.recode.domain.badge.UserBadge;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyRoomDetailResDto{
+    public static class StudyRoomDetailResDto {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long studyRoomId; //스터디 그룹 일련번호
 
-        @Column(unique = true,nullable = false,length = 50)
+        @Column(unique = true, nullable = false, length = 50)
         private String studyName; //스터디 그룹 네임
 
-        @Column(nullable = false,length = 50)
+        @Column(nullable = false, length = 50)
         private String title; //스터디 주제
 
-        @Column(nullable = false,length = 300)
+        @Column(nullable = false, length = 300)
         private String description; //스터디 그룹 소개글
 
         @Column(nullable = false)
@@ -166,36 +168,34 @@ public class StudyResDto {
         private String masterEmail;
         private String masterNickname;
 
-        public StudyListRespDto(StudyRoom studyRoom, List<StudySkill> studySkills) {
+        public StudyListRespDto(StudyRoom studyRoom) {
             this.id = studyRoom.getId();
             this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
-
-            if (studySkills != null) {
-                this.skillNames = studySkills.stream()
-                        .filter(Objects::nonNull) // Check if studySkill is not null
-                        .map(studySkill -> {
-                            Skill skill = studySkill.getSkill();
-                            return (skill != null) ? skill.getSkillName() : null; // Check if getSkill() is not null
-                        })
-                        .filter(Objects::nonNull) // Filter out null skill names
-                        .collect(Collectors.toList());
-            } else {
-                this.skillNames = new ArrayList<>(); // Initialize as an empty list if studySkills is null
-            }
-
             this.currentNum = studyRoom.getCurrentNum();
             this.maxNum = studyRoom.getMaxNum();
             if (studyRoom.getMaster() != null) {
                 this.masterNickname = studyRoom.getMaster().getNickname();
                 this.masterEmail = studyRoom.getMaster().getEmail();
             }
+
+            // studySkill 설정
+            if (studyRoom.getStudySkills() != null) {
+                this.skillNames = studyRoom.getStudySkills().stream()
+                        .map(StudySkill::getSkill)
+                        .filter(Objects::nonNull)
+                        .map(Skill::getSkillName)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            } else {
+                this.skillNames = new ArrayList<>();
+            }
         }
     } //class StudyListRespDto
 
     @Getter
     @Setter
-    public static class StudyMemberListRespDto{
+    public static class StudyMemberListRespDto {
 
         private Long Id; //스터디 룸 member 일련번호
 
@@ -216,7 +216,7 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyMemberAndStatusListRespDto{
+    public static class StudyMemberAndStatusListRespDto {
 
         private Long userId;
 
@@ -237,7 +237,7 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyRoomApplyResDto{
+    public static class StudyRoomApplyResDto {
      /*   {
             "code": 1,
                 "msg": "스터디 신청에 성공하였습니다.",
@@ -343,7 +343,7 @@ public class StudyResDto {
     // skill 객체를 받아오기 위한
     @Getter
     @Setter
-    public class SkillDto{
+    public class SkillDto {
         @NotEmpty
         private String skillName;
 
@@ -352,7 +352,7 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class StudyMembershipResDto{
+    public static class StudyMembershipResDto {
       /*  {
             "code":1
             "msg": "가입 신청이 승인되었습니다."   // or "가입 신청이 거부되었습니다."
@@ -389,7 +389,7 @@ public class StudyResDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplicationResDto{
+    public static class ApplicationResDto {
 
         @NotEmpty
         private Long userId;
@@ -409,7 +409,7 @@ public class StudyResDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplicationEssayResDto{
+    public static class ApplicationEssayResDto {
 
         @NotEmpty
         private String username;
@@ -423,7 +423,7 @@ public class StudyResDto {
 
     @Getter
     @Setter
-    public static class CheckStudyMaserRespDto{
+    public static class CheckStudyMaserRespDto {
         private String username;
         private String masterNickname;
     }
