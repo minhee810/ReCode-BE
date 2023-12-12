@@ -47,14 +47,15 @@ public class Notifications {
     // 알림 발생 시간
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     // 읽음 상태 (true / false)
 
+    @Column(nullable = false)
     private boolean readStatus;
 
     // 알림 유형 (그룹 리더로서의 알림인지, 사용자 관점에서의 알림인지 구분)
@@ -67,16 +68,21 @@ public class Notifications {
     @Builder
     public Notifications(Long id, User user, StudyMember studyMember,
                          String message, String messageId,
-                         LocalDateTime createAt, LocalDateTime updateAt,
+                         LocalDateTime createdAt, LocalDateTime updatedAt,
                          boolean readStatus, String type) {
         this.id = id;
         this.user = user;
         this.studyMember = studyMember;
         this.message = message;
         this.messageId = messageId;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.readStatus = readStatus;
         this.type = type;
+    }
+
+
+    public void updateReadStatus(boolean readStatus) {
+        this.readStatus = readStatus;
     }
 }

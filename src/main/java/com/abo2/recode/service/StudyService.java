@@ -20,7 +20,10 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+<<<<<<< HEAD
+=======
 import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> c680b5a7c72bced88d175bd17db979fa5ab06094
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +32,10 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -284,6 +290,7 @@ public class StudyService {
     }//checkReturnType()
 
     //study 가입 신청
+    @Transactional
     public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
         if (     // -1. userId,studyId를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
