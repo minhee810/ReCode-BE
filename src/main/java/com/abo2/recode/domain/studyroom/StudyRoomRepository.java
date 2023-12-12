@@ -1,5 +1,6 @@
 package com.abo2.recode.domain.studyroom;
 
+import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -41,4 +42,6 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
     @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :studyId", nativeQuery = true)
     void memberRoleDemote(@Param("studyId") Long studyId);
 
+    @Query("SELECT DISTINCT sm FROM StudyRoom sm LEFT JOIN FETCH sm.studySkills WHERE (sm.title LIKE %:keyword% OR sm.studyName LIKE %:keyword%)")
+    List<StudyRoom> findStudyRoomByKeyword(@Param("keyword") String keyword);
 }

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -120,9 +119,13 @@ public class StudyroomController {
 
     // 스터디 목록 조회
     @GetMapping(value = "/main/list")
-    public ResponseEntity<?> mainList() {
+    public ResponseEntity<?> mainList(@RequestParam(required = false) String keyword) {
         List<StudyResDto.StudyListRespDto> studyListRespDto;
-        studyListRespDto = studyService.mainList();
+        if (keyword != null && !keyword.isEmpty()) {
+            studyListRespDto = studyService.findStudyRoomByKeyword(keyword);
+        } else {
+            studyListRespDto = studyService.mainList();
+        }
         return new ResponseEntity<>(new ResponseDto<>(1, "목록 조회 성공", studyListRespDto), HttpStatus.OK);
     }
 

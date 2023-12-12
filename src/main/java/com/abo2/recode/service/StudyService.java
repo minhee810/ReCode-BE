@@ -2,6 +2,7 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -19,6 +20,10 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+<<<<<<< HEAD
+=======
+import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> c680b5a7c72bced88d175bd17db979fa5ab06094
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +50,22 @@ public class StudyService {
     private final UserRepository userRepository;
     private final StudyMemberRepository studyMemberRepository;
 
+    private UserBadgeRepository userBadgeRepository;
+
+    @Autowired
+    public StudyService(AttendanceDayRepository attendanceDayRepository, AttendanceDayRepository attendanceDayRepository1, StudyRoomRepository studyRoomRepository,
+                        StudySkillRepository studySkillRepository,
+                        SkillRepository skillRepository,
+                        UserRepository userRepository,
+                        StudyMemberRepository studyMemberRepository, UserBadgeRepository userBadgeRepository) {
+        this.attendanceDayRepository = attendanceDayRepository1;
+        this.studyRoomRepository = studyRoomRepository;
+        this.studySkillRepository = studySkillRepository;
+        this.skillRepository = skillRepository;
+        this.userRepository = userRepository;
+        this.studyMemberRepository = studyMemberRepository;
+        this.userBadgeRepository = userBadgeRepository;
+    }
 
     //스터디 조장의 스터디 멤버 승인/거부
     @Transactional
@@ -360,7 +381,7 @@ public class StudyService {
     public List<StudyResDto.StudyListRespDto> mainList() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
         return studyRooms.stream()
-                .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
+                .map((StudyResDto.StudyListRespDto::new))
                 .collect(Collectors.toList());
     }
 
@@ -456,6 +477,18 @@ public class StudyService {
             return studyMember;
         }
     }
+    // 메인 제목 검색
+    public List<StudyResDto.StudyListRespDto> findStudyRoomByKeyword(String keyword) {
+        List<StudyRoom> studyRooms = studyRoomRepository.findStudyRoomByKeyword(keyword);
 
+        if (studyRooms.isEmpty()) {
+            throw new CustomApiException("해당 스터디가 존재하지 않습니다.");
+        }
+
+        return studyRooms.stream()
+                .distinct()
+                .map((StudyResDto.StudyListRespDto::new))
+                .collect(Collectors.toList());
+    }
 }
 
