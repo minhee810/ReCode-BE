@@ -61,6 +61,8 @@ public class Notifications {
     @Column(nullable = true)
     private String type;
 
+    @Column(nullable = true)
+    private boolean isNotified;  // 알림 동의 / 비동의
 
     @Builder
     public Notifications(Long id, User user, StudyMember studyMember,
