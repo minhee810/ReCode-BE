@@ -11,6 +11,7 @@ import com.abo2.recode.dto.study.StudyReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -55,6 +56,7 @@ public class StudyRoom {
 
     @Column(nullable = false)
     private LocalTime endTime; //스터디 출석 인정 끝 시간
+
 
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private Set<AttendanceDay> attendanceDay = new HashSet<>();  // 출석 요일
@@ -134,4 +136,3 @@ public class StudyRoom {
     }
 
 }
-

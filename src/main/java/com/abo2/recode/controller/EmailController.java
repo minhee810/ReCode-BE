@@ -24,8 +24,8 @@ public class EmailController {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
-    @GetMapping(value ="/email")
-    public ResponseEntity<?> emailForm(){
+    @GetMapping(value = "/email")
+    public ResponseEntity<?> emailForm() {
         return new ResponseEntity<>(new ResponseDto<>(1, "회원 인증을 위한 이메일 입력 페이지입니다.", null), HttpStatus.OK);
     }
 
@@ -34,7 +34,7 @@ public class EmailController {
                                        @RequestParam String email) throws MessagingException {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
-        if(!userOpt.isPresent()) {
+        if (!userOpt.isPresent()) {
             return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "해당 이메일이 존재하지 않습니다.", null));
         }
 
@@ -49,7 +49,7 @@ public class EmailController {
 
     @GetMapping(value = {"/v1/check-mail-token", "/check-mail-token"})
     public ResponseEntity<?> checkEmailToken(@AuthenticationPrincipal LoginUser loginUser,
-                                             @RequestParam String emailCheckToken, @RequestParam String email){
+                                             @RequestParam String emailCheckToken, @RequestParam String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         Optional<User> userEm = userRepository.findByEmailCheckToken(emailCheckToken);
 

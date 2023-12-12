@@ -5,7 +5,6 @@ import com.abo2.recode.domain.notice.NoticeRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.notice.NoticeReqDto;
-
 import com.abo2.recode.dto.notice.NoticeRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -112,6 +110,7 @@ public class NoticeService {
 
     // 공지사항 제목 검색
 
+    @Transactional
     public List<NoticeRespDto> findByTitleContaining(String title) {
         List<Notice> noticeList = noticeRepository.findByTitleContaining(title);
         List<NoticeRespDto> dtoList = new ArrayList<>();
@@ -125,6 +124,7 @@ public class NoticeService {
     }
 
     // 작성자 검색
+    @Transactional
     public List<NoticeRespDto> findByCreatedByContaining(String createdBy) {
         List<Notice> noticeList = noticeRepository.findByCreatedByContaining(createdBy);
         List<NoticeRespDto> dtoList = new ArrayList<>();
