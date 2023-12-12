@@ -115,20 +115,14 @@ public class NotificationService {
     @Transactional
     public NotificationRespDto.MarkAsReadRespDto markAsRead(NotificationReqDto.MarkAsReadReqDto markAsReadReqDto) {
 
-        // 1. 해당 사용자의 아이디로 알림 목록을 가져옴.
-        // 2. 사용자의 알림 읽을 상태를 dto 로 받아와서 엔티티의 값을 바꾸어 저장해줘야 함.
-        logger.info("markAsReadReqDto.getId() {}" , markAsReadReqDto.getId());
-        logger.info("readStatus {} : ", markAsReadReqDto.isReadStatus());
         Optional<Notifications> optionalNotifications = notificationRepository.findById(markAsReadReqDto.getId());
 
         if (optionalNotifications.isPresent()) {
             Notifications notifications = optionalNotifications.get();
-
             // 값 수정
             notifications.updateReadStatus(markAsReadReqDto.isReadStatus());
             // 반환 Dto 생성
             return new NotificationRespDto.MarkAsReadRespDto(notifications);
-
         }else {
             throw new CustomApiException("해당 알림이 존재하지 않습니다.");
         }
