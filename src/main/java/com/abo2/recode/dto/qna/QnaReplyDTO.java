@@ -1,15 +1,11 @@
 package com.abo2.recode.dto.qna;
 
-import com.abo2.recode.domain.qna.QnaReply;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Getter
 @Setter
@@ -22,14 +18,17 @@ public class QnaReplyDTO {
     private LocalDateTime updatedAt;
     private Long qnaId;
     private Long userId;
+    private String nickname;
 
     @Builder
-    public QnaReplyDTO(Long id, String comment, LocalDateTime createdAt, LocalDateTime updatedAt, Long qnaId, Long userId) {
+    public QnaReplyDTO(Long id, String comment, LocalDateTime createdAt, LocalDateTime updatedAt, Long qnaId, Long userId, String nickname) {
+
         this.id = id;
         this.comment = comment;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.qnaId = qnaId;
         this.userId = userId;
+        this.nickname = nickname;
     }
 }
