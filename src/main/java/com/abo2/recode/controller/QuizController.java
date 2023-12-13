@@ -51,7 +51,7 @@ public class QuizController {
     public ResponseEntity<?> quizModify(@AuthenticationPrincipal LoginUser loginUser,
                                         @PathVariable Long studyId,
                                         @PathVariable Long quiz_id,
-                                        @RequestBody @Valid QuizReqDto.QuizWriteReqDto quizWriteReqDto){
+                                        @RequestBody @Valid QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
         QuizRespDto.QuizListRespDto quizzedModify = quizService.quizModify(loginUser.getUser().getId(), studyId, quiz_id, quizWriteReqDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "퀴즈 수정 완료", quizzedModify), HttpStatus.OK);

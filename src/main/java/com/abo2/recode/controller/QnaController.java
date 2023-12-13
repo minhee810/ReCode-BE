@@ -38,8 +38,6 @@ public class QnaController {
 
     public ResponseEntity<?> qnaDetail(@PathVariable Long id) {
 
-
-//        System.out.println(qnaResDTO.getQnaReplyList().get(0).getComment());
         return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qnaService.qna(id)), HttpStatus.OK);
     }
 
@@ -72,7 +70,7 @@ public class QnaController {
         System.out.println(qnaInfo.getUser().getId());
         System.out.println(loginUser.getUser().getId());
 
-        if (qnaInfo.getUser().getId() !=loginUser.getUser().getId()) {
+        if (!qnaInfo.getUser().getId().equals(loginUser.getUser().getId())) {
             System.out.println(qnaInfo.getUser().getId());
             System.out.println(loginUser.getUser().getId());
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
@@ -90,7 +88,7 @@ public class QnaController {
         User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow();
         Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
 
-        if (qnaInfo.getUser().getId() == user.getId() || user.getRole() == UserEnum.ADMIN) {
+        if (qnaInfo.getUser().getId().equals(user.getId()) || user.getRole() == UserEnum.ADMIN) {
 
             qnaService.qnaDelete(id);
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", id), HttpStatus.OK);

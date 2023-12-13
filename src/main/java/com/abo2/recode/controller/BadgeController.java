@@ -23,7 +23,7 @@ public class BadgeController {
     public ResponseEntity<?> estimate(@AuthenticationPrincipal LoginUser loginUser,
                                       @PathVariable Long studyId,
                                       @PathVariable Long userId,
-                                      @RequestBody BadgeReqDto.EstimateReqDto estimateReqDto){
+                                      @RequestBody BadgeReqDto.EstimateReqDto estimateReqDto) {
 
         BadgeRespDto.EstimateRespDto estimateRespDto = badgeService.estimate(loginUser.getUser().getId(), studyId, userId, estimateReqDto);
 

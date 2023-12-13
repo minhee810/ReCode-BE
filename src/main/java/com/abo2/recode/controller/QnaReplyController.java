@@ -32,50 +32,22 @@ public class QnaReplyController {
 
         System.out.println(qnaId);
         return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 작성 성공", qnaReplyDTO), HttpStatus.OK);
-   }
+    }
 
-
-    //Qna 댓글 수정
-//    @PutMapping("/qna-reply/{qnaId}/{qnaReplyId}")
-//    public ResponseEntity<?> qnaReplyModify(
-//            @AuthenticationPrincipal LoginUser loginUser,
-//            @PathVariable(value = "qnaId") Long qnaId,
-//            @PathVariable(value = "qnaReplyId") Long qnaReplyId,
-//            @RequestBody QnaReplyDTO qnaReplyDTO) {
-//
-//        qnaReplyDTO.setUserId(loginUser.getUser().getId());
-//
-//        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow(
-//                () -> new CustomApiException("User가 존재하지 않습니다!")
-//        );
-//        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
-//                () -> new CustomApiException("Qna가 존재하지 않습니다!")
-//        );
-//
-//        if (qna.getUserId().getId() == user.getId()) {
-//
-//            qnaReplyDTO.setQnaId(qnaId);
-//            QnaReply qnaReply = qnaReplyService.qnaReplyModify(qnaReplyDTO, qnaReplyId);
-//            qnaReplyDTO.setId(qnaReply.getId());
-//
-//            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 수정 성공", qnaReplyDTO), HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.BAD_REQUEST);
-//    }
 
     //Qna 댓글 삭제 (관리자 권한)
     @Secured(value = "ROLE_ADMIN")
     @DeleteMapping("/qna-reply/{qnaId}/{qnaReplyId}")
-    public ResponseEntity<?> qnaReplyDelete(@AuthenticationPrincipal LoginUser loginUser,  @PathVariable Long qnaId, @PathVariable Long qnaReplyId) {
+    public ResponseEntity<?> qnaReplyDelete(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long qnaId, @PathVariable Long qnaReplyId) {
 
         QnaReply reply = qnaReplyRepository.findById(qnaReplyId).orElseThrow();
 
-        if (loginUser.getUser().getId() == reply.getUser().getId() || loginUser.getUser().getRole() == UserEnum.ADMIN) {
+        if (loginUser.getUser().getId().equals(reply.getUser().getId()) || loginUser.getUser().getRole() == UserEnum.ADMIN) {
 
 
             qnaReplyService.qnaReplyDelete(qnaReplyId);
 
-            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 삭제 성공",null), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 삭제 성공", null), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ResponseDto<>(-1, "권한 없음", null), HttpStatus.BAD_REQUEST);
     }
