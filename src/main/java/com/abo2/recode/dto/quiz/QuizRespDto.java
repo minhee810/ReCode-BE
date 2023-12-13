@@ -1,6 +1,7 @@
 package com.abo2.recode.dto.quiz;
 
 import com.abo2.recode.domain.quiz.Quiz;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,6 +41,8 @@ public class QuizRespDto {
         private String quiz_link;
         private String nickname;
         private Long studyId;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일")
         private LocalDate updatedAt;
 
         public QuizListRespDto(Quiz quiz) {

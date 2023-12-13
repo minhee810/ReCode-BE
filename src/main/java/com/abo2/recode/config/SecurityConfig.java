@@ -58,6 +58,7 @@ public class SecurityConfig {
         logger.debug("디버그 : filterChain 빈 등록됨");
         http.headers().frameOptions().disable(); // iframe 허용안함.
         http.csrf().disable();
+
         http.cors().configurationSource(configurationSource());
 
         // jSessionId를 서버쪽에서 관리안함
@@ -89,7 +90,6 @@ public class SecurityConfig {
                         .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
-
         );
         return http.build();
     }

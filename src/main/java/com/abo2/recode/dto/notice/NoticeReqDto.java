@@ -2,6 +2,7 @@ package com.abo2.recode.dto.notice;
 
 import com.abo2.recode.domain.notice.Notice;
 import com.abo2.recode.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -29,7 +30,11 @@ public class NoticeReqDto {
         private User userId;
 
         @NotEmpty
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime createdAt;
+
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
+        private LocalDateTime updatedAt;
 
 
         public Notice toEntity() {
@@ -38,9 +43,9 @@ public class NoticeReqDto {
                     .content(content)
                     .createdBy(userId)
                     .createdAt(createdAt)
+                    .updatedAt(updatedAt)
                     .build();
         }
-
 
     }
 

@@ -2,6 +2,8 @@ package com.abo2.recode.service;
 
 import com.abo2.recode.domain.attendanceDay.AttendanceDay;
 import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.badge.UserBadgeRepository;
+import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -17,48 +19,56 @@ import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class StudyService {
 
+    private final AttendanceDayRepository attendanceDayRepository;
+    private final StudyRoomRepository studyRoomRepository;
+    private final StudySkillRepository studySkillRepository;
+    private final SkillRepository skillRepository;
+    private final UserRepository userRepository;
+    private final StudyMemberRepository studyMemberRepository;
+    private final NotificationRepository notificationRepository;
+
+    private UserBadgeRepository userBadgeRepository;
 
     @Autowired
-    private AttendanceDayRepository attendanceDayRepository;
-
-    private StudyRoomRepository studyRoomRepository;
-
-    private StudySkillRepository studySkillRepository;
-
-    private SkillRepository skillRepository;
-
-    private UserRepository userRepository;
-
-    private StudyMemberRepository studyMemberRepository;
-
-    @Autowired
-    public StudyService(AttendanceDayRepository attendanceDayRepository, StudyRoomRepository studyRoomRepository,
+    public StudyService(AttendanceDayRepository attendanceDayRepository, AttendanceDayRepository attendanceDayRepository1, StudyRoomRepository studyRoomRepository,
                         StudySkillRepository studySkillRepository,
                         SkillRepository skillRepository,
                         UserRepository userRepository,
-                        StudyMemberRepository studyMemberRepository) {
+                        StudyMemberRepository studyMemberRepository,
+                        UserBadgeRepository userBadgeRepository,
+                        NotificationRepository notificationRepository) {
+        this.attendanceDayRepository = attendanceDayRepository1;
         this.studyRoomRepository = studyRoomRepository;
         this.studySkillRepository = studySkillRepository;
         this.skillRepository = skillRepository;
         this.userRepository = userRepository;
         this.studyMemberRepository = studyMemberRepository;
+        this.userBadgeRepository = userBadgeRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     //스터디 조장의 스터디 멤버 승인/거부
@@ -75,6 +85,7 @@ public class StudyService {
         }
     }
 
+
     // 요일 문자열을 enum 타입으로 변환하는 메서드
     private DayOfWeek parseDayOfWeek(String dayOfWeekString) {
         try {
@@ -86,7 +97,6 @@ public class StudyService {
     }
 
 
-    // 민희 수정
     // 시간 문자열을 LocalTime 객체로 변환하는 메서드
     private LocalTime parseTime(String timeString) {
         try {
@@ -103,9 +113,9 @@ public class StudyService {
     public StudyResDto.StudyCreateRespDto modifyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto) {
 
         // studyId로 Studyroom 조회
-        StudyRoom studyRoom = studyRoomRepository.findById(studyModifyReqDto.getStudyId()).orElseThrow(
-                () -> new CustomApiException("존재하지 않는 스터디 그룹입니다.")
-        );
+        StudyRoom studyRoom = studyRoomRepository.findById(studyModifyReqDto.getStudyId())
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 스터디 그룹입니다.")
+                );
 
         // 현재 수정하는 사람이 스터디 조장인지 체크
         if (
@@ -128,15 +138,28 @@ public class StudyService {
             studyRoom.getAttendanceDay().add(attendanceDay);
         }
 
-        for (String skillName : studyModifyReqDto.getSkills()) {
+        // 연관관계 AttendanceDay 저장
+        for (String day : studyModifyReqDto.getAttendanceDay()) {
+            AttendanceDay attendanceDay = AttendanceDay.builder()
+                    .attendanceDay(day)
+                    .studyRoom(studyRoom)
+                    .build();
+
+            studyRoom.getAttendanceDay().add(attendanceDay);
+        }
+        //3.study_skill 테이블에 skill 삽입
+        //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
+        // expertise
+        for (String skillName : studyModifyReqDto.getSkillNames()) {
+
             Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
 
             StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
+            studySkillRepository.save(studySkill);
 
-            studyRoom.getStudySkills().add(studySkill);
         }
 
         // StudyRoom의 AttendanceDay 정보를 String Set으로 변환
@@ -146,7 +169,6 @@ public class StudyService {
                 .map(AttendanceDay::getAttendanceDay)
                 .collect(Collectors.toSet());
 
-        String[] skillNames = studyModifyReqDto.getSkills();
 
         // studyRoom 기반으로 studyCreateRespDto 채우기
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
@@ -161,16 +183,21 @@ public class StudyService {
                 .title(studyRoom.getTitle())
                 .updatedAt(studyRoom.getUpdatedAt())
                 .attendanceDay(attendanceDays) // Set<String>으로 변환한 정보를 저장
-                .skills(skillNames)
+                .skillNames(studyModifyReqDto.getSkillNames())
                 .userId(studyRoom.getMaster().getId())
                 .build();
 
         return studyCreateRespDto;
     }
 
+
     @Transactional
     public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
 
+        // 스터디 이름 중복 검사
+        if (studyRoomRepository.existsByStudyName(studyCreateReqDto.getStudyName())) {
+            throw new CustomApiException("스터디 이름이 이미 존재합니다.");
+        }
         // 1. 넘겨 받은 studyReqDto에서 정보 가져오기
         User master = userRepository.findById(studyCreateReqDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -206,20 +233,19 @@ public class StudyService {
         }
 
 
-        // 3. study_skill 테이블에 skill 삽입
-        // 3-1. Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
+        //3.study_skill 테이블에 skill 삽입
+        //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
         // expertise
-        for (String skillName : studyCreateReqDto.getSkills()) {
+        for (String skillName : studyCreateReqDto.getSkillNames()) {
+
             Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
 
             StudySkill studySkill = StudySkill.builder()
                     .studyRoom(studyRoom)
                     .skill(skill)
                     .build();
-
             studySkillRepository.save(studySkill);
         }
-
 
         // StudyRoom의 AttendanceDay 정보를String Set으로 변환
         Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
@@ -228,8 +254,6 @@ public class StudyService {
                 .map(AttendanceDay::getAttendanceDay)
                 .collect(Collectors.toSet());
 
-
-        String[] skillNames = studyCreateReqDto.getSkills();
 
         // ResponseDto 생성
         StudyResDto.StudyCreateRespDto studyCreateRespDto = StudyResDto.StudyCreateRespDto.builder()
@@ -244,7 +268,7 @@ public class StudyService {
                 .title(studyRoom.getTitle())
                 .updatedAt(studyRoom.getUpdatedAt())
                 .attendanceDay(attendanceDays) // Set<String>으로 변환한 정보를 저장
-                .skills(skillNames)
+                .skillNames(studyCreateReqDto.getSkillNames())
                 .userId(master.getId())
                 .build();
 
@@ -267,6 +291,7 @@ public class StudyService {
     }//checkReturnType()
 
     //study 가입 신청
+    @Transactional
     public StudyResDto.StudyRoomApplyResDto studyApply(StudyReqDto.StudyApplyReqDto studyApplyReqDto) {
 
         if (     // -1. userId,studyId를 기반으로 먼저 유저가 이미 가입한 상태인지 체크
@@ -308,6 +333,7 @@ public class StudyService {
 
     }
 
+    //스터디 모임 상세 조회 + 민희 수정 (출석요일 추가)
     @Transactional
     public StudyResDto.StudyRoomDetailResDto studyRoomDetailBrowse(Long studyId) {
         StudyRoom studyRoom = studyRoomRepository.findWithMasterAndSkillsById(studyId)
@@ -356,9 +382,10 @@ public class StudyService {
     public List<StudyResDto.StudyListRespDto> mainList() {
         List<StudyRoom> studyRooms = studyRoomRepository.findAllWithMaster();
         return studyRooms.stream()
-                .map(studyRoom -> new StudyResDto.StudyListRespDto(studyRoom, getStudySkills(studyRoom)))
+                .map((StudyResDto.StudyListRespDto::new))
                 .collect(Collectors.toList());
     }
+
 
     // Study_skill 불러오기
     private List<StudySkill> getStudySkills(StudyRoom studyRoom) {
@@ -394,23 +421,23 @@ public class StudyService {
     }
 
 
-    public List<StudyResDto.ApplicationResDto> applications(Long groupId) {
+    public List<StudyResDto.ApplicationResDto> applications(Long studyId) {
 
-        return studyMemberRepository.applications(groupId);
+        return studyMemberRepository.applications(studyId);
     }
 
-    public StudyResDto.ApplicationEssayResDto applicationsEssay(Long groupId, Long userId) {
+    public StudyResDto.ApplicationEssayResDto applicationsEssay(Long studyId, Long userId) {
 
-        return studyMemberRepository.applicationsEssay(groupId, userId);
+        return studyMemberRepository.applicationsEssay(studyId, userId);
     }
 
-    public StudyRoom findStudyRoomById(Long studyRoomId) {
-        return studyRoomRepository.findById(studyRoomId)
+    public StudyRoom findStudyRoomById(Long studyId) {
+        return studyRoomRepository.findById(studyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 스터디룸을 찾을 수 없습니다."));
     }
 
-    public Long findcreatedByBystudyId(Long studyRoomId) {
-        return studyRoomRepository.findcreatedByBystudyId(studyRoomId);
+    public Long findcreatedByBystudyId(Long studyId) {
+        return studyRoomRepository.findcreatedByBystudyId(studyId);
     }
 
     public boolean isUserInStudyRoom(Long userId, Long studyId) {
@@ -420,34 +447,62 @@ public class StudyService {
 
 
     // 스터디룸 참가 인원 리스트 조회
-    public List<StudyMember> getStudyMembersByRoomId(Long studyRoomId) {
+    public List<StudyMember> getStudyMembersByRoomId(Long studyId) {
 
-        return studyMemberRepository.findByStudyRoomId(studyRoomId);
+        // 찬 : Study_Member Table에서 studyRoomId = ? And status = 1인 조건을 충족하는 List<StudyMember>를 Return하도록 수정
+        return studyMemberRepository.findByStudyRoomId(studyId);
 
     }
 
     // 관리자 - 스터디룸 참가 인원 리스트 조회
-    public List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(Long studyRoomId) {
+    public List<StudyResDto.StudyMemberAndStatusListRespDto> getStudyMembersByRoomIdAsAdmin(Long studyId) {
 
-        return studyMemberRepository.getStudyMembersByRoomIdAsAdmin(studyRoomId);
+        return studyMemberRepository.getStudyMembersByRoomIdAsAdmin(studyId);
 
     }
 
+    // 스터디룸 멤버 강제 퇴출 + (찬:강제 퇴출하는 사람이 조장이 맞는지 체크하는 로직 추가)
+    @Transactional
+    public StudyMember deleteMember(Long userId, Long studyId, Long memberId) {
 
-    public StudyMember deleteMember(Long userId, Long studyRoomId, Long memberId) {
-
+        if ((studyMemberRepository.findSpecificByUserId(userId, studyId)) == memberId) {
+            throw new CustomForbiddenException("자기 자신을 퇴출 할 수 없습니다.");
+        }
 
         //강제 퇴출하는 사람이 조장이 맞는지 체크
-        if (userId != studyRoomRepository.findcreatedByBystudyId(studyRoomId)) {
+        if (userId != studyRoomRepository.findcreatedByBystudyId(studyId)) {
             throw new CustomForbiddenException("조장만 스터디 원을 퇴출 할 수 있습니다.");
         } else {
             StudyMember studyMember = studyMemberRepository.findById(memberId)
                     .orElseThrow(() -> new EntityNotFoundException("해당 memberId가 존재하지 않습니다." + memberId));
 
+            notificationRepository.deleteByMemberId(memberId);
             studyMemberRepository.delete(studyMember);
 
             return studyMember;
         }
     }
-}
+    // 메인 제목 검색
+    public List<StudyResDto.StudyListRespDto> findStudyRoomByKeyword(String keyword) {
+        List<StudyRoom> studyRooms = studyRoomRepository.findStudyRoomByKeyword(keyword);
 
+        if (studyRooms.isEmpty()) {
+            throw new CustomApiException("해당 스터디가 존재하지 않습니다.");
+        }
+
+        return studyRooms.stream()
+                .distinct()
+                .map((StudyResDto.StudyListRespDto::new))
+                .collect(Collectors.toList());
+    }
+
+    public StudyResDto.CheckStudyDateRespDto checkDate(Long studyId) {
+        StudyRoom studyRoom = studyRoomRepository.findById(studyId)
+                .orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
+
+        boolean isEndDateToday = LocalDate.now().isEqual(studyRoom.getEndDate());
+
+        return new StudyResDto.CheckStudyDateRespDto(studyRoom, isEndDateToday);
+    }
+
+}

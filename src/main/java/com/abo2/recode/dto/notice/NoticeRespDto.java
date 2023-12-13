@@ -1,9 +1,15 @@
 package com.abo2.recode.dto.notice;
 
-import lombok.*;
+import com.abo2.recode.domain.notice.Notice;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,18 +29,32 @@ public class NoticeRespDto {
     @NotEmpty
     private String createdBy;
 
-    @NotEmpty
-    private String createdAt;
+    @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
+    private LocalDateTime updatedAt;
 
 
     @Builder
-    public NoticeRespDto(Long id, String title, String content, String createdBy, String createdAt) {
+    public NoticeRespDto(Long id, String title, String content, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
+    public static NoticeRespDto toDto(Notice notice) {
+        return NoticeRespDto.builder()
+                .id(notice.getId())
+                .title(notice.getTitle())
+                .content(notice.getContent())
+                .createdBy(notice.getCreatedBy().getNickname())
+                .createdAt(notice.getCreatedAt())
+                .updatedAt(notice.getUpdatedAt())
+                .build();
+    }
 
 }

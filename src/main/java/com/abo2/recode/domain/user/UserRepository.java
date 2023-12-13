@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -59,4 +61,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteWithoutRelatedInfo(@Param("userId") Long userId);
 
 
+    @Query(value = "SELECT nickname FROM Users u WHERE u.user_id = :userId", nativeQuery = true)
+    String getNicknameByuserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT user_id,nickname FROM Users u", nativeQuery = true)
+    List<Map<Integer, String>> getUserList();
 }

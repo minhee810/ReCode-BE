@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
 
 
+    boolean existsByStudyName(String studyName);
+
     // userId,studyId를 기반으로 먼저 유저가 이미 가입했거나 가입한 상태인지 체크
     @Query(value = "SELECT study_member_id " +
             "FROM Study_Member WHERE study_room_id=:studyId AND user_id=:userId", nativeQuery = true)
@@ -24,7 +26,7 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
     @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master LEFT JOIN FETCH sr.studySkills WHERE sr.id = :id")
     Optional<StudyRoom> findWithMasterAndSkillsById(@Param("id") Long id);
 
-    @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master")
+    @Query("SELECT sr FROM StudyRoom sr LEFT JOIN FETCH sr.master ORDER BY sr.createdAt DESC")
     List<StudyRoom> findAllWithMaster();
 
     // 사욪자가 스터디 장으로 있는지 확인
@@ -39,4 +41,6 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
     @Query(value = "UPDATE Study_Room s SET s.created_by = null WHERE s.study_room_id = :studyId", nativeQuery = true)
     void memberRoleDemote(@Param("studyId") Long studyId);
 
+    @Query("SELECT DISTINCT sm FROM StudyRoom sm LEFT JOIN FETCH sm.studySkills WHERE (sm.title LIKE %:keyword% OR sm.studyName LIKE %:keyword%)")
+    List<StudyRoom> findStudyRoomByKeyword(@Param("keyword") String keyword);
 }

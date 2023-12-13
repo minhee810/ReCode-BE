@@ -15,22 +15,13 @@ public class PostReqDto {
     @Setter
     public static class PostWriteReqDto {
 
-        @NotEmpty
+
+        private Long postId;
         private String title;
-
-        @NotEmpty
         private String content;
-
-        @NotEmpty
         private Long studyRoomId;
-
-        @NotEmpty
         private Long userId;
-
-        @NotEmpty
         private Integer category;
-
-        @NotEmpty
         private User nickname;
 
     }
@@ -47,7 +38,7 @@ public class PostReqDto {
         private String content;
 
         @NotEmpty
-        private Long studyRoomId;
+        private Long studyId;
 
         @NotEmpty
         private Long userId;
@@ -55,7 +46,7 @@ public class PostReqDto {
         @NotEmpty
         private Integer category;
 
-        private User nickname;
+        private User nickName;
 
     }
 
@@ -70,7 +61,7 @@ public class PostReqDto {
         private String content;
 
         @NotEmpty
-        private Long studyRoomId;
+        private Long studyId;
 
         @NotEmpty
         private Long userId;
@@ -102,6 +93,8 @@ public class PostReqDto {
 
         @CreatedDate
         private LocalDateTime createdAt;
+
+        private Long studyId;
     }
 
 

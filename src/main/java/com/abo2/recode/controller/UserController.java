@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -160,4 +161,11 @@ public class UserController {
         }
     }
 
+    //전체 유저 닉네임 호출
+    @GetMapping(value = "/select-users")
+    public ResponseEntity<?> getUserList() {
+
+        List<Map<Integer, String>> nicknameList = userService.getUserList();
+        return new ResponseEntity<>(new ResponseDto<>(1, "유저 목록입니다.", nicknameList), HttpStatus.OK);
+    }
 }

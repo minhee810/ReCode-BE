@@ -56,6 +56,7 @@ public class StudyRoom {
     @Column(nullable = false)
     private LocalTime endTime; //스터디 출석 인정 끝 시간
 
+
     @OneToMany(mappedBy = "studyRoom", cascade = CascadeType.ALL)
     private Set<AttendanceDay> attendanceDay = new HashSet<>();  // 출석 요일
 
@@ -130,5 +131,5 @@ public class StudyRoom {
         this.maxNum = studyModifyReqDto.getMaxNum();
         this.updatedAt = LocalDateTime.now();
     }
-}
 
+}

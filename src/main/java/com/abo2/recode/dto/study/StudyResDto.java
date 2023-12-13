@@ -4,20 +4,25 @@ import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class StudyResDto {
@@ -28,7 +33,7 @@ public class StudyResDto {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long studyRoomId; //스터디 그룹 일련번호
+        private Long studyId; //스터디 그룹 일련번호
 
         @Column(unique = true, nullable = false, length = 50)
         private String studyName; //스터디 그룹 네임
@@ -63,7 +68,7 @@ public class StudyResDto {
         private List<String> skillNames;
 
         @CreatedDate
-        @Column(nullable = false)
+        @JsonFormat(pattern = "yyyy년 MM월 dd일 HH시 mm분 ss초")
         private LocalDateTime createdAt; //스터디 그룹 만든 시각
 
         @LastModifiedDate
@@ -73,8 +78,10 @@ public class StudyResDto {
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
+        private Long userId;
+
         public StudyRoomDetailResDto(StudyRoom studyRoom, List<StudySkill> studySkills, Set<String> attendanceDays) {
-            this.studyRoomId = studyRoom.getId();
+            this.studyId = studyRoom.getId();
             this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
             this.description = studyRoom.getDescription();
@@ -98,6 +105,7 @@ public class StudyResDto {
             this.createdAt = studyRoom.getCreatedAt();
             this.updatedAt = studyRoom.getUpdatedAt();
             this.attendanceDay = attendanceDays;
+            this.userId = studyRoom.getMaster().getId();
         }
 
     }
@@ -160,29 +168,27 @@ public class StudyResDto {
         private String masterEmail;
         private String masterNickname;
 
-        public StudyListRespDto(StudyRoom studyRoom, List<StudySkill> studySkills) {
+        public StudyListRespDto(StudyRoom studyRoom) {
             this.id = studyRoom.getId();
             this.studyName = studyRoom.getStudyName();
             this.title = studyRoom.getTitle();
-
-            if (studySkills != null) {
-                this.skillNames = studySkills.stream()
-                        .filter(Objects::nonNull) // Check if studySkill is not null
-                        .map(studySkill -> {
-                            Skill skill = studySkill.getSkill();
-                            return (skill != null) ? skill.getSkillName() : null; // Check if getSkill() is not null
-                        })
-                        .filter(Objects::nonNull) // Filter out null skill names
-                        .collect(Collectors.toList());
-            } else {
-                this.skillNames = new ArrayList<>(); // Initialize as an empty list if studySkills is null
-            }
-
             this.currentNum = studyRoom.getCurrentNum();
             this.maxNum = studyRoom.getMaxNum();
             if (studyRoom.getMaster() != null) {
                 this.masterNickname = studyRoom.getMaster().getNickname();
                 this.masterEmail = studyRoom.getMaster().getEmail();
+            }
+
+            // studySkill 설정
+            if (studyRoom.getStudySkills() != null) {
+                this.skillNames = studyRoom.getStudySkills().stream()
+                        .map(StudySkill::getSkill)
+                        .filter(Objects::nonNull)
+                        .map(Skill::getSkillName)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            } else {
+                this.skillNames = new ArrayList<>();
             }
         }
     }
@@ -193,16 +199,16 @@ public class StudyResDto {
 
         private Long Id; //스터디 룸 member 일련번호
 
-        private Long studyRoomId;
+        private Long studyId;
 
         private String nickname;
 
         private Integer status;
 
         @Builder
-        public StudyMemberListRespDto(Long id, Long studyRoomId, String nickname, Integer status) {
+        public StudyMemberListRespDto(Long id, Long studyId, String nickname, Integer status) {
             Id = id;
-            this.studyRoomId = studyRoomId;
+            this.studyId = studyId;
             this.nickname = nickname;
             this.status = status;
         }
@@ -214,16 +220,16 @@ public class StudyResDto {
 
         private Long userId;
 
-        private Long studyRoomId;
+        private Long studyId;
 
         private String username;
 
         private Integer createdBy;
 
         @Builder
-        public StudyMemberAndStatusListRespDto(Long userId, Long studyRoomId, String username, Integer createdBy) {
+        public StudyMemberAndStatusListRespDto(Long userId, Long studyId, String username, Integer createdBy) {
             this.userId = userId;
-            this.studyRoomId = studyRoomId;
+            this.studyId = studyId;
             this.username = username;
             this.createdBy = createdBy;
         }
@@ -259,19 +265,19 @@ public class StudyResDto {
         @Size(min = 1, max = 300)
         private String description;
 
-        @NotEmpty
+        @NotNull
         private LocalTime startTime; //스터디 출석 인정 시작 시간 " 12:00"
 
-        @NotEmpty
+        @NotNull
         private LocalTime endTime; //스터디 출석 인정 끝 시간 " 12:10"
 
         @NotEmpty
         private Set<String> attendanceDay; // 출석 인정 요일 - minhee 추가
 
-        @NotEmpty
+        @NotNull
         private LocalDate startDate;
 
-        @NotEmpty
+        @NotNull
         private LocalDate endDate;
 
         @NotEmpty
@@ -280,20 +286,20 @@ public class StudyResDto {
         @NotEmpty
         private Long userId; // 별도로 가져오는 코드 필요(입력 받지 않음)
 
-        @NotEmpty
         private LocalDateTime createdAt;
 
-        @NotEmpty
         private LocalDateTime updatedAt;
 
-        // skill 테이블의 스킬들,모집분야
-        private String[] skills;
+        // 선택된 Skill 들의 이름 리스트
+        @NotEmpty
+        private List<String> skillNames;
+
 
         @Builder
         public StudyCreateRespDto(String studyName, String title, String description,
                                   LocalTime startTime, LocalTime endTime, Set<String> attendanceDay,
                                   LocalDate startDate, LocalDate endDate, Integer maxNum, Long userId,
-                                  LocalDateTime createdAt, LocalDateTime updatedAt, String[] skills) {
+                                  LocalDateTime createdAt, LocalDateTime updatedAt, List<String> skillNames) {
             this.studyName = studyName;
             this.title = title;
             this.description = description;
@@ -306,9 +312,19 @@ public class StudyResDto {
             this.userId = userId;
             this.createdAt = createdAt;
             this.updatedAt = updatedAt;
-            this.skills = skills;
+            this.skillNames = skillNames;
         }
     }
+
+    // skill 객체를 받아오기 위한
+    @Getter
+    @Setter
+    public class SkillDto {
+        @NotEmpty
+        private String skillName;
+
+    }
+
 
     @Getter
     @Setter
@@ -371,5 +387,22 @@ public class StudyResDto {
         private String essay;
     }
 
-}
+    @Getter
+    @Setter
+    public static class CheckStudyMaserRespDto {
+        private String username;
+        private String masterNickname;
+    }
 
+    @Getter
+    public static class CheckStudyDateRespDto {
+        private LocalDate endDate;
+        private boolean isEndDateToday;
+
+        public CheckStudyDateRespDto(StudyRoom studyRoom, boolean isEndDateToday) {
+            this.endDate = studyRoom.getEndDate();
+            this.isEndDateToday = LocalDate.now().equals(endDate);
+        }
+    }
+
+}
