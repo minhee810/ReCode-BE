@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -26,7 +25,7 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class ChatController {
 
-    private ChatService chatService;
+    private final ChatService chatService;
 
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 

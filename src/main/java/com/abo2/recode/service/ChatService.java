@@ -148,13 +148,17 @@ public class ChatService {
     @Transactional
     public void leaveChatRoom(Long userId, Long chatRoomId) {
 
-        // 같은 채팅방에 참여한 참여자 중 무작위로 채팅방 생성자 지위 넘김
-        List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+        // 나가는 사람이 채팅방 생성자인지 체크
+        if(userId == chatRoomUserLinkRepository.getMasterBychatRoomId(chatRoomId).get(0)){
 
-        // 나와 아이디 일치하지 않는 아무 유저에게나 채팅방 주인 넘김
-        for(Long OneofuserId : userIdList){
-            if(OneofuserId != userId) {
-                chatRoomUserLinkRepository.updateCreatedBy(OneofuserId, chatRoomId);
+            // 같은 채팅방에 참여한 참여자 중 무작위로 채팅방 생성자 지위 넘김
+            List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+
+            // 나와 아이디 일치하지 않는 아무 유저에게나 채팅방 주인 넘김
+            for(Long OneofuserId : userIdList){
+                if(OneofuserId != userId) {
+                    chatRoomUserLinkRepository.updateCreatedBy(OneofuserId, chatRoomId);
+                }
             }
         }
         // chatuserlink 삭제
