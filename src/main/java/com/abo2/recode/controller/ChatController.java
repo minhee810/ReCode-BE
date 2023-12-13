@@ -63,18 +63,18 @@ public class ChatController {
                     .toUri();
 
             //getForObject
-            WebClient webClient = WebClient.create();
+            RestTemplate restTemplate = new RestTemplate();
             String lastMessage;
 
             try {
-                lastMessage = webClient.get()
-                        .uri(uri)
-                        .retrieve()
-                        .bodyToMono(Chat.class)
-                        .block()
-                        .getMsg();
-            } catch (NullPointerException e) {
-                lastMessage = "There is no message";
+                ResponseEntity<Chat> response = restTemplate.getForEntity(uri, Chat.class);
+                if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                    lastMessage = response.getBody().getMsg();
+                } else {
+                    lastMessage = "There is no Message";
+                }
+            } catch (Exception e) {
+                lastMessage = "There is no Message";
             }
 
             logger.info("lastMessage : "+lastMessage);

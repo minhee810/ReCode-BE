@@ -21,4 +21,7 @@ public interface ChatRoomUserLinkRepository extends JpaRepository<ChatRoomUserLi
 
     @Query(value = "DELETE FROM chat_room_user_link WHERE chat_room_id =:chatRoomId AND user_id=:userId",nativeQuery = true)
     void deleteBychatRoomIdAnduserId(@Param(value = "userId") Long userId, @Param(value = "chatRoomId") Long chatRoomId);
+
+    @Query(value = "UPDATE chat_room_user_link SET created_by=:oneofuserId WHERE chat_room_id=:chatRoomId",nativeQuery = true)
+    void updateCreatedBy(@Param(value = "oneofuserId") Long oneofuserId,@Param(value = "chatRoomId") Long chatRoomId);
 }
