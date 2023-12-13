@@ -8,14 +8,13 @@ import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReqDTO;
-import com.abo2.recode.dto.qna.QnaResDTO;
 import com.abo2.recode.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -68,12 +67,14 @@ public class QnaController {
     @PutMapping("/qna/{id}")
     public ResponseEntity<?> qnaModify(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, @RequestBody QnaReqDTO qnaReqDTO) {
 
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow();
+
         Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
+        System.out.println(qnaInfo.getUser().getId());
+        System.out.println(loginUser.getUser().getId());
 
-
-        if (qnaInfo.getUser().getId() != user.getId()) {
-
+        if (qnaInfo.getUser().getId() !=loginUser.getUser().getId()) {
+            System.out.println(qnaInfo.getUser().getId());
+            System.out.println(loginUser.getUser().getId());
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
         } else {
 
