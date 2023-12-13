@@ -21,10 +21,8 @@ import com.abo2.recode.handler.ex.CustomApiException;
 import com.abo2.recode.handler.ex.CustomForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
-=======
+
 import org.springframework.beans.factory.annotation.Autowired;
->>>>>>> c680b5a7c72bced88d175bd17db979fa5ab06094
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

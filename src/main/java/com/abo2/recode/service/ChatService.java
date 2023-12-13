@@ -145,8 +145,18 @@ public class ChatService {
         return nicknameList;
     }//getUsernameList()
 
+    @Transactional
     public void leaveChatRoom(Long userId, Long chatRoomId) {
 
+        // 같은 채팅방에 참여한 참여자 중 무작위로 채팅방 생성자 지위 넘김
+        List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+
+        // 나와 아이디 일치하지 않는 아무 유저에게나 채팅방 주인 넘김
+        for(Long OneofuserId : userIdList){
+            if(OneofuserId != userId) {
+                chatRoomUserLinkRepository.updateCreatedBy(OneofuserId, chatRoomId);
+            }
+        }
         // chatuserlink 삭제
         chatRoomUserLinkRepository.deleteBychatRoomIdAnduserId(userId,chatRoomId);
     }

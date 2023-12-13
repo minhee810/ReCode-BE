@@ -7,12 +7,15 @@ import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.chat.ChatReqDto;
 import com.abo2.recode.dto.chat.ChatResDto;
 import com.abo2.recode.service.ChatService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -24,6 +27,8 @@ import java.util.List;
 public class ChatController {
 
     private ChatService chatService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     @Autowired
     public ChatController(ChatService chatService) {
@@ -48,6 +53,8 @@ public class ChatController {
         for(Long chatRoomId : chatRoomIdList){
             List<String> usernameList = chatService.getUserNameListBychatRoomId(chatRoomId);
 
+            logger.info("usernameList : "+ usernameList);
+
             URI uri = UriComponentsBuilder
                     .fromUriString("http://localhost:8080")
                     .path("/chat/roomNum/{chatRoomId}/last-message")
@@ -57,14 +64,27 @@ public class ChatController {
 
             //getForObject
             RestTemplate restTemplate = new RestTemplate();
-            String lastmessage = restTemplate.getForObject(uri, Chat.class).getMsg();
+            String lastMessage;
+
+            try {
+                ResponseEntity<Chat> response = restTemplate.getForEntity(uri, Chat.class);
+                if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                    lastMessage = response.getBody().getMsg();
+                } else {
+                    lastMessage = "There is no Message";
+                }
+            } catch (Exception e) {
+                lastMessage = "There is no Message";
+            }
+
+            logger.info("lastMessage : "+lastMessage);
 
             //4. ChatListDto , chatListDtoList에 담기
             /*    ChatResDto.ChatListDto = {Long chatRoomId; List<String> usernameList; String lastMessage; }*/
             ChatResDto.ChatListDto chatListDto = ChatResDto.ChatListDto.builder()
                     .chatRoomId(chatRoomId)
                     .usernameList(usernameList)
-                    .lastMessage(lastmessage)
+                    .lastMessage(lastMessage)
                     .title(chatService.getchatRoomTitleBychatRoomId(chatRoomId))
                     .build();
 
