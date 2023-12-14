@@ -83,8 +83,6 @@ public class StudyroomController {
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable Long studyId
     ) {
-        //"studyId": 1, // 사용자가 신청하고자 하는 스터디의 ID
-        // "userId": 42  // 신청하는 사용자의 ID
 
         //1. study_member에 status = 0으로 insert한다
         StudyReqDto.StudyApplyReqDto studyApplyReqDto =

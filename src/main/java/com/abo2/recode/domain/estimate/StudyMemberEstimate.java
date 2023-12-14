@@ -1,6 +1,5 @@
 package com.abo2.recode.domain.estimate;
 
-import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import lombok.Getter;

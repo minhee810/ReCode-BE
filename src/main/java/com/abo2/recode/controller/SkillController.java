@@ -1,6 +1,5 @@
 package com.abo2.recode.controller;
 
-import com.abo2.recode.domain.skill.SkillRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.skill.SkillResDto;
 import com.abo2.recode.service.SkillService;
@@ -22,8 +21,6 @@ public class SkillController {
 
     private final SkillService skillService;
 
-    private final SkillRepository skillRepository;
-
     // POSITION 에 따라서 skillName을 반환하는 메서드
 
     @GetMapping("/skills/get-skillName")
@@ -34,12 +31,5 @@ public class SkillController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "선택된 포지션으로 스킬 이름 불러오기 성공", skills), HttpStatus.OK);
     }
-
-
-//    // 중복 제거된 포지션 목록을 반환하는 엔드포인트
-//    @GetMapping("/skills/get-positions")
-//    public List<String> getDistinctPositions() {
-//        return skillRepository.findDistinctPositions();
-//    }
 
 }

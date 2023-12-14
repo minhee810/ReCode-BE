@@ -163,9 +163,9 @@ public class UserController {
 
     //전체 유저 닉네임 호출
     @GetMapping(value = "/select-users")
-    public ResponseEntity<?> getUserList(){
+    public ResponseEntity<?> getUserList() {
 
-        List<Map<Integer,String>> nicknameList = userService.getUserList();
-        return new ResponseEntity<>(new ResponseDto<>(1,"유저 목록입니다.",nicknameList),HttpStatus.OK);
+        List<Map<Integer, String>> nicknameList = userService.getUserList();
+        return new ResponseEntity<>(new ResponseDto<>(1, "유저 목록입니다.", nicknameList), HttpStatus.OK);
     }
 }

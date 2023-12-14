@@ -26,11 +26,13 @@ public class QnaReplyService {
     public QnaReply postQnaReply(Long qnaId, QnaReplyDTO qnaReplyDTO) {
 
         Qna qna = qnaRepository.findById(qnaId).orElseThrow();
-//        User user = userRepository.findById(qna.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(qna.getUser().getId()).orElseThrow();
 
         QnaReply qnaReply = QnaReply.builder()
                 .comment(qnaReplyDTO.getComment())
-//                .createdAt(qnaReplyDTO.getCreatedAt())
+                .createdAt(qnaReplyDTO.getCreatedAt())
+                .updatedAt(qnaReplyDTO.getUpdatedAt())
+                .user(user)
                 .qna(qna)
                 .build();
 
@@ -57,6 +59,7 @@ public class QnaReplyService {
     //Qna 댓글 삭제
     @Transactional
     public void qnaReplyDelete(Long id) {
+
         qnaReplyRepository.deleteById(id);
     }
 }

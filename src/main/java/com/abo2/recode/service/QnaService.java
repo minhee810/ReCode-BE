@@ -62,6 +62,7 @@ public class QnaService {
         List<QnaReplyDTO> qnaReplyDTOList = new ArrayList<>();
         qnaReplies.forEach(q -> {
             QnaReplyDTO dto = QnaReplyDTO.builder()
+                    .id(q.getId())
                     .qnaId(q.getId())
                     .comment(q.getComment())
                     .createdAt(q.getCreatedAt())
@@ -104,15 +105,15 @@ public class QnaService {
     //Qna 수정
     @Transactional
     public void qnaModify(Long qnaId, QnaReqDTO qnaReqDTO) {
-
-        Qna qna = Qna.builder()
-                .id(qnaId)
+Qna qna = qnaRepository.findById(qnaId).orElseThrow();
+        Qna data = Qna.builder()
+                .id(qna.getId())
                 .title(qnaReqDTO.getTitle())
                 .content(qnaReqDTO.getContent())
                 .updatedAt(qnaReqDTO.getUpdatedAt())
                 .build();
 
-        qnaRepository.save(qna);
+        qnaRepository.save(data);
     }
 
     //Qna 삭제
