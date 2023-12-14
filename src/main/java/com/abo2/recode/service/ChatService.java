@@ -161,6 +161,13 @@ public class ChatService {
                 }
             }
         }
+
+        // 나가는 사람이 채팅방의 마지막 사람인지 체크 -> 만약 맞으면 바로 채팅방 삭제
+        if(chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId).size() == 1){
+            deleteChatRoom(userId,chatRoomId);
+            return;
+        }
+
         // chatuserlink 삭제
         chatRoomUserLinkRepository.deleteBychatRoomIdAnduserId(userId,chatRoomId);
     }
