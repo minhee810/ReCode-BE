@@ -19,11 +19,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END " +
             "FROM Attendance " +
             "WHERE study_room_id = :studyRoomId " +
-            "AND user_id = :userId " +
-            "AND attendance_date = :attendanceDate", nativeQuery = true)
-    boolean existsByStudyRoomIdAndUserIdAndAttendanceDate(
+            "AND user_id = :userId ")
+    boolean existsByStudyRoomIdAndUserId(
             @Param("studyRoomId") Long studyRoomId,
-            @Param("userId") Long userId,
-            @Param("attendanceDate") LocalDateTime attendanceDate);
+            @Param("userId") Long userId);
+
+    @Modifying
+    @Query("UPDATE Attendance a SET a.status = :status WHERE a.studyRoom.id = :studyId and a.user.id = :userId")
+    void markAttendance(Integer status, Long studyId, Long userId);
 
 }
