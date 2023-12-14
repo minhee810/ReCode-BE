@@ -87,7 +87,7 @@ public class StudyMember {
     @Id
     @Column(name = "study_member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id; //스터디 룸 member 일련번호
+    private Long id; //스터디 룸 member 일련번호
 
     @ManyToOne
     @JoinColumn(name = "study_room_id")
