@@ -13,12 +13,15 @@ import com.abo2.recode.dto.attendance.AttendanceRespDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -71,7 +74,7 @@ public class AttendanceService {
                 Attendance savedAttendance = attendanceRepository.save(attendance);
                 return new AttendanceRespDto.markAttendanceRespDto(savedAttendance);
 
-            } else if (status.equals("Unchecked")) {
+            } else if (status.equals("지각이다")) {
                 //attendance 테이블 업데이트(상태값 0)
                 attendanceRepository.markAttendance(0, studyId, userId);
 
@@ -80,7 +83,7 @@ public class AttendanceService {
                 attendance.setStudyRoom(studyRoom);
                 attendance.setUser(user);
                 attendance.setAttendanceDate(LocalDateTime.now());
-                attendance.setStatus(0); // 미출석을 나타내는 값으로 0
+                attendance.setStatus(2); // 지각 나타내는 값으로 2
 
                 Attendance savedAttendance = attendanceRepository.save(attendance);
                 return new AttendanceRespDto.markAttendanceRespDto(savedAttendance);
@@ -97,4 +100,5 @@ public class AttendanceService {
             throw new IllegalStateException("이미 출석이 표시되었습니다: " + userId + ", " + studyId);
         }
     }
+
 }
