@@ -1,5 +1,9 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.badge.Badge;
+import com.abo2.recode.domain.badge.BadgeRepository;
+import com.abo2.recode.domain.badge.UserBadge;
+import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMember;
@@ -33,6 +37,8 @@ public class UserService {
     private final StudySkillRepository studySkillRepository;
 
     private final StudyRoomRepository studyRoomRepository;
+    private final UserBadgeRepository userBadgeRepository;
+    private final BadgeRepository badgeRepository;
 
 
     @Transactional
@@ -49,10 +55,21 @@ public class UserService {
             throw new CustomApiException("동일한 email 로 가입된 계정이 존재합니다.");
         }
 
-        // 2. 패스워드 인코딩 + 회원가입
+        // 3. 패스워드 인코딩 + 회원가입
         User userPS = userRepository.save(joinReqDto.toEntity(passwordEncoder));
 
-        // 3. dto 응답
+        // 4. 뱃지 생성 및 초기화
+        UserBadge userBadge = new UserBadge();
+        userBadge.setUser(userPS);
+        userBadge.setPoint(0);
+
+        Badge defaultBadge = badgeRepository.findById(1L).orElseThrow(
+                () -> new CustomApiException("기본 뱃지를 찾을 수 없습니다."));
+        userBadge.setBadge(defaultBadge);
+
+        userBadgeRepository.save(userBadge);
+
+        // 4. dto 응답
         return new UserRespDto.JoinRespDto(userPS);
     }
 
