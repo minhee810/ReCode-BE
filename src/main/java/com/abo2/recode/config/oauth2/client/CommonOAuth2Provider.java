@@ -11,11 +11,11 @@ public enum CommonOAuth2Provider {
             ClientRegistration.Builder builder = getBuilder(registrationId,
                     ClientAuthenticationMethod.CLIENT_SECRET_BASIC, DEFAULT_REDIRECT_URL);
             builder.scope("openId", "profile", "email");
-            builder.authorizationUri("https://accounts.google.com/o/oauth2/v2/outh");
-            builder.tokenUri("https://www.googleapis.com/oauth/v4/token");
-            builder.jwkSetUri("https://www.googleapis.com/oauth2/v3/certs");
-            builder.issuerUri("https://accounts.google.com");
-            builder.userInfoUri("https://www.googleapis.com/oauth2/v3/userInfo");
+            builder.authorizationUri("http://accounts.google.com/o/oauth2/v2/outh");
+            builder.tokenUri("http://www.googleapis.com/oauth/v4/token");
+            builder.jwkSetUri("http://www.googleapis.com/oauth2/v3/certs");
+            builder.issuerUri("http://accounts.google.com");
+            builder.userInfoUri("http://www.googleapis.com/oauth2/v3/userInfo");
             builder.userNameAttributeName(IdTokenClaimNames.SUB);
             builder.clientName("Google");
             return builder;
