@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @RequiredArgsConstructor
 @Transactional
@@ -29,15 +31,15 @@ public class AttendanceService {
     private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
 
-    public AttendanceRespDto markAttendance(String status, Long userId, Long studyId, AttendanceReqDto.markAttendanceReqDto attendanceReqDto) {
+    public AttendanceRespDto.markAttendanceRespDto markAttendance(String status, Long userId, Long studyId, AttendanceReqDto.markAttendanceReqDto markAttendanceReqDto) {
 
         StudyMember studyMember = studyMemberRepository.findByUserAndStudyRoom(userId, studyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 Id 가 없습니다." + userId + studyId));
 
-        StudyRoom studyRoom = studyRoomRepository.findById(attendanceReqDto.getStudyId())
+        StudyRoom studyRoom = studyRoomRepository.findById(markAttendanceReqDto.getStudyId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 스터디룸이 없습니다."));
 
-        User user = userRepository.findById(attendanceReqDto.getUserId())
+        User user = userRepository.findById(markAttendanceReqDto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 유저가 없습니다."));
 
         // 해당 날짜에 이미 출석이 있는지 확인
@@ -45,6 +47,16 @@ public class AttendanceService {
                 userId, studyId);
 
         if (!attendanceExists) {
+
+            // 현재 시간과 스터디룸의 출석 인정 시간 비교
+            LocalTime now = LocalTime.now(); // 현재 시간
+            LocalTime startTime = studyRoom.getStartTime(); // 스터디룸의 출석 인정 시작 시간
+            LocalTime endTime = studyRoom.getEndTime(); // 스터디룸의 출석 인정 종료 시간
+
+            if (!(now.isAfter(startTime) && now.isBefore(endTime))) { // 현재 시간이 출석 인정 시간 내에 있는지 확인
+                throw new IllegalArgumentException("현재 시간은 출석 인정 시간이 아닙니다.");
+            }
+
             if (status.equals("Checked")) {
                 //attendance 테이블 업데이트(상태값 0 -> 1)
                 attendanceRepository.markAttendance(1, studyId, userId);
@@ -53,12 +65,11 @@ public class AttendanceService {
                 Attendance attendance = new Attendance();
                 attendance.setStudyRoom(studyRoom);
                 attendance.setUser(user);
-                attendance.setAttendanceDate(attendanceReqDto.getAttendanceDate());
+                attendance.setAttendanceDate(LocalDateTime.now());
                 attendance.setStatus(1); // 출석을 나타내는 값으로 1
 
                 Attendance savedAttendance = attendanceRepository.save(attendance);
-                return new AttendanceRespDto(savedAttendance);
-
+                return new AttendanceRespDto.markAttendanceRespDto(savedAttendance);
 
             } else if (status.equals("Unchecked")) {
                 //attendance 테이블 업데이트(상태값 0)
@@ -68,23 +79,22 @@ public class AttendanceService {
                 Attendance attendance = new Attendance();
                 attendance.setStudyRoom(studyRoom);
                 attendance.setUser(user);
-                attendance.setAttendanceDate(attendanceReqDto.getAttendanceDate());
+                attendance.setAttendanceDate(LocalDateTime.now());
                 attendance.setStatus(0); // 미출석을 나타내는 값으로 0
 
                 Attendance savedAttendance = attendanceRepository.save(attendance);
-                return new AttendanceRespDto(savedAttendance);
+                return new AttendanceRespDto.markAttendanceRespDto(savedAttendance);
 
             } else {
-                // 중복 출석 로그
-                logger.warn("User {} tried to mark attendance on {} for study room {} but attendance already exists.", userId, studyId);
+                // 잘못된 출석 상태 로그
+                logger.warn("User {} tried to mark attendance with invalid status {} for study room {}.", userId, status, studyId);
                 throw new IllegalArgumentException("잘못된 출석 상태: " + status);
             }
 
         } else {
             // 중복 출석 로그
             logger.warn("User {} tried to mark attendance on {} for study room {} but attendance already exists.", userId, studyId);
-            throw new IllegalArgumentException("잘못된 출석 상태: " + status);
+            throw new IllegalStateException("이미 출석이 표시되었습니다: " + userId + ", " + studyId);
         }
-
     }
 }

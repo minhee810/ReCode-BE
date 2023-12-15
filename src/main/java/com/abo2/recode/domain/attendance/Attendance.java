@@ -34,9 +34,8 @@ public class Attendance {
 
     @CreatedDate
     @Column(nullable = false)
-    @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
     private LocalDateTime attendanceDate; //출석일 : localDatetime 과 비교 해야함.
-
+    
 
     @Column(nullable = false)
     private Integer status; //0 : 결석 1: 출석

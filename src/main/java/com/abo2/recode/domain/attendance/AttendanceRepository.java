@@ -24,6 +24,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             @Param("studyRoomId") Long studyRoomId,
             @Param("userId") Long userId);
 
+    // 출석체크
     @Modifying
     @Query("UPDATE Attendance a SET a.status = :status WHERE a.studyRoom.id = :studyId and a.user.id = :userId")
     void markAttendance(Integer status, Long studyId, Long userId);
