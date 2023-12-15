@@ -107,7 +107,7 @@ public class ChatService {
 
         // RestTemplate() -> chatting 삭제
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8080")
+                .fromUriString("http://52.79.108.89:8080")
                 .path("/chat/room/{chatRoomId}/delete")
                 .buildAndExpand(chatRoomId)
                 .encode()
