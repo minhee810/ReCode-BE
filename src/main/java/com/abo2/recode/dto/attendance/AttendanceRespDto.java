@@ -32,7 +32,7 @@ public class AttendanceRespDto {
             this.id = attendance.getId();
             this.studyId = attendance.getStudyRoom().getId();
             this.userId = attendance.getUser().getId();
-            this.status = attendance.getStatus() == 0 ? "결석" : "출석";
+            this.status = attendance.getStatus() == 1 ? "출석" : "지각";
             this.attendanceDate = attendance.getAttendanceDate();
         }
     }

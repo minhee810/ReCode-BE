@@ -4,12 +4,14 @@ import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class AttendanceDay {
@@ -32,4 +34,5 @@ public class AttendanceDay {
         this.studyRoom = studyRoom;
         this.attendanceDay = attendanceDay;
     }
+
 }
