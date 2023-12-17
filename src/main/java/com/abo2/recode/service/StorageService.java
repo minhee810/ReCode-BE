@@ -1,9 +1,8 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.dto.file.FileInfo;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StorageService {
@@ -32,7 +33,7 @@ public class StorageService {
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         fileObj.delete();
-        return "File uploaded : " + fileName;
+        return fileName;
     }
 
 
@@ -52,6 +53,27 @@ public class StorageService {
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
         return fileName + " removed ...";
+    }
+
+    public FileInfo getFileDetails(String fileName) {
+        S3Object s3Object = s3Client.getObject(bucketName, fileName);
+        ObjectMetadata metadata  = s3Object.getObjectMetadata();
+
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFileName(fileName);
+        fileInfo.setSize(metadata.getContentLength());
+
+        return fileInfo;
+    }
+
+    public List<String> searchFilesByKeyword(String keyword) {
+        ListObjectsV2Result result = s3Client.listObjectsV2(bucketName);
+        List<S3ObjectSummary> objects = result.getObjectSummaries();
+
+        return objects.stream()
+                .map(S3ObjectSummary::getKey)
+                .filter(name -> name.contains(keyword))
+                .collect(Collectors.toList());
     }
 
 
