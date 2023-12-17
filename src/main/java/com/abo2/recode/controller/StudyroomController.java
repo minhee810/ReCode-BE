@@ -196,7 +196,7 @@ public class StudyroomController {
                     = StudyResDto.StudyMemberListRespDto.builder()
                     .id(studyMember.getId())
                     .studyId(studyMember.getStudyRoom().getId())
-                    .nickname(studyMember.getUser().getNickname())
+                    .user(studyMember.getUser())
                     .status(studyMember.getStatus())
                     .build();
 

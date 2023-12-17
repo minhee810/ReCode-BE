@@ -23,10 +23,10 @@ public class QnaReplyService {
 
     //Qna 댓글 생성
     @Transactional
-    public QnaReply postQnaReply(Long qnaId, QnaReplyDTO qnaReplyDTO) {
+    public void postQnaReply(Long qnaId, QnaReplyDTO qnaReplyDTO) {
 
         Qna qna = qnaRepository.findById(qnaId).orElseThrow();
-        User user = userRepository.findById(qna.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(qnaReplyDTO.getUserId()).orElseThrow();
 
         QnaReply qnaReply = QnaReply.builder()
                 .comment(qnaReplyDTO.getComment())
@@ -37,24 +37,22 @@ public class QnaReplyService {
                 .build();
 
         qnaReplyRepository.save(qnaReply);
-
-        return qnaReply;
     }
 
     //Qna 댓글 수정
-    @Transactional
-    public QnaReply qnaReplyModify(QnaReplyDTO qnaReplyDTO, Long id, Long qnaId) {
-        Qna qna = qnaRepository.findById(qnaId).orElseThrow();
-        QnaReply qnaReply = QnaReply.builder()
-                .id(id)
-                .comment(qnaReplyDTO.getComment())
-                .qna(qna)
-                .build();
-
-        qnaReplyRepository.save(qnaReply);
-
-        return qnaReply;
-    }
+//    @Transactional
+//    public QnaReply qnaReplyModify(QnaReplyDTO qnaReplyDTO, Long id, Long qnaId) {
+//        Qna qna = qnaRepository.findById(qnaId).orElseThrow();
+//        QnaReply qnaReply = QnaReply.builder()
+//                .id(id)
+//                .comment(qnaReplyDTO.getComment())
+//                .qna(qna)
+//                .build();
+//
+//        qnaReplyRepository.save(qnaReply);
+//
+//        return qnaReply;
+//    }
 
     //Qna 댓글 삭제
     @Transactional

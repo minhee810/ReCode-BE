@@ -30,7 +30,7 @@ public class QnaReplyController {
 
         qnaReplyService.postQnaReply(qnaId, qnaReplyDTO);
 
-        System.out.println(qnaId);
+        System.out.println(qnaReplyDTO.getUserId());
         return new ResponseEntity<>(new ResponseDto<>(1, "Qna 댓글 작성 성공", qnaReplyDTO), HttpStatus.OK);
     }
 
