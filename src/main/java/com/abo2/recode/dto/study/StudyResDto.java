@@ -4,6 +4,7 @@ import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import com.abo2.recode.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -206,10 +207,10 @@ public class StudyResDto {
         private Integer status;
 
         @Builder
-        public StudyMemberListRespDto(Long id, Long studyId, String nickname, Integer status) {
+        public StudyMemberListRespDto(Long id, Long studyId, User user, String nickname, Integer status) {
             Id = id;
             this.studyId = studyId;
-            this.nickname = nickname;
+            this.nickname = (user != null) ? user.getNickname() : "탈퇴한 회원입니다";
             this.status = status;
         }
     }//StudyMemberListRespDto
