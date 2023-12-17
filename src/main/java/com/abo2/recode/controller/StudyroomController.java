@@ -5,6 +5,7 @@ import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
+import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -39,6 +40,20 @@ public class StudyroomController {
         this.userRepository = userRepository;
     }
 
+//
+//    // 스킬을 수정 혹은 삭제 하는 메서드 즉, 스킬 업데이트 메서드
+//    @PutMapping("/v1/study/{studyId}/modify-skills")
+//    public ResponseEntity<?> modifyStudySkills(@PathVariable Long studyId, @RequestBody SkillReqDto.StudySkillsReqDto studySkillsReqDto) {
+//        try {
+//            studyService.modifyStudySkills(studyId, studySkillsReqDto);
+//            System.out.println("studyId = " + studyId);
+//            System.out.println("studySkillsReqDto = " + studySkillsReqDto);
+//            return new ResponseEntity<>(new ResponseDto<>(1, "skill 수정 성공", null ), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(new ResponseDto<>(-1, "skill 수정 실패", null ), HttpStatus.CONFLICT);
+//        }
+//    }
+
     @CrossOrigin
     @Transactional
     @PostMapping(value = "/v1/study") // @AuthenticationPrincipal 에서 LoginUser 객체를 꺼내와야 함. LoginUSer
@@ -69,6 +84,8 @@ public class StudyroomController {
         // 수정할 스터디 룸 정보,조장 아이디 정보 입력
         studyModifyReqDto.setStudyId(studyId);
         studyModifyReqDto.setCreatedBy(loginUser.getUser().getId());
+
+        List<String> skillNames = studyModifyReqDto.getSkillNames();
 
         //1. studyModifyReqDto를 DB에 넣기 Service에서 처리
         StudyResDto.StudyCreateRespDto studyCreateRespDto = studyService.modifyRoom(studyModifyReqDto);
