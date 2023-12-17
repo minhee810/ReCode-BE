@@ -64,6 +64,8 @@ public class QnaService {
             QnaReplyDTO dto = QnaReplyDTO.builder()
                     .id(q.getId())
                     .qnaId(q.getId())
+                    .userId(q.getUser().getId())
+                    .nickname(q.getUser().getNickname())
                     .comment(q.getComment())
                     .createdAt(q.getCreatedAt())
                     .updatedAt(q.getUpdatedAt())
