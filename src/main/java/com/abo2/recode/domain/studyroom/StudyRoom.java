@@ -42,7 +42,7 @@ public class StudyRoom {
     @Column(nullable = false, length = 50)
     private String title; //스터디 주제
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String description; //스터디 그룹 소개글
 
     @Column(nullable = false)
