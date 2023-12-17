@@ -59,6 +59,10 @@ dependencies {
 
     //Webclient for chat
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    //Caching for Metor Recommend
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
 }
 
 tasks.named('test') {
