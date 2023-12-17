@@ -8,4 +8,6 @@ import java.util.List;
 public interface PostReplyRepository extends JpaRepository<PostReply, Long> {
 
     List<PostReply> findByPostId(@Param("postId") Long postId);
+
+    boolean existsByUserId(Long userId);
 }

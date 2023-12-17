@@ -27,12 +27,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Post p SET p.user = null WHERE p.user.id = :userId", nativeQuery = true)
+    @Query(value = "UPDATE Post p SET p.user_id = null WHERE p.user_id = :userId", nativeQuery = true)
     void dissociatePosts(@Param("userId") Long userId);
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE PostReply pp SET pp.user.id = null WHERE pp.user.id = :userId", nativeQuery = true)
+    @Query(value = "DELETE FROM Post_Reply pp WHERE pp.user_id = :userId", nativeQuery = true)
     void dissociatePostReply(@Param("userId") Long userId);
 
     @Transactional
@@ -42,22 +42,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Study_Member sm SET sm.user.id = null WHERE sm.user.id = :userId", nativeQuery = true)
+    @Query(value = "UPDATE Study_Member sm SET sm.user_id = null WHERE sm.user_id = :userId", nativeQuery = true)
     void dissociateStudyMember(@Param("userId") Long userId);
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Quiz q SET q.user.id = null WHERE q.user.id = :userId", nativeQuery = true)
+    @Query(value = "UPDATE Quiz q SET q.user_id = null WHERE q.user_id = :userId", nativeQuery = true)
     void dissociateQuiz(@Param("userId") Long userId);
 
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM Attendance a WHERE a.user.id = :userId", nativeQuery = true)
+    @Query(value = "DELETE FROM Attendance a WHERE a.user_id = :userId", nativeQuery = true)
     void deleteUsersAttendance(@Param("userId") Long userId);
 
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM User u WHERE u.id = :userId", nativeQuery = true)
+    @Query(value = "DELETE FROM Users u WHERE u.user_id = :userId", nativeQuery = true)
     void deleteWithoutRelatedInfo(@Param("userId") Long userId);
 
 
@@ -66,4 +66,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT user_id,nickname FROM Users u", nativeQuery = true)
     List<Map<Integer,String>> getUserList();
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM Notifications n WHERE n.user_id = :userId", nativeQuery = true)
+    void deleteUsersNotifications(@Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM User_Badge ub WHERE ub.user_id = :userId", nativeQuery = true)
+    void deleteUsersUserBadge(@Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE Chat_Room_User_Link crul SET crul.user_id = null WHERE crul.user_id =:userId", nativeQuery = true)
+    void dissociateChatRoomUserLink(@Param("userId") Long userId);
 }

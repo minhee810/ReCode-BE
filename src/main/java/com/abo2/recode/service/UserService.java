@@ -4,10 +4,17 @@ import com.abo2.recode.domain.badge.Badge;
 import com.abo2.recode.domain.badge.BadgeRepository;
 import com.abo2.recode.domain.badge.UserBadge;
 import com.abo2.recode.domain.badge.UserBadgeRepository;
+import com.abo2.recode.domain.chatroom.ChatRoomUserLinkRepository;
+import com.abo2.recode.domain.notification.NotificationRepository;
+import com.abo2.recode.domain.post.PostReplyRepository;
+import com.abo2.recode.domain.post.PostRepository;
+import com.abo2.recode.domain.qna.QnaRepository;
+import com.abo2.recode.domain.quiz.QuizRepository;
 import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
+import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
@@ -40,7 +47,13 @@ public class UserService {
     private final StudyRoomRepository studyRoomRepository;
     private final UserBadgeRepository userBadgeRepository;
     private final BadgeRepository badgeRepository;
-
+    private final PostRepository postRepository;
+    private final QnaRepository qnaRepository;
+    private final QuizRepository quizRepository;
+    private final AttendanceRepository attendanceRepository;
+    private final NotificationRepository notificationRepository;
+    private final PostReplyRepository postReplyRepository;
+    private final ChatRoomUserLinkRepository chatRoomUserLinkRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -64,8 +77,7 @@ public class UserService {
         userBadge.setUser(userPS);
         userBadge.setPoint(0);
 
-        Badge defaultBadge = badgeRepository.findById(1L).orElseThrow(
-                () -> new CustomApiException("기본 뱃지를 찾을 수 없습니다."));
+        Badge defaultBadge = badgeRepository.findById(1L).orElseThrow(() -> new CustomApiException("기본 뱃지를 찾을 수 없습니다."));
         userBadge.setBadge(defaultBadge);
 
         userBadgeRepository.save(userBadge);
@@ -90,13 +102,13 @@ public class UserService {
     }
 
     @Transactional
-    public boolean checkUsernameDuplicate(String username){
+    public boolean checkUsernameDuplicate(String username) {
         // 1. 회원가입 시 username 중복확인
         return userRepository.existsByUsername(username);
     }
 
     @Transactional
-    public boolean checkEmailDuplicate(String email){
+    public boolean checkEmailDuplicate(String email) {
         // 1. 회원가입 시 email 중복확인
         return userRepository.existsByEmail(email);
     }
@@ -104,8 +116,7 @@ public class UserService {
     @Transactional
     public UserRespDto.FindUsernameRespDto findUsername(UserReqDto.FindUsernameReqDto findUsernameReqDto) {
         // 1. 이메일로 user 정보 조회
-        User userPS = userRepository.findByEmail(findUsernameReqDto.getEmail()).orElseThrow(()
-                -> new CustomApiException("존재하지 않는 사용자입니다."));
+        User userPS = userRepository.findByEmail(findUsernameReqDto.getEmail()).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
         // 2. dto 응답
         return new UserRespDto.FindUsernameRespDto(userPS.getUsername());
@@ -113,7 +124,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserRespDto.UpdateUserRespDto updateUser(Long userId, UserReqDto.UpdateUserReqDto updateUserReqDto){
+    public UserRespDto.UpdateUserRespDto updateUser(Long userId, UserReqDto.UpdateUserReqDto updateUserReqDto) {
         // 1. user 아이디 조회
         User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -124,7 +135,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserRespDto.EssayRespDto writeEssay(Long userId, UserReqDto.WriteEssayReqDto writeEssayReqDto){
+    public UserRespDto.EssayRespDto writeEssay(Long userId, UserReqDto.WriteEssayReqDto writeEssayReqDto) {
         // 1. user 아이디 조회
         User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -136,7 +147,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserRespDto.EssayRespDto getEssay(Long userId){
+    public UserRespDto.EssayRespDto getEssay(Long userId) {
         // 1. user 아이디 조회
         User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -145,7 +156,7 @@ public class UserService {
     }
 
     @Transactional
-    public void withdrawUser(Long userId){
+    public void withdrawUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
         // 가입 중인 스터디룸 중에서 스터디장의 권한으로 있는 스터디 룸이 있는지 확인
@@ -155,24 +166,41 @@ public class UserService {
             throw new CustomApiException("스터디장의 권한을 갖고 계신 스터디룸이 존재합니다. 권한을 양도한 후에 탈퇴를 진행해주시기 바랍니다.");
         }
 
-        if(studyMemberRepository.existsById(userId)){
+        if (studyMemberRepository.existsById(userId)) {
             // 스터디장의 권한으로 있는 스터디 룸이 없다면 스터디룸에 작성한 글, 퀴즈, Qna 에서 작성한 글을 제외한 정보 삭제
             userRepository.dissociateStudyMember(userId);
-            userRepository.dissociatePosts(userId);
-            userRepository.dissociatePostReply(userId);
-            userRepository.dissociateQnas(userId);
-            userRepository.dissociateQuiz(userId);
-            userRepository.deleteUsersAttendance(userId);
+            if (postRepository.existsByUserId(userId)) {
+                userRepository.dissociatePosts(userId);
+            }
+            if(postReplyRepository.existsByUserId(userId)){
+                userRepository.dissociatePostReply(userId);
+            }
+            if (qnaRepository.existsByUserId(userId)) {
+                userRepository.dissociateQnas(userId);
+            }
+            if (quizRepository.existsByUserId(userId)) {
+                userRepository.dissociateQuiz(userId);
+            }
+            if (attendanceRepository.existsByUserId(userId)) {
+                userRepository.deleteUsersAttendance(userId);
+            }
+            if (notificationRepository.existsByUserId(userId)) {
+                userRepository.deleteUsersNotifications(userId);
+            }
+            if (chatRoomUserLinkRepository.existsByUserId(userId)) {
+                userRepository.dissociateChatRoomUserLink(userId);
+            }
+            userRepository.deleteUsersUserBadge(userId);
             userRepository.deleteWithoutRelatedInfo(userId);
-            userRepository.deleteById(userId);
         } else {
+            userRepository.deleteUsersUserBadge(userId);
             userRepository.deleteById(userId);
         }
-
     }
 
+
     @Transactional
-    public UserRespDto.GetUserInfoDto getUserInfo(Long userId){
+    public UserRespDto.GetUserInfoDto getUserInfo(Long userId) {
         // 1. user 아이디 조회
         User userPS = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
@@ -194,15 +222,13 @@ public class UserService {
     }
 
     public User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다."));
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 ID의 사용자를 찾을 수 없습니다."));
     }
 
     @Transactional
     public UserRespDto.ChangePasswordRespDto changePassword(Long userId, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
         // 1. 사용자 찾기
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
         // 2. 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(changePasswordReqDto.getPassword());
@@ -219,8 +245,7 @@ public class UserService {
     @Transactional
     public UserRespDto.ChangePasswordRespDto changePasswordWithToken(String emailCheckToken, UserReqDto.ChangePasswordReqDto changePasswordReqDto) {
         // 1. 토큰 유효성 검증 및 사용자 찾기
-        User user = userRepository.findByEmailCheckToken(emailCheckToken)
-                .orElseThrow(() -> new CustomApiException("유효하지 않은 토큰입니다."));
+        User user = userRepository.findByEmailCheckToken(emailCheckToken).orElseThrow(() -> new CustomApiException("유효하지 않은 토큰입니다."));
 
         // 2. 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(changePasswordReqDto.getPassword());
@@ -234,7 +259,7 @@ public class UserService {
         return new UserRespDto.ChangePasswordRespDto(user);
     }
 
-    public List<Map<Integer,String>> getUserList() {
+    public List<Map<Integer, String>> getUserList() {
         return userRepository.getUserList();
     }
 }

@@ -25,4 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     @Query(value = "DELETE FROM study_skill WHERE study_room_id = ?1", nativeQuery = true)
     void deleteByStudyId(Long studyId);
+
+    boolean existsByUserId(Long userId);
 }
