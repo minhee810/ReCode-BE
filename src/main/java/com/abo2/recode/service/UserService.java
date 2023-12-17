@@ -8,6 +8,7 @@ import com.abo2.recode.domain.chatroom.ChatRoomUserLinkRepository;
 import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.post.PostReplyRepository;
 import com.abo2.recode.domain.post.PostRepository;
+import com.abo2.recode.domain.qna.QnaReplyRepository;
 import com.abo2.recode.domain.qna.QnaRepository;
 import com.abo2.recode.domain.quiz.QuizRepository;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -54,6 +55,7 @@ public class UserService {
     private final NotificationRepository notificationRepository;
     private final PostReplyRepository postReplyRepository;
     private final ChatRoomUserLinkRepository chatRoomUserLinkRepository;
+    private final QnaReplyRepository qnaReplyRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
@@ -177,6 +179,9 @@ public class UserService {
             }
             if (qnaRepository.existsByUserId(userId)) {
                 userRepository.dissociateQnas(userId);
+            }
+            if (qnaReplyRepository.existsByUserId(userId)){
+                userRepository.deleteUsersQnaReply(userId);
             }
             if (quizRepository.existsByUserId(userId)) {
                 userRepository.dissociateQuiz(userId);

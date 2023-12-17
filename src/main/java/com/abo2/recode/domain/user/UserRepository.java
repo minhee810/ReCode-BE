@@ -81,4 +81,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "UPDATE Chat_Room_User_Link crul SET crul.user_id = null WHERE crul.user_id =:userId", nativeQuery = true)
     void dissociateChatRoomUserLink(@Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM Qna_Reply qr FROM qr.user_id =:userId", nativeQuery = true)
+    void deleteUsersQnaReply(@Param("userId") Long userId);
 }
