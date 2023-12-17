@@ -38,6 +38,7 @@ public class AttendanceService {
 
     public AttendanceRespDto.markAttendanceRespDto markAttendance(String status, Long userId, Long studyId, AttendanceReqDto.markAttendanceReqDto markAttendanceReqDto) {
 
+
         StudyMember studyMember = studyMemberRepository.findByUserAndStudyRoom(userId, studyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 Id 가 없습니다." + userId + studyId));
 
@@ -80,7 +81,6 @@ public class AttendanceService {
                     currentDay = "일요일";
                     break;
             }
-
             Set<AttendanceDay> attendanceDays = studyRoom.getAttendanceDay(); // 스터디룸의 스터디 요일
 
             if (!attendanceDays.stream().map(AttendanceDay::getAttendanceDay).collect(Collectors.toSet()).contains(currentDay)) { // 스터디가 없는 날인 경우

@@ -20,7 +20,6 @@ public class AttendanceRespDto {
     @Getter
     @Setter
     public static class markAttendanceRespDto {
-        private Long id;
         private Long studyId;
         private Long userId;
         private String status;
@@ -29,7 +28,6 @@ public class AttendanceRespDto {
         private LocalDateTime attendanceDate;
 
         public markAttendanceRespDto(Attendance attendance){
-            this.id = attendance.getId();
             this.studyId = attendance.getStudyRoom().getId();
             this.userId = attendance.getUser().getId();
             this.status = attendance.getStatus() == 1 ? "출석" : "지각";

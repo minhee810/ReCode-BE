@@ -12,7 +12,6 @@ public class AttendanceReqDto {
     @Getter
     @Setter
     public static class markAttendanceReqDto {
-        private Long id;
         private Long studyId;
         private Long userId;
         private String status;

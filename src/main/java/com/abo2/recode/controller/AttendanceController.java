@@ -30,15 +30,16 @@ public class AttendanceController {
             @PathVariable Long studyId,
             @RequestBody AttendanceReqDto.markAttendanceReqDto markAttendanceReqDto) {
 
+        AttendanceRespDto.markAttendanceRespDto markAttendanceRespDto =
+                attendanceService.markAttendance(markAttendanceReqDto.getStatus(), loginUser.getUser().getId(), studyId, markAttendanceReqDto);
+
         if (markAttendanceReqDto != null && markAttendanceReqDto.getStatus().equals("Checked")) {
             // 승인 된 경우
             // attendance 테이블 업데이트(상태값 0 -> 1)
-            AttendanceRespDto.markAttendanceRespDto markAttendanceRespDto =
-                    attendanceService.markAttendance(markAttendanceReqDto.getStatus(), loginUser.getUser().getId(), studyId, markAttendanceReqDto);
             return new ResponseEntity<>(new ResponseDto<>(1, "출석체크를 완료했습니다.", markAttendanceRespDto), HttpStatus.CREATED);
+
         } else {
-            // 승인되지 않은 경우 혹은 markAttendanceReqDto 가 null 인 경우
-            return new ResponseEntity<>(new ResponseDto<>(-1, "출석체크 요청이 잘못되었습니다.", null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(-1, "출석체크 요청이 잘못되었습니다.", markAttendanceRespDto), HttpStatus.BAD_REQUEST);
 
         }
     }
