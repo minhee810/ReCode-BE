@@ -1,5 +1,6 @@
 package com.abo2.recode.domain.chatroom;
 
+import com.abo2.recode.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +27,7 @@ public interface ChatRoomUserLinkRepository extends JpaRepository<ChatRoomUserLi
     void updateCreatedBy(@Param(value = "oneofuserId") Long oneofuserId,@Param(value = "chatRoomId") Long chatRoomId);
 
     boolean existsByUserId(Long userId);
+  
+    @Query(value = "SELECT DISTINCT created_by FROM chat_room_user_link WHERE chat_room_id=:chatRoomId",nativeQuery = true)
+    Long findCreatedBychatRoomId(@Param(value = "chatRoomId") Long chatRoomId);
 }
