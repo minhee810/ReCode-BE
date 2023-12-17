@@ -1,6 +1,7 @@
 package com.abo2.recode.domain.skill;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,8 @@ public class StudySkill {
 
     @OneToOne
     @JoinColumn(name = "skill_id")
-    private Skill skill;
+    private
+    Skill skill;
 
     @Builder
     public StudySkill(StudyRoom studyRoom, Skill skill) {

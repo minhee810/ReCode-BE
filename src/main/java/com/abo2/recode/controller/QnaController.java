@@ -8,14 +8,13 @@ import com.abo2.recode.domain.user.UserEnum;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.qna.QnaReqDTO;
-import com.abo2.recode.dto.qna.QnaResDTO;
 import com.abo2.recode.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -39,8 +38,6 @@ public class QnaController {
 
     public ResponseEntity<?> qnaDetail(@PathVariable Long id) {
 
-
-//        System.out.println(qnaResDTO.getQnaReplyList().get(0).getComment());
         return new ResponseEntity<>(new ResponseDto<>(1, "Qna 단일 조회 성공", qnaService.qna(id)), HttpStatus.OK);
     }
 
@@ -68,12 +65,14 @@ public class QnaController {
     @PutMapping("/qna/{id}")
     public ResponseEntity<?> qnaModify(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long id, @RequestBody QnaReqDTO qnaReqDTO) {
 
-        User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow();
+
         Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
+        System.out.println(qnaInfo.getUser().getId());
+        System.out.println(loginUser.getUser().getId());
 
-
-        if (qnaInfo.getUser().getId() != user.getId()) {
-
+        if (!qnaInfo.getUser().getId().equals(loginUser.getUser().getId())) {
+            System.out.println(qnaInfo.getUser().getId());
+            System.out.println(loginUser.getUser().getId());
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
         } else {
 
@@ -89,7 +88,7 @@ public class QnaController {
         User user = userRepository.findById(loginUser.getUser().getId()).orElseThrow();
         Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
 
-        if (qnaInfo.getUser().getId() == user.getId() || user.getRole() == UserEnum.ADMIN) {
+        if (qnaInfo.getUser().getId().equals(user.getId()) || user.getRole() == UserEnum.ADMIN) {
 
             qnaService.qnaDelete(id);
             return new ResponseEntity<>(new ResponseDto<>(1, "Qna 삭제 성공", id), HttpStatus.OK);

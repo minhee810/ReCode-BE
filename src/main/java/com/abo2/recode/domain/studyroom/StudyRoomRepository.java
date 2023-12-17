@@ -44,4 +44,5 @@ public interface StudyRoomRepository extends JpaRepository<StudyRoom, Long> {
 
     @Query("SELECT DISTINCT sm FROM StudyRoom sm LEFT JOIN FETCH sm.studySkills WHERE (sm.title LIKE %:keyword% OR sm.studyName LIKE %:keyword%)")
     List<StudyRoom> findStudyRoomByKeyword(@Param("keyword") String keyword);
+
 }

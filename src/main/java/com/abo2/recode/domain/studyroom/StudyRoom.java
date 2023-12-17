@@ -20,10 +20,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @Getter
@@ -134,5 +131,4 @@ public class StudyRoom {
         this.maxNum = studyModifyReqDto.getMaxNum();
         this.updatedAt = LocalDateTime.now();
     }
-
 }

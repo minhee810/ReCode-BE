@@ -65,7 +65,7 @@ public class StudyReqDto {
 //        private String[] skillNames;
 //        private List<SkillReqDto.GetSkillNameReqDto> skillNames;
 
-//        private Set<StudyResDto.SkillDto> skills;
+//        private Set<StudyResDto.SkillDto> skillNames;
 
         @NotEmpty
         private List<String> skillNames;
@@ -107,9 +107,9 @@ public class StudyReqDto {
         private Long studyId;
 
         // Study_Room
-//        @NotEmpty
-//        @Size(min = 1, max = 50)
-//        private String studyName;
+        @NotEmpty
+        @Size(min = 1, max = 50)
+        private String studyName;
 
         @NotEmpty
         @Size(min = 1, max = 50)

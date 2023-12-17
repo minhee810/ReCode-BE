@@ -107,7 +107,7 @@ public class ChatService {
 
         // RestTemplate() -> chatting 삭제
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8080")
+                .fromUriString("http://52.79.108.89:8080")
                 .path("/chat/room/{chatRoomId}/delete")
                 .buildAndExpand(chatRoomId)
                 .encode()
@@ -145,7 +145,28 @@ public class ChatService {
         return nicknameList;
     }//getUsernameList()
 
+    @Transactional
     public void leaveChatRoom(Long userId, Long chatRoomId) {
+
+        // 나가는 사람이 채팅방 생성자인지 체크
+        if(userId == chatRoomUserLinkRepository.getMasterBychatRoomId(chatRoomId).get(0)){
+
+            // 같은 채팅방에 참여한 참여자 중 무작위로 채팅방 생성자 지위 넘김
+            List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+
+            // 나와 아이디 일치하지 않는 아무 유저에게나 채팅방 주인 넘김
+            for(Long OneofuserId : userIdList){
+                if(OneofuserId != userId) {
+                    chatRoomUserLinkRepository.updateCreatedBy(OneofuserId, chatRoomId);
+                }
+            }
+        }
+
+        // 나가는 사람이 채팅방의 마지막 사람인지 체크 -> 만약 맞으면 바로 채팅방 삭제
+        if(chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId).size() == 1){
+            deleteChatRoom(userId,chatRoomId);
+            return;
+        }
 
         // chatuserlink 삭제
         chatRoomUserLinkRepository.deleteBychatRoomIdAnduserId(userId,chatRoomId);

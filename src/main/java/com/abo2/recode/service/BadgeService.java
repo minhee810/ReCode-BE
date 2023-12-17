@@ -54,14 +54,34 @@ public class BadgeService {
         StudyMemberEstimate studyMemberEstimate = processEstimate(studyId, userId, estimateReqDto);
         studyMemberEstimateRepository.save(studyMemberEstimate);
 
+        // 5. UserBadge 업데이트 (포인트 동기화)
+        updateUserBadgePoints(userId, studyMemberEstimate.getTotalPoint());
+
         Estimate estimate = processEstimate(studyMemberEstimate, estimateReqDto);
         estimateRepository.save(estimate);
 
-        // 5. 뱃지 업데이트
+        // 6. 뱃지 업데이트
         Badge badge = determineBadge(estimateReqDto.getPoint());
         assignBadgeToMember(user.getId(), badge);
 
         return createEstimateRespDto(estimate);
+    }
+
+    private void updateUserBadgePoints(Long userId, Integer newPoints) {
+        // 사용자의 UserBadge를 찾거나 새로 생성
+        UserBadge userBadge = userBadgeRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    UserBadge newUserBadge = new UserBadge();
+                    User user = userRepository.findById(userId).orElseThrow(
+                            () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    );
+                    newUserBadge.setUser(user);
+                    return newUserBadge;
+                });
+
+        userBadge.setPoint(newPoints); // 새로운 포인트 설정
+        // 필요한 경우 뱃지와 다른 필드 설정
+        userBadgeRepository.save(userBadge);
     }
 
     private StudyMemberEstimate processEstimate(Long studyId, Long userId, BadgeReqDto.EstimateReqDto estimateReqDto) {
@@ -82,8 +102,19 @@ public class BadgeService {
         studyMemberEstimate.setUser(user);
 
         // 총 점수 업데이트
-        int totalPoint = (studyMemberEstimate.getTotalPoint() != null) ? studyMemberEstimate.getTotalPoint() : 0;
-        studyMemberEstimate.setTotalPoint(totalPoint + estimateReqDto.getPoint());
+        Integer existingPoints = studyMemberEstimate.getTotalPoint();
+        int newPoints = estimateReqDto.getPoint();
+
+        int totalPoints;
+        if (existingPoints == null || existingPoints == 0) {
+            totalPoints = newPoints;
+        } else {
+            totalPoints = (existingPoints + newPoints) / 2; // Calculate the average
+        }
+
+        totalPoints = Math.min(totalPoints, 1000);
+
+        studyMemberEstimate.setTotalPoint(totalPoints);
         studyMemberEstimate.setCreatedAt(LocalDateTime.now());
         studyMemberEstimateRepository.save(studyMemberEstimate);
 
@@ -127,12 +158,16 @@ public class BadgeService {
     private Badge determineBadge(int point) {
         // 점수가 100점 이상이면 badge_id가 3인 뱃지를, 50점이상 100점 미만이면 badge_id 가 2인 뱃지를 그 외에는 badge_id 가 1인 뱃지를 부여
         Long badgeId;
-        if (point >= 100) {
-            badgeId = 3L;
-        } else if (point >= 50 && point < 100) {
-            badgeId = 2L;
+        if (point < 200) {
+            badgeId = 1L; // 1등급
+        } else if (point < 400) {
+            badgeId = 2L; // 2등급
+        } else if (point < 600) {
+            badgeId = 3L; // 3등급
+        } else if (point < 800) {
+            badgeId = 4L; // 4등급
         } else {
-            badgeId = 1L;
+            badgeId = 5L; // 5등급
         }
         return badgeRepository.findById(badgeId).orElseThrow(() -> new IllegalArgumentException("잘못된 뱃지 요청입니다."));
     }

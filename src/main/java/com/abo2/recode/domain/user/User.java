@@ -66,6 +66,7 @@ public class User {
 //    @Column(nullable = false)
 //    private Integer phoneNum;
 
+
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
