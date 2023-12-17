@@ -64,6 +64,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/nickname/{nickname}/exists")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable @Valid String nickname) {
+
+        // 1. username 중복 값 확인
+        if (userService.checkNicknameDuplicate(nickname)) {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 닉네임입니다.", null), HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다.", null), HttpStatus.OK);
+        }
+    }
+
     @GetMapping("/user-email/{email}/exists")
     public ResponseEntity<?> checkEmailDuplicate(@PathVariable @Valid String email) {
 
