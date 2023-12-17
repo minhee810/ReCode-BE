@@ -102,6 +102,12 @@ public class UserService {
     }
 
     @Transactional
+    public boolean checkNicknameDuplicate(String nickname){
+        // 1. 회원가입 시 email 중복확인
+        return userRepository.existsByNickname(nickname);
+    }
+
+    @Transactional
     public UserRespDto.FindUsernameRespDto findUsername(UserReqDto.FindUsernameReqDto findUsernameReqDto) {
         // 1. 이메일로 user 정보 조회
         User userPS = userRepository.findByEmail(findUsernameReqDto.getEmail()).orElseThrow(()

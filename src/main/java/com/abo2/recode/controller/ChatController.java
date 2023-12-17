@@ -85,6 +85,7 @@ public class ChatController {
                     .usernameList(usernameList)
                     .lastMessage(lastMessage)
                     .title(chatService.getchatRoomTitleBychatRoomId(chatRoomId))
+                    .createdBy(chatService.getCreatedBychatRoomId(chatRoomId))
                     .build();
 
             chatListDtoList.add(chatListDto);
