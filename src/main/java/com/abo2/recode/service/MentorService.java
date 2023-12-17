@@ -13,10 +13,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -145,20 +142,32 @@ public class MentorService {
             totalScores.add(totalScore);
         }
 
-        // 상위 5명의 멘토 추천 리스트
+        // 상위 5개의 멘토를 추천 리스트에 추가
         List<Mentor> recommendedMentors = new ArrayList<>();
 
-        // 상위 5개의 멘토를 추천 리스트에 추가
-        for (int i = 0; i < 5; i++) {
-            // 최대 종합 점수를 가진 멘토의 인덱스 찾기
-            int maxIndex = totalScores.indexOf(Collections.max(totalScores));
+        Set<Integer> selectedIndices = new HashSet<>(); // 이미 선택된 인덱스를 저장하는 집합
 
-            // 해당 멘토를 추천 리스트에 추가하고, 종합 점수 리스트에서 제거
-            recommendedMentors.add(mentors.get(maxIndex));
-            totalScores.remove(maxIndex);
+        for (int i = 0; i < 5; i++) {
+            // 최대 종합 점수를 가진 멘토의 인덱스 찾기 (중복을 제외하고 선택)
+            int maxIndex = -1;
+            double maxScore = Double.MIN_VALUE;
+
+            for (int j = 0; j < totalScores.size(); j++) {
+                if (!selectedIndices.contains(j) && totalScores.get(j) > maxScore) {
+                    maxScore = totalScores.get(j);
+                    maxIndex = j;
+                }
+            }
+
+            if (maxIndex != -1) {
+                // 해당 멘토를 추천 리스트에 추가하고, 선택된 인덱스를 저장
+                recommendedMentors.add(mentors.get(maxIndex));
+                selectedIndices.add(maxIndex);
+            }
         }
 
         return recommendedMentors;
+
 
     } //getMentorRecommend()
 

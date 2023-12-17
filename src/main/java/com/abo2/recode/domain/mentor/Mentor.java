@@ -30,4 +30,7 @@ public class Mentor {
     @NotEmpty
     private Long rating; //평점
 
+    @NotEmpty
+    private String email; //멘토 연락처
+
 }
