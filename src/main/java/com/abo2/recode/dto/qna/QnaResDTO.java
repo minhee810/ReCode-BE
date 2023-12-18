@@ -1,8 +1,6 @@
 package com.abo2.recode.dto.qna;
 
 
-import com.abo2.recode.domain.qna.QnaReply;
-import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserEnum;
 import lombok.*;
 
@@ -12,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class QnaResDTO {
 
     private Long id;
@@ -23,6 +22,7 @@ public class QnaResDTO {
     private String role;
     private String nickname;
     private List<QnaReplyDTO> qnaReplyList;
+
 
     @Builder
     public QnaResDTO(Long id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User user, List<QnaReplyDTO> qnaReplyList) {
@@ -41,5 +41,10 @@ public class QnaResDTO {
             this.nickname = "탈퇴한 회원 입니다.";
         }
         this.qnaReplyList = qnaReplyList;
+    }
+
+
+    public QnaResDTO(Long id) {
+        this.id = id;
     }
 }
