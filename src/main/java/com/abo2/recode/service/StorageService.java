@@ -51,7 +51,15 @@ public class StorageService {
 
 
     public String deleteFile(String fileName) {
-        s3Client.deleteObject(bucketName, fileName);
+        ListVersionsRequest listVersionsRequest = new ListVersionsRequest()
+                .withBucketName(bucketName)
+                .withPrefix(fileName);
+        VersionListing versionListing = s3Client.listVersions(listVersionsRequest);
+
+        for (S3VersionSummary version : versionListing.getVersionSummaries()) {
+            s3Client.deleteVersion(bucketName, fileName, version.getVersionId());
+        }
+
         return fileName + " removed ...";
     }
 

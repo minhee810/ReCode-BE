@@ -151,5 +151,13 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public void removeFileNameFromPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId));
+
+        post.setFileName(null);
+        postRepository.save(post);
+    }
+
 
 }

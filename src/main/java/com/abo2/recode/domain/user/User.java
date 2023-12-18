@@ -63,8 +63,8 @@ public class User {
     @Column(name = "email_token_expiry", nullable = true)
     private LocalDateTime emailTokenExpiry;
 
-//    @Column(nullable = false)
-//    private Integer phoneNum;
+    @Column(name = "phone_num", unique = true, nullable = true)
+    private String phoneNum;
 
 
     @Builder
