@@ -29,6 +29,7 @@ public class PostRespDto {
         private Integer category;
         private LocalDateTime createdAt;
         private String nickname;
+        public String fileName;
 
         public PostWriteRespDto(Post post, String nickname) {
             this.id = post.getId();
@@ -37,6 +38,7 @@ public class PostRespDto {
             this.category = post.getCategory();
             this.createdAt = post.getCreatedAt();
             this.nickname = nickname;
+            this.fileName = post.getFileName();
         }
 
     }
@@ -91,6 +93,7 @@ public class PostRespDto {
         private String content;
         private Integer category;
         private String nickName;
+        private String fileName;
 
         @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime createdAt;
@@ -101,6 +104,7 @@ public class PostRespDto {
             this.content = post.getContent();
             this.category = post.getCategory();
             this.createdAt = post.getCreatedAt();
+            this.fileName = post.getFileName();
             if (post.getUser() != null) {
                 this.nickName = post.getUser().getNickname();
             } else {
