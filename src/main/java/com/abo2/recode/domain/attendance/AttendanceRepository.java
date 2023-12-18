@@ -29,4 +29,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("UPDATE Attendance a SET a.status = :status WHERE a.studyRoom.id = :studyId and a.user.id = :userId")
     void markAttendance(Integer status, Long studyId, Long userId);
 
+    boolean existsByUserId(Long userId);
+
 }

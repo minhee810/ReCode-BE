@@ -1,6 +1,7 @@
 package com.abo2.recode.domain.studyroom;
 
 
+import com.abo2.recode.domain.attendance.Attendance;
 import com.abo2.recode.domain.attendance.AttendanceDay;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
