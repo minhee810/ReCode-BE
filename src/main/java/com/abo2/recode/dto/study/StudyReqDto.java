@@ -3,6 +3,7 @@ package com.abo2.recode.dto.study;
 import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.dto.skill.SkillReqDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -98,6 +99,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     public static class StudyModifyReqDto{
 
         @NotEmpty
