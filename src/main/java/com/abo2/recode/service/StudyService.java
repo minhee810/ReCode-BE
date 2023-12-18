@@ -54,6 +54,7 @@ public class StudyService {
 
     private UserBadgeRepository userBadgeRepository;
 
+
     @Autowired
     public StudyService(AttendanceDayRepository attendanceDayRepository, AttendanceDayRepository attendanceDayRepository1, StudyRoomRepository studyRoomRepository,
                         StudySkillRepository studySkillRepository,
@@ -127,9 +128,17 @@ public class StudyService {
             throw new CustomForbiddenException("조장만 스터디 그룹 정보를 수정 할 수 있습니다.");
         }
 
+
         // update()로 객체에 변경 사항 반영
         studyRoom.updateStudyRoom(studyModifyReqDto, parseTime(studyModifyReqDto.getStartTime())
                 , parseTime(studyModifyReqDto.getEndTime()));
+
+
+//        Set<AttendanceDay> existingAttendanceDays = attendanceDayRepository.findByStudyRoomId(studyModifyReqDto.getStudyId());
+        studyRoom.getAttendanceDay().clear();
+        attendanceDayRepository.deleteAttendanceDaysByStudyRoomId(studyModifyReqDto.getStudyId());
+
+//        System.out.println("기존 existingAttendanceDays = " + existingAttendanceDays);
 
         //스터디룸과 연계된 출석일,기술 스택들 studyRoom 삽입
         for (String day : studyModifyReqDto.getAttendanceDay()) {
@@ -140,19 +149,15 @@ public class StudyService {
 
             studyRoom.getAttendanceDay().add(attendanceDay);
         }
+        // StudyRoom의 AttendanceDay 정보를 String Set으로 변환
+        Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .map(AttendanceDay::getAttendanceDay)
+                .collect(Collectors.toSet());
 
-        // 연관관계 AttendanceDay 저장
-        for (String day : studyModifyReqDto.getAttendanceDay()) {
-            AttendanceDay attendanceDay = AttendanceDay.builder()
-                    .attendanceDay(day)
-                    .studyRoom(studyRoom)
-                    .build();
-
-            studyRoom.getAttendanceDay().add(attendanceDay);
-        }
         //3.study_skill 테이블에 skill 삽입
         //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
-
         // 기존의 스터디 룸과 관련된 모든 StudySkill 엔티티를 가져옴
         List<StudySkill> existingStudySkills = studySkillRepository.findByStudyRoomId(studyModifyReqDto.getStudyId());
 
@@ -171,12 +176,6 @@ public class StudyService {
                 studySkillRepository.save(studySkill);
             }
         }
-        // StudyRoom의 AttendanceDay 정보를 String Set으로 변환
-        Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
-                .orElseGet(Collections::emptySet)
-                .stream()
-                .map(AttendanceDay::getAttendanceDay)
-                .collect(Collectors.toSet());
 
 
         // studyRoom 기반으로 studyCreateRespDto 채우기

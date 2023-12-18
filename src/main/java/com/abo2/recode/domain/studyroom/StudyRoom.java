@@ -121,7 +121,7 @@ public class StudyRoom {
     public void updateStudyRoom(StudyReqDto.StudyModifyReqDto studyModifyReqDto,
                                 LocalTime startTime, LocalTime endTime) {
 
-        this.studyName = studyModifyReqDto.getStudyName();
+//        this.studyName = studyModifyReqDto.getStudyName();
         this.title = studyModifyReqDto.getTitle();
         this.description = studyModifyReqDto.getDescription();
         this.startDate = studyModifyReqDto.getStartDate();
