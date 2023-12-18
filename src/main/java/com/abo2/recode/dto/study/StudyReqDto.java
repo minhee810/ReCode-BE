@@ -65,7 +65,7 @@ public class StudyReqDto {
 //        private String[] skillNames;
 //        private List<SkillReqDto.GetSkillNameReqDto> skillNames;
 
-//        private Set<StudyResDto.SkillDto> skills;
+//        private Set<StudyResDto.SkillDto> skillNames;
 
         @NotEmpty
         private List<String> skillNames;

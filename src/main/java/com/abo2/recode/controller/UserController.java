@@ -58,9 +58,20 @@ public class UserController {
 
         // 1. username 중복 값 확인
         if (userService.checkUsernameDuplicate(username)) {
-            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 아이디 입니다.", null), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 아이디 입니다.", null), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 아이디 입니다.", null), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/nickname/{nickname}/exists")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable @Valid String nickname) {
+
+        // 1. username 중복 값 확인
+        if (userService.checkNicknameDuplicate(nickname)) {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 닉네임입니다.", null), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다.", null), HttpStatus.OK);
         }
     }
 
@@ -69,7 +80,7 @@ public class UserController {
 
         // 1. email 중복 값 확인
         if (userService.checkEmailDuplicate(email)) {
-            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 이메일 입니다.", null), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미 사용 중인 이메일 입니다.", null), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 이메일 입니다.", null), HttpStatus.OK);
         }
@@ -163,9 +174,9 @@ public class UserController {
 
     //전체 유저 닉네임 호출
     @GetMapping(value = "/select-users")
-    public ResponseEntity<?> getUserList(){
+    public ResponseEntity<?> getUserList() {
 
-        List<Map<Integer,String>> nicknameList = userService.getUserList();
-        return new ResponseEntity<>(new ResponseDto<>(1,"유저 목록입니다.",nicknameList),HttpStatus.OK);
+        List<Map<Integer, String>> nicknameList = userService.getUserList();
+        return new ResponseEntity<>(new ResponseDto<>(1, "유저 목록입니다.", nicknameList), HttpStatus.OK);
     }
 }

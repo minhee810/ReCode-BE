@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,7 +32,7 @@ public class User {
     @Column(unique = true, nullable = false, length = 20)
     private String username;
 
-    @Column(nullable = false, length = 20)
+    @Column(unique = true, nullable = false, length = 20)
     private String nickname;
 
     @Column(nullable = false, length = 60)
@@ -61,6 +62,10 @@ public class User {
 
     @Column(name = "email_token_expiry", nullable = true)
     private LocalDateTime emailTokenExpiry;
+
+//    @Column(nullable = false)
+//    private Integer phoneNum;
+
 
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {

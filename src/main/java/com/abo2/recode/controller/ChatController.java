@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -26,7 +25,7 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class ChatController {
 
-    private ChatService chatService;
+    private final ChatService chatService;
 
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
@@ -39,7 +38,7 @@ public class ChatController {
     @GetMapping(value = "/v1/chat/chat-list")
     public ResponseEntity<?> getChatRoomsByUser(
             @AuthenticationPrincipal LoginUser loginUser
-            ){
+    ) {
 
         List<ChatResDto.ChatListDto> chatListDtoList = new ArrayList<>();
 
@@ -50,13 +49,13 @@ public class ChatController {
         //2. 모든 chatRoomId에 대해 각 채팅방에 참여 중인 유저 목록 출력
         // SELECT user_id as userId FROM ChatRoomUserLink WHERE chat_room_id = ?
         // 3. 각 chatRoomId에 대해 마지막 메세지 가져오기
-        for(Long chatRoomId : chatRoomIdList){
+        for (Long chatRoomId : chatRoomIdList) {
             List<String> usernameList = chatService.getUserNameListBychatRoomId(chatRoomId);
 
-            logger.info("usernameList : "+ usernameList);
+            logger.info("usernameList : " + usernameList);
 
             URI uri = UriComponentsBuilder
-                    .fromUriString("http://localhost:8080")
+                    .fromUriString("http://52.79.108.89:8080")
                     .path("/chat/roomNum/{chatRoomId}/last-message")
                     .buildAndExpand(chatRoomId)
                     .encode()
@@ -77,7 +76,7 @@ public class ChatController {
                 lastMessage = "There is no Message";
             }
 
-            logger.info("lastMessage : "+lastMessage);
+            logger.info("lastMessage : " + lastMessage);
 
             //4. ChatListDto , chatListDtoList에 담기
             /*    ChatResDto.ChatListDto = {Long chatRoomId; List<String> usernameList; String lastMessage; }*/
@@ -86,11 +85,12 @@ public class ChatController {
                     .usernameList(usernameList)
                     .lastMessage(lastMessage)
                     .title(chatService.getchatRoomTitleBychatRoomId(chatRoomId))
+                    .createdBy(chatService.getCreatedBychatRoomId(chatRoomId))
                     .build();
 
             chatListDtoList.add(chatListDto);
         }
-        return new ResponseEntity<>( new ResponseDto<>(1,"현재 참여 중인 채팅방 목록입니다.",chatListDtoList), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "현재 참여 중인 채팅방 목록입니다.", chatListDtoList), HttpStatus.OK);
     }//getChatRoomsByUser()
 
     // 참여 중인 채팅방 나가기
@@ -98,9 +98,9 @@ public class ChatController {
     public ResponseEntity<?> leaveChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(name = "chatRoomId") Long chatRoomId
-    ){
-        chatService.leaveChatRoom(loginUser.getUser().getId(),chatRoomId);
-        return new ResponseEntity<>(new ResponseDto<>(1,"채팅방에서 나갔습니다.",chatRoomId),HttpStatus.OK);
+    ) {
+        chatService.leaveChatRoom(loginUser.getUser().getId(), chatRoomId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "채팅방에서 나갔습니다.", chatRoomId), HttpStatus.OK);
     }//leaveChatRoom()
 
     // 채팅방 생성
@@ -108,11 +108,11 @@ public class ChatController {
     public ResponseEntity<?> createChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @RequestBody ChatReqDto.ChatCreateReqDto chatCreateReqDto
-    ){
+    ) {
         chatCreateReqDto.setMaster(loginUser.getUser());
         // 1.chatroom Entity,chatRoomUserLink Entity
         ChatReqDto.ChatCreateReqDto chatcreatedtoresult = chatService.createChatRoom(chatCreateReqDto);
-        return new ResponseEntity<>( new ResponseDto<>(1,"채팅방을 생성했습니다.",chatcreatedtoresult), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "채팅방을 생성했습니다.", chatcreatedtoresult), HttpStatus.OK);
     }//createChatRoom()
 
     // 채팅방 삭제
@@ -120,17 +120,17 @@ public class ChatController {
     public ResponseEntity<?> deleteChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(name = "chatRoomId") Long chatRoomId
-    ){
+    ) {
         // chatroom,chatuserlink 삭제
         // RestTemplate() -> chatting 삭제
-        ChatRoom chatRoom = chatService.deleteChatRoom(loginUser.getUser().getId(),chatRoomId);
+        ChatRoom chatRoom = chatService.deleteChatRoom(loginUser.getUser().getId(), chatRoomId);
 
         ChatResDto.ChatDeleteResDto chatDeleteResDto = ChatResDto.ChatDeleteResDto.builder()
                 .id(chatRoom.getId())
                 .title(chatRoom.getTitle())
                 .build();
 
-        return new ResponseEntity<>(new ResponseDto<>(1,"채팅방을 삭제했습니다.",chatDeleteResDto),HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "채팅방을 삭제했습니다.", chatDeleteResDto), HttpStatus.OK);
     } //deleteChatRoom()
 
     // 특정 채팅방에 참여 중인 유저 목록 출력 -> 채팅 창
@@ -138,9 +138,9 @@ public class ChatController {
     @GetMapping(value = "/v1/chat/{chatRoomId}/user-list")
     public ResponseEntity<?> getUserList(
             @PathVariable(name = "chatRoomId") Long chatRoomId
-    ){
+    ) {
         List<String> nicknameList = chatService.getNicknameList(chatRoomId);
-        return new ResponseEntity<>(new ResponseDto<>(1,"현재 채팅방에 참여중인 유저 리스트입니다.",nicknameList),HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "현재 채팅방에 참여중인 유저 리스트입니다.", nicknameList), HttpStatus.OK);
     }//getUserList()
 
 }//ChatController

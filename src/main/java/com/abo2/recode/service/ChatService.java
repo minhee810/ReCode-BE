@@ -56,6 +56,11 @@ public class ChatService {
         return usernameList;
     }
 
+    public String getCreatedBychatRoomId(Long chatRoomId) {
+        Long createdBy = chatRoomUserLinkRepository.findCreatedBychatRoomId(chatRoomId);
+            return userRepository.getNicknameByuserId(createdBy);
+    }
+
     public ChatReqDto.ChatCreateReqDto createChatRoom(ChatReqDto.ChatCreateReqDto chatCreateReqDto) {
         // 1.chatroom Entity
         ChatRoom chatRoom = new ChatRoom(chatCreateReqDto.getChatRoomTitle());
@@ -107,7 +112,7 @@ public class ChatService {
 
         // RestTemplate() -> chatting 삭제
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8080")
+                .fromUriString("http://52.79.108.89:8080")
                 .path("/chat/room/{chatRoomId}/delete")
                 .buildAndExpand(chatRoomId)
                 .encode()
@@ -148,16 +153,29 @@ public class ChatService {
     @Transactional
     public void leaveChatRoom(Long userId, Long chatRoomId) {
 
-        // 같은 채팅방에 참여한 참여자 중 무작위로 채팅방 생성자 지위 넘김
-        List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+        // 나가는 사람이 채팅방 생성자인지 체크
+        if(userId == chatRoomUserLinkRepository.getMasterBychatRoomId(chatRoomId).get(0)){
 
-        // 나와 아이디 일치하지 않는 아무 유저에게나 채팅방 주인 넘김
-        for(Long OneofuserId : userIdList){
-            if(OneofuserId != userId) {
-                chatRoomUserLinkRepository.updateCreatedBy(OneofuserId, chatRoomId);
+            // 같은 채팅방에 참여한 참여자 중 무작위로 채팅방 생성자 지위 넘김
+            List<Long> userIdList = chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId);
+
+            // 나와 아이디 일치하지 않는 아무 유저에게나 채팅방 주인 넘김
+            for(Long OneofuserId : userIdList){
+                if(OneofuserId != userId) {
+                    chatRoomUserLinkRepository.updateCreatedBy(OneofuserId, chatRoomId);
+                }
             }
         }
+
+        // 나가는 사람이 채팅방의 마지막 사람인지 체크 -> 만약 맞으면 바로 채팅방 삭제
+        if(chatRoomUserLinkRepository.getUserIdBychatRoomId(chatRoomId).size() == 1){
+            deleteChatRoom(userId,chatRoomId);
+            return;
+        }
+
         // chatuserlink 삭제
         chatRoomUserLinkRepository.deleteBychatRoomIdAnduserId(userId,chatRoomId);
     }
+
+
 }//ChatService

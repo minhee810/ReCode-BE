@@ -30,7 +30,7 @@ public class NotificationController {
     // 알림 읽음 처리
     @PostMapping("/mark-as-read")
     public ResponseEntity<?> markAsRead(@AuthenticationPrincipal @Valid LoginUser loginUser,
-                                        @RequestBody NotificationReqDto.MarkAsReadReqDto markAsReadReqDto){
+                                        @RequestBody NotificationReqDto.MarkAsReadReqDto markAsReadReqDto) {
         System.out.println("markAsReadReqDto = " + markAsReadReqDto);
         NotificationRespDto.MarkAsReadRespDto readStatusDto = notificationService.markAsRead(markAsReadReqDto);
         System.out.println("Controller : markAsReadReqDto.isReadStatus() = " + markAsReadReqDto.isReadStatus());
@@ -41,7 +41,7 @@ public class NotificationController {
 
     // 알림 삭제
     @DeleteMapping("/{notificationId}")
-    public ResponseEntity<?> deleteMessage(@PathVariable("notificationId") Long notificationId){
+    public ResponseEntity<?> deleteMessage(@PathVariable("notificationId") Long notificationId) {
         notificationService.deleteNotification(notificationId);
         return new ResponseEntity<>(new ResponseDto<>(1, "알림 삭제 처리 완료", null), HttpStatus.OK);
     }

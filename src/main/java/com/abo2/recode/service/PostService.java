@@ -63,6 +63,7 @@ public class PostService {
         post.setCategory(postWriteReqDto.getCategory());
         post.setStudyRoom(studyRoom);
         post.setUser(user);
+        post.setFileName(postWriteReqDto.getFileName());
 
         Post savedPost = postRepository.save(post);
         String nickname = user.getNickname();

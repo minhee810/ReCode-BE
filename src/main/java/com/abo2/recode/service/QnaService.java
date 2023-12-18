@@ -40,9 +40,7 @@ public class QnaService {
                     .title(q.getTitle())
                     .createdAt(q.getCreatedAt())
                     .updatedAt(q.getUpdatedAt())
-                    .nickname(user.getNickname())
-                    .role(user.getRole())
-                    .userId(user.getId())
+                    .user(user)
                     .build();
 
             result.add(dto);
@@ -57,6 +55,8 @@ public class QnaService {
 
         Qna qna = qnaRepository.findById(qnaId).orElseThrow();
         List<QnaReply> qnaReplies = qnaReplyRepository.findByQnaId(qnaId);
+
+        User user = qna.getUser();
 
 
         List<QnaReplyDTO> qnaReplyDTOList = new ArrayList<>();
@@ -81,9 +81,7 @@ public class QnaService {
                 .content(qna.getContent())
                 .createdAt(qna.getCreatedAt())
                 .updatedAt(qna.getUpdatedAt())
-                .userId(qna.getUser().getId())
-                .role(qna.getUser().getRole())
-                .nickname(qna.getUser().getNickname())
+                .user(qna.getUser())
                 .qnaReplyList(qnaReplyDTOList)
                 .build();
     }

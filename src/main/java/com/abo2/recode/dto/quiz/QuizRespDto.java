@@ -50,7 +50,11 @@ public class QuizRespDto {
             this.title = quiz.getTitle();
             this.difficulty = quiz.getDifficulty();
             this.quiz_link = quiz.getQuiz_link();
-            this.nickname = quiz.getUser().getNickname();
+            if (quiz.getUser() != null) {
+                this.nickname = quiz.getUser().getNickname();
+            } else {
+                this.nickname = "탈퇴한 회원입니다.";
+            }
             this.studyId = quiz.getStudyRoom().getId();
             this.updatedAt = quiz.getUpdatedAt();
         }

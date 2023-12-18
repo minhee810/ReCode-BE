@@ -24,6 +24,7 @@ public class PostReqDto {
         private Long userId;
         private Integer category;
         private User nickname;
+        private String fileName;
 
     }
 

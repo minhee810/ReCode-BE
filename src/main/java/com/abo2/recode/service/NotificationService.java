@@ -104,9 +104,10 @@ public class NotificationService {
 
         logger.info("notifications {} ", notifications);
 
-        if (notifications.isEmpty()) {
-            throw new CustomApiException("알림이 존재하지 않습니다.");
-        }
+//        if (notifications.isEmpty()) {
+//            throw new CustomApiException("알림이 존재하지 않습니다.");
+//        }
+
         return notifications.stream()
                 .map(NotificationRespDto.NotificationListRespDto::new)
                 .collect(Collectors.toList());
