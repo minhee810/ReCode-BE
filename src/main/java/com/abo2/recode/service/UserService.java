@@ -1,5 +1,6 @@
 package com.abo2.recode.service;
 
+import com.abo2.recode.domain.attendance.AttendanceRepository;
 import com.abo2.recode.domain.badge.Badge;
 import com.abo2.recode.domain.badge.BadgeRepository;
 import com.abo2.recode.domain.badge.UserBadge;
@@ -15,7 +16,6 @@ import com.abo2.recode.domain.skill.StudySkill;
 import com.abo2.recode.domain.skill.StudySkillRepository;
 import com.abo2.recode.domain.studymember.StudyMember;
 import com.abo2.recode.domain.studymember.StudyMemberRepository;
-import com.abo2.recode.domain.studyroom.AttendanceRepository;
 import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
