@@ -49,6 +49,9 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "file_name", length = 255, nullable = true)
+    private String fileName;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReply> postReplies;
 

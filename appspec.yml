@@ -5,6 +5,11 @@ files:
     destination: /var/app/current
 hooks:
   BeforeInstall:
+    - location: docker-stop.sh
+      timeout: 300
+      runas: root
+
+  AfterInstall:
     - location: deploy-be.sh
       timeout: 300
       runas: root

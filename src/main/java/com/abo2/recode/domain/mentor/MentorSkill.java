@@ -1,7 +1,8 @@
-package com.abo2.recode.domain.skill;
+package com.abo2.recode.domain.mentor;
 
+import com.abo2.recode.domain.skill.Skill;
 import com.abo2.recode.domain.studyroom.StudyRoom;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,27 +14,26 @@ import javax.persistence.*;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class StudySkill {
+public class MentorSkill {
+
 
     @Id
     @Column(name = "study_skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //스터디 그룹 스킬 일련번호
+    private Long id; // MentorSkill 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "study_room_id")
-    private StudyRoom studyRoom;
+    @JoinColumn(name = "mentor_id")
+    @JsonIgnore
+    private Mentor mentor;
 
     @OneToOne
     @JoinColumn(name = "skill_id")
-    private
-    Skill skill;
+    private Skill skill;
 
     @Builder
-    public StudySkill(StudyRoom studyRoom, Skill skill) {
-        this.studyRoom = studyRoom;
+    public MentorSkill(Mentor mentor, Skill skill) {
+        this.mentor = mentor;
         this.skill = skill;
     }
-
-
 }

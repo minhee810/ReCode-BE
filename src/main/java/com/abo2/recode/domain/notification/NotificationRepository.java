@@ -15,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notifications, Lon
     // 사용자의 알림 조회
     List<Notifications> findByUserId(Long userId);
 
+    boolean existsByUserId(Long userId);
+
 }

@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class ChatController {
 
-    private ChatService chatService;
+    private final ChatService chatService;
 
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
@@ -53,7 +53,7 @@ public class ChatController {
             logger.info("usernameList : " + usernameList);
 
             URI uri = UriComponentsBuilder
-                    .fromUriString("http://localhost:8080")
+                    .fromUriString("http://52.79.108.89:8080")
                     .path("/chat/roomNum/{chatRoomId}/last-message")
                     .buildAndExpand(chatRoomId)
                     .encode()
@@ -82,6 +82,7 @@ public class ChatController {
                     .usernameList(usernameList)
                     .lastMessage(lastMessage)
                     .title(chatService.getchatRoomTitleBychatRoomId(chatRoomId))
+                    .createdBy(chatService.getCreatedBychatRoomId(chatRoomId))
                     .build();
 
             chatListDtoList.add(chatListDto);

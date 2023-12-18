@@ -39,6 +39,7 @@ public class StudyroomController {
         this.userRepository = userRepository;
     }
 
+
     @CrossOrigin
     @Transactional
     @PostMapping(value = "/v1/study") // @AuthenticationPrincipal 에서 LoginUser 객체를 꺼내와야 함. LoginUSer
@@ -69,6 +70,8 @@ public class StudyroomController {
         // 수정할 스터디 룸 정보,조장 아이디 정보 입력
         studyModifyReqDto.setStudyId(studyId);
         studyModifyReqDto.setCreatedBy(loginUser.getUser().getId());
+
+        List<String> skillNames = studyModifyReqDto.getSkillNames();
 
         //1. studyModifyReqDto를 DB에 넣기 Service에서 처리
         StudyResDto.StudyCreateRespDto studyCreateRespDto = studyService.modifyRoom(studyModifyReqDto);
@@ -179,7 +182,7 @@ public class StudyroomController {
                     = StudyResDto.StudyMemberListRespDto.builder()
                     .id(studyMember.getId())
                     .studyId(studyMember.getStudyRoom().getId())
-                    .nickname(studyMember.getUser().getNickname())
+                    .user(studyMember.getUser())
                     .status(studyMember.getStatus())
                     .build();
 

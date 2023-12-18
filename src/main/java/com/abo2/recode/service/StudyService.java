@@ -1,7 +1,7 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.attendanceDay.AttendanceDay;
-import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.attendance.AttendanceDay;
+import com.abo2.recode.domain.attendance.AttendanceDayRepository;
 import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.skill.Skill;
@@ -15,6 +15,7 @@ import com.abo2.recode.domain.studyroom.StudyRoomRepository;
 import com.abo2.recode.domain.user.User;
 import com.abo2.recode.domain.user.UserRepository;
 import com.abo2.recode.dto.post.PostRespDto;
+import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
@@ -149,19 +150,25 @@ public class StudyService {
         }
         //3.study_skill 테이블에 skill 삽입
         //3-1 Study_skill Entity 선언, Study_skill Entity에 데이터 집어 넣기, DB에 Insert
-        // expertise
+
+        // 기존의 스터디 룸과 관련된 모든 StudySkill 엔티티를 가져옴
+        List<StudySkill> existingStudySkills = studySkillRepository.findByStudyRoomId(studyModifyReqDto.getStudyId());
+
+        // 기존의 스킬을 모두 삭제
+        studySkillRepository.deleteAll(existingStudySkills);
+
+        // 새로운 스킬을 추가
         for (String skillName : studyModifyReqDto.getSkillNames()) {
+            Skill skill = skillRepository.findBySkillName(skillName);
 
-            Skill skill = skillRepository.findBySkillName(skillName); // 스킬 이름으로 Skill 엔티티 검색
-
-            StudySkill studySkill = StudySkill.builder()
-                    .studyRoom(studyRoom)
-                    .skill(skill)
-                    .build();
-            studySkillRepository.save(studySkill);
-
+            if (skill != null) { // 스킬을 찾았을 때만 처리
+                StudySkill studySkill = StudySkill.builder()
+                        .studyRoom(studyRoom)
+                        .skill(skill)
+                        .build();
+                studySkillRepository.save(studySkill);
+            }
         }
-
         // StudyRoom의 AttendanceDay 정보를 String Set으로 변환
         Set<String> attendanceDays = Optional.ofNullable(studyRoom.getAttendanceDay())
                 .orElseGet(Collections::emptySet)
@@ -191,6 +198,8 @@ public class StudyService {
     }
 
 
+
+    // 민희 수정
     @Transactional
     public StudyResDto.StudyCreateRespDto createRoom(StudyReqDto.StudyCreateReqDto studyCreateReqDto) {
 
@@ -288,7 +297,7 @@ public class StudyService {
     // 반환 타입이 Long인지 확인하는 메소드
     public boolean checkReturnType(Object returnValue) {
         return returnValue instanceof Long;
-    }//checkReturnType()
+    }
 
     //study 가입 신청
     @Transactional
@@ -482,6 +491,7 @@ public class StudyService {
             return studyMember;
         }
     }
+
     // 메인 제목 검색
     public List<StudyResDto.StudyListRespDto> findStudyRoomByKeyword(String keyword) {
         List<StudyRoom> studyRooms = studyRoomRepository.findStudyRoomByKeyword(keyword);

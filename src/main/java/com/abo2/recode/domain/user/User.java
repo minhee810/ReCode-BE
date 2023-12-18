@@ -31,7 +31,7 @@ public class User {
     @Column(unique = true, nullable = false, length = 20)
     private String username;
 
-    @Column(nullable = false, length = 20)
+    @Column(unique = true, nullable = false, length = 20)
     private String nickname;
 
     @Column(nullable = false, length = 60)
@@ -61,6 +61,7 @@ public class User {
 
     @Column(name = "email_token_expiry", nullable = true)
     private LocalDateTime emailTokenExpiry;
+
 
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {

@@ -169,6 +169,5 @@ public class StudyReqDto {
             this.status = status;
         }
 
-        public StudyMembershipReqDto() {}
     }
 }

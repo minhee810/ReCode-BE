@@ -1,5 +1,6 @@
 package com.abo2.recode.dto.skill;
 
+import com.abo2.recode.domain.skill.StudySkill;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,5 +48,14 @@ public class SkillReqDto {
         public PositionDto(String selectedPosition) {
             this.selectedPosition = selectedPosition;
         }
+    }
+    @Getter
+    @Setter
+    public static class StudySkillsReqDto {
+
+        private List<StudySkill> addedSkills;
+
+        private List<String> removedSkills;
+
     }
 }

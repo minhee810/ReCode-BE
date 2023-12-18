@@ -39,11 +39,10 @@ public class Qna {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "qna", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<QnaReply> qnaReplies = new ArrayList<>();
 
     @Builder

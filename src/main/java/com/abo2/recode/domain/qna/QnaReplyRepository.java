@@ -7,4 +7,5 @@ import java.util.List;
 public interface QnaReplyRepository extends JpaRepository<QnaReply, Long> {
     List<QnaReply> findByQnaId(Long id);
 
+    boolean existsByUserId(Long userId);
 }

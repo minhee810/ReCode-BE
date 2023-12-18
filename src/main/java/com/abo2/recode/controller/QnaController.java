@@ -48,17 +48,16 @@ public class QnaController {
 
         try {
             qnaReqDTO.setUserId(loginUser.getUser().getId());
-            qnaService.postQna(qnaReqDTO);
 
             //슬랙봇 호출
             String triggerUrl = "https://c1r67w97gd.execute-api.ap-northeast-2.amazonaws.com/default/post-qna";
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.postForEntity(triggerUrl, null, String.class);
 
-            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 생성 성공", qnaReqDTO), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(1, "Qna 생성 성공",  qnaService.postQna(qnaReqDTO)), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(new ResponseDto<>(-1, " Qna 생성 실패", qnaReqDTO), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto<>(-1, " Qna 생성 실패", qnaService.postQna(qnaReqDTO)), HttpStatus.BAD_REQUEST);
         }
     }
 
