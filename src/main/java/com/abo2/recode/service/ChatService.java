@@ -56,6 +56,11 @@ public class ChatService {
         return usernameList;
     }
 
+    public String getCreatedBychatRoomId(Long chatRoomId) {
+        Long createdBy = chatRoomUserLinkRepository.findCreatedBychatRoomId(chatRoomId);
+            return userRepository.getNicknameByuserId(createdBy);
+    }
+
     public ChatReqDto.ChatCreateReqDto createChatRoom(ChatReqDto.ChatCreateReqDto chatCreateReqDto) {
         // 1.chatroom Entity
         ChatRoom chatRoom = new ChatRoom(chatCreateReqDto.getChatRoomTitle());
@@ -171,4 +176,6 @@ public class ChatService {
         // chatuserlink 삭제
         chatRoomUserLinkRepository.deleteBychatRoomIdAnduserId(userId,chatRoomId);
     }
+
+
 }//ChatService

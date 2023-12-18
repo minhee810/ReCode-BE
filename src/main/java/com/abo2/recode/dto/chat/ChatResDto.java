@@ -30,12 +30,16 @@ public class ChatResDto {
         @NotEmpty
         private String lastMessage;
 
+        @NotEmpty
+        private String createdBy;
+
         @Builder
-        public ChatListDto(Long chatRoomId, List<String> usernameList, String title, String lastMessage) {
+        public ChatListDto(Long chatRoomId, List<String> usernameList, String title, String lastMessage,String createdBy) {
             this.chatRoomId = chatRoomId;
             this.usernameList = usernameList;
             this.title = title;
             this.lastMessage = lastMessage;
+            this.createdBy = createdBy;
         }
     } //ChatListDto
 

@@ -60,7 +60,12 @@ public class PostRespDto {
             this.content = post.getContent();
             this.category = getCategory(post.getCategory());
             this.createdAt = post.getCreatedAt();
-            this.nickname = post.getUser().getNickname();
+
+            if (post.getUser() != null) {
+                this.nickname = post.getUser().getNickname();
+            } else {
+                this.nickname = "탈퇴한 회원입니다.";
+            }
         }
 
         private String getCategory(Integer category) {
@@ -96,7 +101,11 @@ public class PostRespDto {
             this.content = post.getContent();
             this.category = post.getCategory();
             this.createdAt = post.getCreatedAt();
-            this.nickName = post.getUser().getNickname();
+            if (post.getUser() != null) {
+                this.nickName = post.getUser().getNickname();
+            } else {
+                this.nickName = "탈퇴한 회원입니다.";
+            }
         }
     }
 
