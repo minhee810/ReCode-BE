@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.attendanceDay;
+package com.abo2.recode.domain.attendance;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

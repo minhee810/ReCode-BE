@@ -1,7 +1,7 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.attendanceDay.AttendanceDay;
-import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.attendance.AttendanceDay;
+import com.abo2.recode.domain.attendance.AttendanceDayRepository;
 import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.skill.Skill;
