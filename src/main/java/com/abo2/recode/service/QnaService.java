@@ -86,9 +86,9 @@ public class QnaService {
                 .build();
     }
 
-    //Qna 생성
+    //    Qna 생성
     @Transactional
-    public void postQna(QnaReqDTO qnaReqDTO) {
+    public QnaResDTO postQna(QnaReqDTO qnaReqDTO) {
 
         User user = userRepository.findById(qnaReqDTO.getUserId()).orElseThrow();
 
@@ -96,16 +96,21 @@ public class QnaService {
                 .user(user)
                 .title(qnaReqDTO.getTitle())
                 .content(qnaReqDTO.getContent())
-                .createdAt(qnaReqDTO.getCreatedAt())
                 .build();
 
-        qnaRepository.save(qna);
+        Qna qnaId = qnaRepository.save(qna);
+
+        QnaResDTO qnaResDTO = new QnaResDTO(qnaId.getId());
+
+        return qnaResDTO;
+
     }
+
 
     //Qna 수정
     @Transactional
     public void qnaModify(Long qnaId, QnaReqDTO qnaReqDTO) {
-Qna qna = qnaRepository.findById(qnaId).orElseThrow();
+        Qna qna = qnaRepository.findById(qnaId).orElseThrow();
         Qna data = Qna.builder()
                 .id(qna.getId())
                 .title(qnaReqDTO.getTitle())

@@ -1,4 +1,4 @@
-package com.abo2.recode.domain.attendanceDay;
+package com.abo2.recode.domain.attendance;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import lombok.Builder;

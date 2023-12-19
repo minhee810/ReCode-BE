@@ -1,7 +1,7 @@
 package com.abo2.recode.service;
 
-import com.abo2.recode.domain.attendanceDay.AttendanceDay;
-import com.abo2.recode.domain.attendanceDay.AttendanceDayRepository;
+import com.abo2.recode.domain.attendance.AttendanceDay;
+import com.abo2.recode.domain.attendance.AttendanceDayRepository;
 import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.skill.Skill;
@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
@@ -514,6 +516,13 @@ public class StudyService {
         boolean isEndDateToday = LocalDate.now().isEqual(studyRoom.getEndDate());
 
         return new StudyResDto.CheckStudyDateRespDto(studyRoom, isEndDateToday);
+    }
+
+
+    // 스터디 멤버 아이디 조회 메서드
+    public Long findStudyMemberId(Long studyId, Long userId) {
+        Long studyMemberId = studyMemberRepository.findByStudyRoomAndUser(studyId, userId);
+        return studyMemberId;
     }
 
 }
