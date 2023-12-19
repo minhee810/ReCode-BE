@@ -187,17 +187,25 @@ public class StudyroomController {
         List<StudyResDto.StudyMemberListRespDto> studyMemberListRespDtoList = new ArrayList<>();
 
         for (StudyMember studyMember : studyMembers) {
+            Long userId = null;
+            String nickname = "탈퇴한 회원입니다";
+
+            if (studyMember.getUser() != null) {
+                userId = studyMember.getUser().getId();
+                nickname = studyMember.getUser().getNickname();
+            }
+
             StudyResDto.StudyMemberListRespDto studyMemberListRespDto
                     = StudyResDto.StudyMemberListRespDto.builder()
                     .id(studyMember.getId())
                     .studyId(studyMember.getStudyRoom().getId())
                     .user(studyMember.getUser())
                     .status(studyMember.getStatus())
-                    .userId(studyMember.getUser().getId())
+                    .userId(userId)
+                    .nickname(nickname)
                     .build();
 
             studyMemberListRespDtoList.add(studyMemberListRespDto);
-
         }
         return studyMemberListRespDtoList;
     }

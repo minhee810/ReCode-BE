@@ -10,6 +10,8 @@ import com.abo2.recode.dto.quiz.QuizReqDto;
 import com.abo2.recode.dto.quiz.QuizRespDto;
 import com.abo2.recode.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
     private final StudyRoomRepository studyRoomRepository;
+
+    Logger log = LoggerFactory.getLogger(QuizService.class);
 
     @Transactional
     public QuizRespDto.QuizWriteRespDto writeQuiz(Long studyId, QuizReqDto.QuizWriteReqDto quizWriteReqDto) {
@@ -110,8 +114,10 @@ public class QuizService {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomApiException("해당 유저가 존재하지 않습니다."));
         StudyRoom studyRoom = studyRoomRepository.findById(studyId).orElseThrow(() -> new CustomApiException("해당 스터디 룸이 존재하지 않습니다."));
 
+        log.info("요청- userId: {}, studyId: {}, quizId: {}", userId, studyId, quizId);
+
         // 퀴즈 조회
-        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new CustomApiException("해당 퀴즈를 찾을 수 없습니다."));
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new CustomApiException("해당 퀴즈 아이디" + quizId + "를 찾을 수 없습니다."));
 
         return new QuizRespDto.QuizDetailRespDto(quiz);
     }
