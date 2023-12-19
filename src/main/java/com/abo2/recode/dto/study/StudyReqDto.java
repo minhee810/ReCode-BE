@@ -90,6 +90,7 @@ public class StudyReqDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     public static class StudyModifyReqDto{
 
         @NotEmpty
@@ -97,11 +98,6 @@ public class StudyReqDto {
 
         @NotEmpty
         private Long studyId;
-
-        // Study_Room
-        @NotEmpty
-        @Size(min = 1, max = 50)
-        private String studyName;
 
         @NotEmpty
         @Size(min = 1, max = 50)

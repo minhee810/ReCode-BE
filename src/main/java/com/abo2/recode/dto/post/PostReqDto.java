@@ -70,6 +70,8 @@ public class PostReqDto {
         @NotEmpty
         private Integer category;
 
+        private String fileName;
+
 
     }
 

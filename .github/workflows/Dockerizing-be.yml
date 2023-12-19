@@ -37,7 +37,7 @@ jobs:
       - name: Upload to S3
         run: |
           touch docker-stop.sh
-          echo "docker stop \$(docker ps -a -q)" >> docker-stop.sh
+          echo '[ -z "$(docker ps -q)" ] || docker stop "$(docker ps -q)"' >> docker-stop.sh
           touch deploy-be.sh
           echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com" >> deploy-be.sh
           echo "docker pull 699926146296.dkr.ecr.ap-northeast-2.amazonaws.com:"${{ env.DATE_TIME }} >> deploy-be.sh

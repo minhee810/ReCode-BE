@@ -121,6 +121,7 @@ public class PostRespDto {
         private String title;
         private String content;
         private Integer category;
+        public String fileName;
 
         @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
         private LocalDateTime updatedAt;
@@ -131,6 +132,7 @@ public class PostRespDto {
             this.content = post.getContent();
             this.category = post.getCategory();
             this.updatedAt = post.getUpdatedAt();
+            this.fileName = post.getFileName();
         }
 
     }
