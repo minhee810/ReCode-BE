@@ -74,6 +74,7 @@ public class StudyMemberController {
                     .build();
 
             emailService.sendApprovedEmail(studyId, userId, user);
+
             Long studyMemberId = getStudyMemberId(studyId, userId);
 
             // AWS Lambda 알림 함수 호출

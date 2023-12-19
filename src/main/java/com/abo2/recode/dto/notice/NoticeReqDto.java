@@ -48,10 +48,6 @@ public class NoticeReqDto {
                     .build();
         }
 
-
-
-
-
     }
 
     @Getter
