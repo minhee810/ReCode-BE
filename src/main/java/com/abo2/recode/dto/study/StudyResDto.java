@@ -206,12 +206,15 @@ public class StudyResDto {
 
         private Integer status;
 
+        private Long userId;
+
         @Builder
-        public StudyMemberListRespDto(Long id, Long studyId, User user, String nickname, Integer status) {
+        public StudyMemberListRespDto(Long id, Long studyId, User user, String nickname, Integer status, Long userId) {
             Id = id;
             this.studyId = studyId;
             this.nickname = (user != null) ? user.getNickname() : "탈퇴한 회원입니다";
             this.status = status;
+            this.userId = user.getId();
         }
     }//StudyMemberListRespDto
 

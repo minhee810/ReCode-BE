@@ -24,6 +24,7 @@ public class PostReqDto {
         private Long userId;
         private Integer category;
         private User nickname;
+        private String fileName;
 
     }
 
@@ -69,6 +70,8 @@ public class PostReqDto {
 
         @NotEmpty
         private Integer category;
+
+        private String fileName;
 
 
     }

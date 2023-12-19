@@ -1,5 +1,6 @@
-package com.abo2.recode.domain.studyroom;
+package com.abo2.recode.domain.attendance;
 
+import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,6 @@ public class Attendance {
 
 
     @Column(nullable = false)
-    private Integer status; //0 : 결석 1: 출석
+    private Integer status; // 1: 출석 2: 지각
 
 }

@@ -1,7 +1,8 @@
 package com.abo2.recode.domain.studyroom;
 
 
-import com.abo2.recode.domain.attendanceDay.AttendanceDay;
+import com.abo2.recode.domain.attendance.Attendance;
+import com.abo2.recode.domain.attendance.AttendanceDay;
 import com.abo2.recode.domain.post.Post;
 import com.abo2.recode.domain.quiz.Quiz;
 import com.abo2.recode.domain.skill.StudySkill;
@@ -11,7 +12,6 @@ import com.abo2.recode.dto.study.StudyReqDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

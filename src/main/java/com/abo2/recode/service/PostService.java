@@ -63,6 +63,7 @@ public class PostService {
         post.setCategory(postWriteReqDto.getCategory());
         post.setStudyRoom(studyRoom);
         post.setUser(user);
+        post.setFileName(postWriteReqDto.getFileName());
 
         Post savedPost = postRepository.save(post);
         String nickname = user.getNickname();
@@ -97,6 +98,7 @@ public class PostService {
         post.setTitle(postUpdateReqDto.getTitle());
         post.setContent(postUpdateReqDto.getContent());
         post.setCategory(postUpdateReqDto.getCategory());
+        post.setFileName(postUpdateReqDto.getFileName());
 
         Post updatedPost = postRepository.save(post);
 
@@ -148,6 +150,14 @@ public class PostService {
         return posts.stream()
                 .map(((PostRespDto.PostListRespDto::new)))
                 .collect(Collectors.toList());
+    }
+
+    public void removeFileNameFromPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다. :" + postId));
+
+        post.setFileName(null);
+        postRepository.save(post);
     }
 
 
