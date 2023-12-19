@@ -2,6 +2,7 @@ package com.abo2.recode.domain.attendance;
 
 import com.abo2.recode.domain.studyroom.StudyRoom;
 import com.abo2.recode.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,7 +35,7 @@ public class Attendance {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime attendanceDate; //출석일 : localDatetime 과 비교 해야함.
-
+    
 
     @Column(nullable = false)
     private Integer status; // 1: 출석 2: 지각

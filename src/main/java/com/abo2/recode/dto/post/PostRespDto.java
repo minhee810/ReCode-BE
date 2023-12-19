@@ -111,6 +111,19 @@ public class PostRespDto {
                 this.nickName = "탈퇴한 회원입니다.";
             }
         }
+
+        private String getCategory(Integer category) {
+            switch (category) {
+                case 0:
+                    return "공지사항";
+                case 1:
+                    return "회고록";
+                case 2:
+                    return "자료 공유";
+                default:
+                    return "선택하세요";
+            }
+        }
     }
 
 

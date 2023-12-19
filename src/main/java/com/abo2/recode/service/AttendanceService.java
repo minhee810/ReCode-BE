@@ -38,7 +38,6 @@ public class AttendanceService {
 
     public AttendanceResDto.markAttendanceResDto markAttendance(String status, Long userId, Long studyId, AttendanceReqDto.markAttendanceReqDto markAttendanceReqDto) {
 
-
         StudyMember studyMember = studyMemberRepository.findByUserAndStudyRoom(userId, studyId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 Id 가 없습니다." + userId + studyId));
 
@@ -108,6 +107,7 @@ public class AttendanceService {
             }
 
             Attendance savedAttendance = attendanceRepository.save(attendance);
+
             return new AttendanceResDto.markAttendanceResDto(savedAttendance);
 
         } else {
