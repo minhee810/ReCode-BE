@@ -31,11 +31,8 @@ public class NotificationController {
     @PostMapping("/mark-as-read")
     public ResponseEntity<?> markAsRead(@AuthenticationPrincipal @Valid LoginUser loginUser,
                                         @RequestBody NotificationReqDto.MarkAsReadReqDto markAsReadReqDto) {
-        System.out.println("markAsReadReqDto = " + markAsReadReqDto);
-        NotificationRespDto.MarkAsReadRespDto readStatusDto = notificationService.markAsRead(markAsReadReqDto);
-        System.out.println("Controller : markAsReadReqDto.isReadStatus() = " + markAsReadReqDto.isReadStatus());
-        System.out.println("Controller : markAsReadReqDto.getId()  = " + markAsReadReqDto.getId());
 
+        NotificationRespDto.MarkAsReadRespDto readStatusDto = notificationService.markAsRead(markAsReadReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "알림 읽음 처리 완료", readStatusDto), HttpStatus.OK);
     }
 
