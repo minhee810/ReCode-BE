@@ -1,4 +1,9 @@
 FROM gradle:7.4-jdk11-alpine as builder
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Seoul
+RUN apt-get install -y tzdata
+
 WORKDIR /build
 COPY . /build
 RUN gradle build
