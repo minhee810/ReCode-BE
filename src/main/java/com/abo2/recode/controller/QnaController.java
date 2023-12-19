@@ -67,6 +67,7 @@ public class QnaController {
 
 
         Qna qnaInfo = qnaRepository.findById(id).orElseThrow();
+        qnaReqDTO.setUserId(loginUser.getUser().getId());
 
         if (!qnaInfo.getUser().getId().equals(loginUser.getUser().getId())) {
             return new ResponseEntity<>(new ResponseDto<>(-1, " 권한 없음", null), HttpStatus.FORBIDDEN);
