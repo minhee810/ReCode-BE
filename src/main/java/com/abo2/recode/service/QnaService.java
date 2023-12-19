@@ -56,8 +56,6 @@ public class QnaService {
         Qna qna = qnaRepository.findById(qnaId).orElseThrow();
         List<QnaReply> qnaReplies = qnaReplyRepository.findByQnaId(qnaId);
 
-        User user = qna.getUser();
-
 
         List<QnaReplyDTO> qnaReplyDTOList = new ArrayList<>();
         qnaReplies.forEach(q -> {
@@ -113,6 +111,7 @@ public class QnaService {
         Qna qna = qnaRepository.findById(qnaId).orElseThrow();
         Qna data = Qna.builder()
                 .id(qna.getId())
+                .user(qna.getUser())
                 .title(qnaReqDTO.getTitle())
                 .content(qnaReqDTO.getContent())
                 .updatedAt(qnaReqDTO.getUpdatedAt())
