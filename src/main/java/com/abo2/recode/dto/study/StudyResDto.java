@@ -214,7 +214,7 @@ public class StudyResDto {
             this.studyId = studyId;
             this.nickname = (user != null) ? user.getNickname() : "탈퇴한 회원입니다";
             this.status = status;
-            this.userId = user.getId();
+            this.userId = (user != null) ? user.getId() : null;
         }
     }//StudyMemberListRespDto
 
