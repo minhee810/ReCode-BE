@@ -51,8 +51,13 @@ public class StorageService {
 
 
     public String deleteFile(String fileName) {
-        s3Client.deleteObject(bucketName, fileName);
-        return fileName + " removed ...";
+        try {
+            s3Client.deleteObject(bucketName, fileName);
+            return fileName + " removed ...";
+        } catch (AmazonS3Exception e) {
+            log.error("Error deleting file from S3: {}", e.getMessage());
+            throw e;
+        }
     }
 
     public FileInfo getFileDetails(String fileName) {

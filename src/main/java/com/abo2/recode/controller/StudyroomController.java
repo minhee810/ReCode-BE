@@ -9,7 +9,9 @@ import com.abo2.recode.dto.skill.SkillReqDto;
 import com.abo2.recode.dto.study.StudyReqDto;
 import com.abo2.recode.dto.study.StudyResDto;
 import com.abo2.recode.handler.ex.CustomApiException;
+import com.abo2.recode.service.NotificationService;
 import com.abo2.recode.service.StudyService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,34 +27,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/api")
 public class StudyroomController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudyroomController.class);
 
-    StudyService studyService;
+    private final StudyService studyService;
 
-    private UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    @Autowired
-    public StudyroomController(StudyService studyService, UserRepository userRepository) {
-        this.studyService = studyService;
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
-//
-//    // 스킬을 수정 혹은 삭제 하는 메서드 즉, 스킬 업데이트 메서드
-//    @PutMapping("/v1/study/{studyId}/modify-skills")
-//    public ResponseEntity<?> modifyStudySkills(@PathVariable Long studyId, @RequestBody SkillReqDto.StudySkillsReqDto studySkillsReqDto) {
-//        try {
-//            studyService.modifyStudySkills(studyId, studySkillsReqDto);
-//            System.out.println("studyId = " + studyId);
-//            System.out.println("studySkillsReqDto = " + studySkillsReqDto);
-//            return new ResponseEntity<>(new ResponseDto<>(1, "skill 수정 성공", null ), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(new ResponseDto<>(-1, "skill 수정 실패", null ), HttpStatus.CONFLICT);
-//        }
-//    }
 
     @CrossOrigin
     @Transactional
@@ -96,16 +82,27 @@ public class StudyroomController {
 
     //study 가입 신청
     @PostMapping(value = "/v1/study/{studyId}/apply")
-    public ResponseEntity<ResponseDto> studyApply(
-            @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Long studyId
-    ) {
+
+    public ResponseEntity<ResponseDto> studyApply(@AuthenticationPrincipal LoginUser loginUser, @PathVariable Long studyId) {
 
         //1. study_member에 status = 0으로 insert한다
         StudyReqDto.StudyApplyReqDto studyApplyReqDto =
                 new StudyReqDto.StudyApplyReqDto(studyId, loginUser.getUser().getId());
 
         StudyResDto.StudyRoomApplyResDto studyRoomApplyResDto = studyService.studyApply(studyApplyReqDto);
+        
+        // 스터디 신청 알림 (스터디 생성자에게 메시지 전달)
+        // AWS Lambda 알림 함수 호출
+        // 1. 요청 url -> "스터디 승인 신청이 들어왔습니다. @@ 스터디 룸에서 신청 목록을 확인해주세요! " 발행
+        // 2. 메시지 받아와서 sendNotification() 호출 (스터디 룸 이름, 스터디 생성자 아이디, url)
+        String lambdaFunctionUrl = "https://8n4eynhw2h.execute-api.ap-northeast-1.amazonaws.com/prod/notifications/apply";
+        Long masterId = studyService.findcreatedByBystudyId(studyId);
+        System.out.println("masterId = " + masterId);
+        System.out.println("lambdaFunctionUrl = " + lambdaFunctionUrl);
+        Long studyMemberId = studyService.findStudyMemberId(studyId, loginUser.getUser().getId());
+        System.out.println("studyMemberId = " + studyMemberId);
+
+        notificationService.sendToMasterMessage(studyMemberId, masterId, lambdaFunctionUrl);
 
         //2. 성공 return
         return new ResponseEntity<>(new ResponseDto<>(1, "스터디 신청에 성공하였습니다.", studyRoomApplyResDto), HttpStatus.OK);
@@ -198,6 +195,7 @@ public class StudyroomController {
                     .studyId(studyMember.getStudyRoom().getId())
                     .user(studyMember.getUser())
                     .status(studyMember.getStatus())
+                    .userId(studyMember.getUser().getId())
                     .build();
 
             studyMemberListRespDtoList.add(studyMemberListRespDto);

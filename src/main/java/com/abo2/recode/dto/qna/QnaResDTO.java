@@ -2,7 +2,6 @@ package com.abo2.recode.dto.qna;
 
 
 import com.abo2.recode.domain.user.User;
-import com.abo2.recode.domain.user.UserEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;

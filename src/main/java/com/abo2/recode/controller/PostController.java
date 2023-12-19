@@ -5,6 +5,7 @@ import com.abo2.recode.dto.ResponseDto;
 import com.abo2.recode.dto.post.PostReqDto;
 import com.abo2.recode.dto.post.PostRespDto;
 import com.abo2.recode.service.PostService;
+import com.abo2.recode.service.StorageService;
 import com.abo2.recode.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class PostController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final PostService postService;
     private final StudyService studyService;
+    private final StorageService storageService;
 
     // 게시글 목록 조회
     @GetMapping(value = "/v1/study/{studyId}/list")
@@ -100,5 +102,15 @@ public class PostController {
                 "게시글 목록 불러오기 성공", studyMemberListDtos), HttpStatus.OK);
     }
 
+    @DeleteMapping("/v1/study/{studyId}/post/{postId}/{fileName}")
+    public ResponseEntity<?> deleteFileAndUpdatePost(@PathVariable Long studyId, @PathVariable Long postId, @PathVariable String fileName) {
+        try {
+            postService.removeFileNameFromPost(postId);
+            return ResponseEntity.ok("파일 삭제 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error occurred: " + e.getMessage());
+        }
+    }
 
 }
