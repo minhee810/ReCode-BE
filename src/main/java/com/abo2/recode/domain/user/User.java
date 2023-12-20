@@ -1,6 +1,8 @@
 package com.abo2.recode.domain.user;
 
 import com.abo2.recode.domain.estimate.StudyMemberEstimate;
+import com.abo2.recode.domain.notification.Notifications;
+import com.abo2.recode.domain.studymember.StudyMember;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,8 +66,14 @@ public class User {
     @Column(name = "email_token_expiry", nullable = true)
     private LocalDateTime emailTokenExpiry;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<StudyMemberEstimate> studyMemberEstimates;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Notifications> notifications;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<StudyMember> studyMembers;
 
     @Builder
     public User(Long id, String username, String nickname, String password, String essay, String email, UserEnum role, LocalDateTime createdAt, LocalDateTime updatedAt) {
