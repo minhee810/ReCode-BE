@@ -6,6 +6,7 @@ import com.abo2.recode.domain.badge.BadgeRepository;
 import com.abo2.recode.domain.badge.UserBadge;
 import com.abo2.recode.domain.badge.UserBadgeRepository;
 import com.abo2.recode.domain.chatroom.ChatRoomUserLinkRepository;
+import com.abo2.recode.domain.estimate.StudyMemberEstimateRepository;
 import com.abo2.recode.domain.notification.NotificationRepository;
 import com.abo2.recode.domain.post.PostReplyRepository;
 import com.abo2.recode.domain.post.PostRepository;
@@ -56,6 +57,7 @@ public class UserService {
     private final PostReplyRepository postReplyRepository;
     private final ChatRoomUserLinkRepository chatRoomUserLinkRepository;
     private final QnaReplyRepository qnaReplyRepository;
+    private final StudyMemberEstimateRepository studyMemberEstimateRepository;
 
     @Transactional
     public UserRespDto.JoinRespDto 회원가입(UserReqDto.JoinReqDto joinReqDto) {
