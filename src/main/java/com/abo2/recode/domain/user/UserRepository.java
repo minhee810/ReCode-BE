@@ -88,4 +88,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "DELETE FROM Qna_Reply FROM user_id =:userId", nativeQuery = true)
     void deleteUsersQnaReply(@Param("userId") Long userId);
+
 }
