@@ -88,4 +88,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "DELETE FROM Qna_Reply qr FROM qr.user_id =:userId", nativeQuery = true)
     void deleteUsersQnaReply(@Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM Study_Member_Estimate sme FROM sme.target_id =:userId", nativeQuery = true)
+    void deleteUsersStudyMemberEstimate(@Param("userId") Long userId);
 }
