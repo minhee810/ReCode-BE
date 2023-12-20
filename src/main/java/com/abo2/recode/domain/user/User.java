@@ -64,7 +64,7 @@ public class User {
     @Column(name = "email_token_expiry", nullable = true)
     private LocalDateTime emailTokenExpiry;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<StudyMemberEstimate> studyMemberEstimates;
 
     @Builder
