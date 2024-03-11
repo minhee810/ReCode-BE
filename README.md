@@ -14,7 +14,7 @@
 [![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=React&logoColor=white)](https://reactjs.org/)
 [![Visual Studio Code](https://img.shields.io/badge/-Visual_Studio_Code-007ACC?style=flat-square&logo=Visual%20Studio%20Code&logoColor=white)](https://code.visualstudio.com/)
 
-- API 명세 : 
+- API 명세서 및 문서 정리 툴 : 
 [![Notion](https://img.shields.io/badge/-Notion-000000?style=flat-square&logo=Notion&logoColor=white)](https://www.notion.so/)
 [![Swagger Hub](https://img.shields.io/badge/-Swagger_Hub-85EA2D?style=flat-square&logo=Swagger&logoColor=black)](https://swagger.io/tools/swaggerhub/)
 
