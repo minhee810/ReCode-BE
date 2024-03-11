@@ -74,12 +74,14 @@
 #### 🌱 Backend 
 - API 명세서, 기능 명세서 작성 
 - 사용자 ID 중복 체크 
-- 공지사항 CRUD 기능
+- 공지사항 CRUD 기능 [[👀 NoticeService]](https://github.com/minhee810/ReCode-BE/blob/main/src/main/java/com/abo2/recode/service/NoticeService.java)
 - 공지사항 목록 검색 기능
 - 사용자 권한별 페이지 접근 제한 및 관리 (Spring Security) 
-- 스터디룸 생성(그룹 생성) 및 수정 코드 리팩토링
+- 스터디룸 생성(그룹 생성) 및 수정 코드 리팩토링 
 - AWS SNS + Lambda(node.js) + API Gateway 활용한 알림 기능
-- 알림 발행, 조회, 삭제, 읽음 처리 기능 
+  - [[👀 블로그_기록_1]](https://nuvgw2810.tistory.com/283)
+  - [[👀 블로그_기록_2]](https://nuvgw2810.tistory.com/284)
+- 알림 발행, 조회, 삭제, 읽음 처리 기능 [[👀 NotificationService]](https://github.com/minhee810/ReCode-BE/blob/main/src/main/java/com/abo2/recode/service/NotificationService.java)
 
 #### 🌱 Frontend 
 - 공지사항 CRUD 페이지 
