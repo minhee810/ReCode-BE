@@ -83,12 +83,14 @@
 
 #### 🌱 Frontend 
 - 공지사항 CRUD 페이지 
-- 메인페이지 기술 스택별 스터디 목록 필터링 기능 (비동기 처리)
+- 메인페이지 기술 스택별 스터디 목록 필터링 기능 (비동기 처리) <br>
+  ![mainpage2](https://github.com/HeoJungBaekKang/ReCode-BE/assets/100061907/7e7c42fc-c624-4920-8790-f698b7350ca3)
+
 - 작성 및 수정 시 CKEditor 적용 
 - 스터디룸 생성(그룹 생성) 및 수정 페이지
 - FE github Pull Request 승인 관리
-- 알림 조회, 삭제, 읽음 처리 기능 페이지, 헤더 알림 개수 뱃지 생성 기능 
-
+- 알림 조회, 삭제, 읽음 처리 기능 페이지, 헤더 알림 개수 뱃지 생성 기능  <br>
+  ![알림기능](https://github.com/HeoJungBaekKang/ReCode-BE/assets/100061907/e076f0ba-ff05-44d5-abdb-b67c4d8500d3)
 #### 🌱 ETC 
 - 문서 정리(회의록, 공유문서, WBS), 일정 관리 담당 
    
