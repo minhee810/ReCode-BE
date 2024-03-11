@@ -21,29 +21,29 @@ Recode 서비스는 온라인 스터디 매칭 웹 서비스로 Recode = Let’s
 
 ## 🌐 개발 환경 
 - **OS**
-    - ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white), ![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)
+    - ![Windows](https://img.shields.io/badge/Windows-0078D6?style=plastic&logo=windows&logoColor=white), ![macOS](https://img.shields.io/badge/macOS-000000?style=plastic&logo=apple&logoColor=white)
     - Ubuntu 22.04 : AWS EC2 인스턴스 OS
     - iOS, Android : 알람 기능
 - **Server**
-    - ![Tomcat](https://img.shields.io/badge/Tomcat-F8DC75?style=for-the-badge&logo=apache-tomcat&logoColor=black) : Spring Boot 기반 Backend API 서버
-    - ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white) : React 기반 Frontend API 서버
-    - ![Netty](https://img.shields.io/badge/Netty-415D46?style=for-the-badge&logo=Netty&logoColor=white) : Spring Boot Reactive Web 기반 채팅 API 서버
-- **Framework** : ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white), ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+    - ![Tomcat](https://img.shields.io/badge/Tomcat-F8DC75?style=plastic&logo=apache-tomcat&logoColor=black) : Spring Boot 기반 Backend API 서버
+    - ![Nginx](https://img.shields.io/badge/Nginx-009639?style=plastic&logo=nginx&logoColor=white) : React 기반 Frontend API 서버
+    - ![Netty](https://img.shields.io/badge/Netty-415D46?style=plastic&logo=Netty&logoColor=white) : Spring Boot Reactive Web 기반 채팅 API 서버
+- **Framework** : ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=plastic&logo=spring-boot&logoColor=white), ![React](https://img.shields.io/badge/React-61DAFB?style=plastic&logo=react&logoColor=white)
 - **IDE**
-    - ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=for-the-badge&logo=intellij-idea&logoColor=white) : Backend 개발
-    - ![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white) : Frontend 개발
-    - ![HeidiSQL](https://img.shields.io/badge/HeidiSQL-9C27B0?style=for-the-badge&logo=HeidiSQL&logoColor=white) : 최종 배포판 DB 관리
-    - ![h2 Database](https://img.shields.io/badge/h2_Database-00457C?style=for-the-badge&logo=h2&logoColor=white) : [Localhost](http://Localhost) 환경에서 DB 테스트
-    - ![MongoDB Compass](https://img.shields.io/badge/MongoDB_Compass-47A248?style=for-the-badge&logo=mongodb&logoColor=white) : 채팅 데이터 확인
+    - ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=plastic&logo=intellij-idea&logoColor=white) : Backend 개발
+    - ![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=plastic&logo=visual-studio-code&logoColor=white) : Frontend 개발
+    - ![HeidiSQL](https://img.shields.io/badge/HeidiSQL-9C27B0?style=plastic&logo=HeidiSQL&logoColor=white) : 최종 배포판 DB 관리
+    - ![h2 Database](https://img.shields.io/badge/h2_Database-00457C?style=plastic&logo=h2&logoColor=white) : [Localhost](http://Localhost) 환경에서 DB 테스트
+    - ![MongoDB Compass](https://img.shields.io/badge/MongoDB_Compass-47A248?style=plastic&logo=mongodb&logoColor=white) : 채팅 데이터 확인
 - **DB Tool**
-    - ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white) : 프로젝트 전체 DB
-    - ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) : 채팅 메세지 저장을 위한 DB
+    - ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=plastic&logo=mariadb&logoColor=white) : 프로젝트 전체 DB
+    - ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=plastic&logo=mongodb&logoColor=white) : 채팅 메세지 저장을 위한 DB
 - **개발 언어**
-    - ![JavaSE 11](https://img.shields.io/badge/Java_SE_11-007396?style=for-the-badge&logo=java&logoColor=white) : Backend 개발 언어
-    - ![JavaSE 21](https://img.shields.io/badge/Java_SE_21-007396?style=for-the-badge&logo=java&logoColor=white) : 채팅 기능 개발 언어
+    - ![JavaSE 11](https://img.shields.io/badge/Java_SE_11-007396?style=plastic&logo=java&logoColor=white) : Backend 개발 언어
+    - ![JavaSE 21](https://img.shields.io/badge/Java_SE_21-007396?style=plastic&logo=java&logoColor=white) : 채팅 기능 개발 언어
 - **부수적인 언어**
-    - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) : React 개발 언어
-    - ![Python3](https://img.shields.io/badge/Python_3-3776AB?style=for-the-badge&logo=python&logoColor=white) : AWS Lambda 개발 언어
+    - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=plastic&logo=javascript&logoColor=black) : React 개발 언어
+    - ![Python3](https://img.shields.io/badge/Python_3-3776AB?style=plastic&logo=python&logoColor=white) : AWS Lambda 개발 언어
 
 ## 📝 Notion Page 
 프로젝트 기록 Notion 보러가기 : ✏️ [Recode Notion page ](https://www.notion.so/Recode-Project-b7f5aae1842d434cb56b61cd655d7c8f)
