@@ -129,7 +129,7 @@
 
 <br>
 
-
+## 프로젝트 상세내용 
 
 ### 📝 Notion Page 
 프로젝트 기록 Notion 보러가기 : ✏️ [Recode Notion page ](https://www.notion.so/Recode-Project-b7f5aae1842d434cb56b61cd655d7c8f)
@@ -177,17 +177,4 @@
 </details>
 
 <br>
-
-### 주요 기능 설명
-
-    1. 메인 페이지
-
-    2. 스터디 그룹 생성
-
-    3. 채팅
-
-    4. 마이 페이지
-
-    5. 스터디 룸
-    
 
