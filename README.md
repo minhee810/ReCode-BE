@@ -68,7 +68,7 @@ Recode 서비스는 온라인 스터디 매칭 웹 서비스로 Recode = Let’s
     <summary> 이미지 </summary>
     - 전체 목록 
     <img width="1106" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/c403dd67-3b56-4a74-97a6-a107b3f18943">
-    - Request / Response 응답 형식
+    - Request / Response 응답 형식 <br>
     <img width="508" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/c8f6f797-5ce7-47b9-924e-2c6fc6c3ec55">
     <img width="510" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/2da554d9-6881-4c4c-ae97-22bab4ae4dce">
  </details>
