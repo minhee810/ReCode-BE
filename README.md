@@ -1,5 +1,6 @@
 # Final 프로젝트 
 
+
 ### 🛠️ Tech Stack
 
 - OS
@@ -43,6 +44,8 @@
 
 <br> 
 
+
+
 ### 📝 프로젝트 소개
 - Recode 서비스는 온라인 스터디 매칭 웹 서비스로 Recode = Let’s coding + Record의 합성어로 같이 코딩하며 공부한 내용을 기록하자는 의미임.
 - 본인이 공부하고 싶은 공부 주제(기술 스택)에 맞는 스터디 그룹에 가입 할 수 있게 도와주는 것이 주요 목적임. 
@@ -59,6 +62,54 @@
 - 이 점을 보완하여 Recode 서비스에서는 스터디 룸 내에서 채팅, 자료공유 게시판, 출석체크 기능 등을 제공하여 사용자들이 해당 서비스를 지속적으로 이용하며 스터디를 진행할 수 있도록 서비스를 개선함. 
 
 <br> 
+
+### 📄 프로젝트 상세내용 
+
+#### 📝 Notion Page 
+프로젝트 기록 Notion 보러가기 : ✏️ [Recode Notion page ](https://www.notion.so/Recode-Project-b7f5aae1842d434cb56b61cd655d7c8f)
+
+<br>
+
+#### 📆 WBS (Work Breakdown Structure)
+[Recode WBS](https://docs.google.com/spreadsheets/d/1g9SNr9Wtk2Ag40zXaVhdDxNf1PJvWBMJU3m0X9w3-DM/edit#gid=397150525)
+
+<br>
+
+#### 📌 기능 명세서 [Notion_링크](https://www.notion.so/2b288647f6734f8ca7c67b0b95290c74?v=d3cb78329e324a92b004dfa917fe5933)
+ <details>
+  <summary> 이미지 </summary>
+  <img width="1386" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/e025ee37-a42a-4ef3-93f2-9a109f3b7096">
+</details>
+
+<br>
+
+#### 📌 API 명세서 [Notion 링크](https://www.notion.so/API-ver-2-f76b1841beb2407c80dae8cd56b953f7)
+ <details>
+    <summary> 이미지 </summary>
+    - 전체 목록 
+    <img width="1106" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/c403dd67-3b56-4a74-97a6-a107b3f18943">
+    - Request / Response 응답 형식 <br>
+    <img width="508" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/c8f6f797-5ce7-47b9-924e-2c6fc6c3ec55">
+    <img width="510" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/2da554d9-6881-4c4c-ae97-22bab4ae4dce">
+ </details>
+
+<br>
+
+#### 📌 ERD
+<details>
+    <summary> 이미지 </summary>
+    <img width="1101" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/fb74450a-71af-4c36-9d67-1d8aef20d2cb">
+</details>
+
+<br>
+
+#### 📌 시스템 아키텍쳐 
+<details> 
+    <summary> 이미지 </summary>
+    <img width="827" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/99c6e4cb-8221-45de-aafc-b5c862735522">
+</details>
+
+<br>
 
 ### 👨‍💻 멤버 구성 
 - 팀장_백승주 : 프로젝트 전체 PM, Frontend PM 
@@ -129,52 +180,5 @@
 
 <br>
 
-## 프로젝트 상세내용 
 
-### 📝 Notion Page 
-프로젝트 기록 Notion 보러가기 : ✏️ [Recode Notion page ](https://www.notion.so/Recode-Project-b7f5aae1842d434cb56b61cd655d7c8f)
-
-<br>
-
-### 📆 WBS (Work Breakdown Structure)
-[Recode WBS](https://docs.google.com/spreadsheets/d/1g9SNr9Wtk2Ag40zXaVhdDxNf1PJvWBMJU3m0X9w3-DM/edit#gid=397150525)
-
-<br>
-
-### 📄 주요 명세 자료 
-#### 📌 기능 명세서 [Notion_링크](https://www.notion.so/2b288647f6734f8ca7c67b0b95290c74?v=d3cb78329e324a92b004dfa917fe5933)
- <details>
-  <summary> 이미지 </summary>
-  <img width="1386" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/e025ee37-a42a-4ef3-93f2-9a109f3b7096">
-</details>
-
-<br>
-
-#### 📌 API 명세서 [Notion 링크](https://www.notion.so/API-ver-2-f76b1841beb2407c80dae8cd56b953f7)
- <details>
-    <summary> 이미지 </summary>
-    - 전체 목록 
-    <img width="1106" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/c403dd67-3b56-4a74-97a6-a107b3f18943">
-    - Request / Response 응답 형식 <br>
-    <img width="508" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/c8f6f797-5ce7-47b9-924e-2c6fc6c3ec55">
-    <img width="510" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/2da554d9-6881-4c4c-ae97-22bab4ae4dce">
- </details>
-
-<br>
-
-#### 📌 ERD
-<details>
-    <summary> 이미지 </summary>
-    <img width="1101" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/fb74450a-71af-4c36-9d67-1d8aef20d2cb">
-</details>
-
-<br>
-
-#### 📌 시스템 아키텍쳐 
-<details> 
-    <summary> 이미지 </summary>
-    <img width="827" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/99c6e4cb-8221-45de-aafc-b5c862735522">
-</details>
-
-<br>
 
