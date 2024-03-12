@@ -1,5 +1,7 @@
 # Final 프로젝트 
 
+### 프로젝트 구조 
+ <img width="827" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/99c6e4cb-8221-45de-aafc-b5c862735522">
 
 ### 🛠️ Tech Stack
 
@@ -99,14 +101,6 @@
 <details>
     <summary> 이미지 </summary>
     <img width="1101" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/fb74450a-71af-4c36-9d67-1d8aef20d2cb">
-</details>
-
-<br>
-
-#### 📌 시스템 아키텍쳐 
-<details> 
-    <summary> 이미지 </summary>
-    <img width="827" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/99c6e4cb-8221-45de-aafc-b5c862735522">
 </details>
 
 <br>
