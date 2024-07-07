@@ -35,7 +35,7 @@
 : AWS Lambda 개발 언어
 
 
-- API 명세서 및 문서 정리 툴 : 
+- API 명세서 및 문서 정리 툴 :
 [![Notion](https://img.shields.io/badge/-Notion-000000?style=flat-square&logo=Notion&logoColor=white)](https://www.notion.so/)
 [![Swagger Hub](https://img.shields.io/badge/-Swagger_Hub-85EA2D?style=flat-square&logo=Swagger&logoColor=black)](https://swagger.io/tools/swaggerhub/)
 
@@ -68,7 +68,7 @@
 ### 📄 프로젝트 상세내용 
 
 #### 📝 Notion Page 
-프로젝트 기록 Notion 보러가기 : ✏️ [Recode Notion page ](https://www.notion.so/Recode-Project-b7f5aae1842d434cb56b61cd655d7c8f)
+프로젝트 기록 Notion 보러가기 : ✏️ [Recode Notion page](https://efficacious-wheel-eca.notion.site/Recode-Project-11f8b937d65c436d8aea15541e7ddade)
 
 <br>
 
@@ -77,7 +77,7 @@
 
 <br>
 
-#### 📌 기능 명세서 [Notion_링크](https://www.notion.so/2b288647f6734f8ca7c67b0b95290c74?v=d3cb78329e324a92b004dfa917fe5933)
+#### 📌 기능 명세서 
  <details>
   <summary> 이미지 </summary>
   <img width="1386" alt="image" src="https://github.com/minhee810/ReCode-BE/assets/100061907/e025ee37-a42a-4ef3-93f2-9a109f3b7096">
@@ -85,7 +85,7 @@
 
 <br>
 
-#### 📌 API 명세서 [Notion 링크](https://www.notion.so/API-ver-2-f76b1841beb2407c80dae8cd56b953f7)
+#### 📌 API 명세서 [Notion_링크](https://www.notion.so/API-ver-2-4f3f2aeef62a445f9b1fcc770920c022?pvs=4)
  <details>
     <summary> 이미지 </summary>
     - 전체 목록 
